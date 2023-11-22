@@ -1,0 +1,227 @@
+[
+  {
+    "id": 1,
+    "name": "Peace Lily",
+    "originalName": "Spathiphyllum",
+    "price": "$12",
+    "image": "https://media.houseandgarden.co.uk/photos/64677e9c55fc4e858e5b4d31/master/w_1600%2Cc_limit/492766473",
+    "types": "green_plants, indoor_plants",
+    "description": "The Peace Lily is known for its elegant white flowers and is perfect for indoor spaces.",
+    "details": {
+      "size": "30x45 cm",
+      "temperature": "18 - 24 C",
+      "fullSun": false,
+      "drained": true
+    }
+  },
+  {
+    "id": 2,
+    "name": "Snake Plant",
+    "originalName": "Sansevieria trifasciata",
+    "price": "$15",
+    "image": "https://cdn.shopify.com/s/files/1/0150/6262/products/the-sill_snake-plant-laurentii_large_upcycled-saucer_stonewash.jpg?v=1686848706",
+    "types": "green_plants, indoor_plants",
+    "description": "The Snake Plant is a hardy indoor plant that adds a touch of modern style.",
+    "details": {
+      "size": "20x30 cm",
+      "temperature": "15 - 25 C",
+      "fullSun": false,
+      "drained": true
+    }
+  },
+  {
+    "id": 3,
+    "name": "Sunflower",
+    "originalName": "Helianthus annuus",
+    "price": "$8",
+    "image": "https://i5.walmartimages.com/seo/CLEARANCE-sale-Artificial-Sunflowers-with-Stems-Indoor-Outdoor-Fake-Silk-Sunflower_c37d56c9-7e4d-46be-8c78-d5b23acf2bf3.15c08220beac805118de141958230d4b.jpeg?odnHeight=768&odnWidth=768&odnBg=FFFFFF",
+    "types": "flowers",
+    "description": "Bright and cheery, the Sunflower is a classic choice for gardens and bouquets.",
+    "details": {
+      "size": "60x90 cm",
+      "temperature": "20 - 30 C",
+      "fullSun": true,
+      "drained": true
+    }
+  },
+  {
+    "id": 4,
+    "name": "Spider Plant",
+    "originalName": "Chlorophytum comosum",
+    "price": "$10",
+    "image": "https://media.houseandgarden.co.uk/photos/64e4d253e1a65c932c542b2e/master/w_1600%2Cc_limit/Screenshot%25202023-08-22%2520at%252016.20.41.png",
+    "types": "green_plants, indoor_plants",
+    "description": "The Spider Plant is known for its arching leaves and is easy to care for indoors.",
+    "details": {
+      "size": "25x35 cm",
+      "temperature": "15 - 25 C",
+      "fullSun": false,
+      "drained": true
+    }
+  },
+  {
+    "id": 5,
+    "name": "Rose",
+    "originalName": "Rosa",
+    "price": "$18",
+    "image": "https://img.freepik.com/premium-photo/mini-roses-pot-white-background_777542-920.jpg?size=626&ext=jpg&ga=GA1.1.1826414947.1699660800&semt=ais",
+    "types": "flowers",
+    "description": "Symbolizing love, the Rose comes in various colors and adds beauty to any garden.",
+    "details": {
+      "size": "40x60 cm",
+      "temperature": "18 - 25 C",
+      "fullSun": true,
+      "drained": true
+    }
+  },
+  {
+    "id": 6,
+    "name": "Aloe Vera",
+    "originalName": "Aloe barbadensis miller",
+    "price": "$14",
+    "image": "https://plantsworld.ae/cdn/shop/products/AloeVera-IndoorPlant_NurseryPlasticPot_50_60_cm.jpg?v=1651254306&width=1214",
+    "types": "green_plants, indoor_plants",
+    "description": "Aloe Vera is not only decorative but also known for its medicinal properties.",
+    "details": {
+      "size": "15x20 cm",
+      "temperature": "15 - 30 C",
+      "fullSun": true,
+      "drained": true
+    }
+  },
+  {
+    "id": 7,
+    "name": "Orchid",
+    "originalName": "Phalaenopsis",
+    "price": "$25",
+    "image": "https://www.interflora.co.za/wp-content/uploads/2022/04/Phalaenopsis-Orchid-in-Pot%E2%80%93602PP.jpg",
+    "types": "flowers, indoor_plants",
+    "description": "Orchids are elegant flowering plants, perfect for indoor spaces and special occasions.",
+    "details": {
+      "size": "25x40 cm",
+      "temperature": "18 - 24 C",
+      "fullSun": false,
+      "drained": true
+    }
+  },
+  {
+    "id": 8,
+    "name": "Bamboo Palm",
+    "originalName": "Chamaedorea seifrizii",
+    "price": "$20",
+    "image": "https://www.mashrita.com/wp-content/uploads/2017/09/Bamboo-Palm-Chamaedorea-Seifrizii-108-Inch.jpg",
+    "types": "green_plants, indoor_plants",
+    "description": "The Bamboo Palm adds a tropical touch to indoor spaces and is easy to care for.",
+    "details": {
+      "size": "30x50 cm",
+      "temperature": "18 - 24 C",
+      "fullSun": false,
+      "drained": true
+    }
+  },
+  {
+    "id": 9,
+    "name": "Tulip",
+    "originalName": "Tulipa",
+    "price": "$10",
+    "image": "https://www.hgdco.com.au/cdn/shop/products/PL089.jpg?v=1666247637",
+    "types": "flowers",
+    "description": "Tulips are vibrant spring flowers that come in a variety of colors.",
+    "details": {
+      "size": "20x30 cm",
+      "temperature": "15 - 22 C",
+      "fullSun": true,
+      "drained": true
+    }
+  },
+  {
+    "id": 10,
+    "name": "Fiddle Leaf Fig",
+    "originalName": "Ficus lyrata",
+    "price": "$30",
+    "image": "https://greeneryunlimited.co/cdn/shop/products/Kent-48-3265.048-WH_Fiddle-Leaf-Fig-Tree-14.jpg?v=1605963807",
+    "types": "green_plants, indoor_plants",
+    "description": "The Fiddle Leaf Fig is a popular choice for indoor decoration, known for its large, violin-shaped leaves.",
+    "details": {
+      "size": "40x60 cm",
+      "temperature": "18 - 25 C",
+      "fullSun": false,
+      "drained": true
+    }
+  },
+  {
+    "id": 11,
+    "name": "Lyrata",
+    "originalName": "Lyrata",
+    "price": "49$",
+    "image": "https://c.media.kavehome.com/images/Products/AA5690_1V01.jpg?tx=w_1900",
+    "types": "green_plants, indoor_plants",
+    "description": "Add a touch of urban garden to your environments. With decorative succulents and plants you can make endless combinations, as well as choose from among different types of pots made from fabric, ceramic, cement or glass. If you want to go green but don't have time to keep watering plants, this is your collection.",
+    "details": {
+      "size": "30x60 cm",
+      "temperature": "10 - 26 C",
+      "fullSun": false,
+      "drained": true
+    }
+  },
+  {
+    "id": 12,
+    "name": "Kalanchoe",
+    "originalName": "Kalanchoe",
+    "price": "27$",
+    "image": "https://c.media.kavehome.com/images/Products/AA5703_1V01.jpg?tx=w_1900",
+    "types": "green_plants, indoor_plants",
+    "description": "The Kalanchoe tomentosa succulent is a decorative plant that will add a touch of urban garden to your environments. In combination with its cement pot with white geometric details, it will also fit in any space. The perfect accessory for bringing freshness into your interior spaces.",
+    "details": {
+      "size": "35x40 cm",
+      "temperature": "10 - 26 C",
+      "fullSun": false,
+      "drained": true
+    }
+  },
+  {
+    "id": 13,
+    "name": "Filicopsida",
+    "originalName": "Filicopsida",
+    "price": "22$",
+    "image": "https://c.media.kavehome.com/images/Products/AA5699_1V01.jpg?tx=w_1900",
+    "types": "green_plants, indoor_plants",
+    "description": "Add a touch of urban garden to your environments. With decorative succulents and plants you can make endless combinations, as well as choose from among different types of pots made from fabric, ceramic, cement or glass. If you want to go green but don't have time to keep watering plants, this is your collection.",
+    "details": {
+      "size": "35x40 cm",
+      "temperature": "10 - 26 C",
+      "fullSun": true,
+      "drained": true
+    }
+  },
+  {
+    "id": 14,
+    "name": "Leonitis",
+    "originalName": "Leonitis",
+    "price": "22$",
+    "image": "https://c.media.kavehome.com/images/Products/AA6329_1V01.jpg?tx=w_1900",
+    "types": "flowers, indoor_plants",
+    "description": "This decorative leonitis leonurus plant is ideal to add greenery to your home, it also allows you to relax without any worries. We know your time is precious, so keep it just for you.",
+    "details": {
+      "size": "29x35 cm",
+      "temperature": "10 - 26 C",
+      "fullSun": true,
+      "drained": true
+    }
+  },
+  {
+    "id": 15,
+    "name": "Banano",
+    "originalName": "Banano",
+    "price": "22$",
+    "image": "https://c.media.kavehome.com/images/Products/AA5695_1V01.jpg?tx=w_1900",
+    "types": "indoor_plants",
+    "description": "Add a touch of urban garden to your environments. With decorative succulents and plants you can make endless combinations, as well as choose from among different types of pots made from fabric, ceramic, cement or glass. If you want to go green but don't have time to keep watering plants, this is your collection.",
+    "details": {
+      "size": "90x160 cm",
+      "temperature": "10 - 26 C",
+      "fullSun": true,
+      "drained": true
+    }
+  }
+]
