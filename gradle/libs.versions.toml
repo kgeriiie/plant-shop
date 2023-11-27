@@ -14,6 +14,8 @@ kotlinx-datetime = "0.4.0"
 moko-mvvm = "0.16.1"
 moko-resources = "0.23.0"
 moko-graphics = "0.9.0"
+kamel-image-version = "0.7.3"
+ktor-version = "2.3.4"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -45,6 +47,21 @@ moko-resources-common = { group = "dev.icerock.moko", name = "resources", versio
 moko-graphics = { group = "dev.icerock.moko", name = "graphics", version.ref = "moko-graphics" }
 moko-resources-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko-resources" }
 moko-resources-generator = { group = "dev.icerock.moko", name = "resources-generator", version.ref = "moko-resources" }
+
+#Asyn image loading
+kamel-image = {group = "media.kamel", name = "kamel-image", version.ref = "kamel-image-version"}
+
+# For network https://ktor.io/docs/client-logging.html#install_plugin
+ktor-bom = {group = "io.ktor", name = "ktor-bom", version.ref= "ktor-version"}
+ktor-client-core = {group = "io.ktor", name = "ktor-client-core", version.ref= "ktor-version"}
+ktor-android = {group = "io.ktor", name = "ktor-client-android", version.ref = "ktor-version" }
+ktor-ios = {group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor-version"}
+# To access content negotiation
+ktor-client-content-negotiation = {group = "io.ktor", name = "ktor-client-content-negotiation", version.ref= "ktor-version"}
+ktor-serialization-kotlinx-json = {group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref= "ktor-version"}
+
+[bundles]
+ktor = ["ktor-client-core", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
