@@ -44,6 +44,7 @@ kotlin {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.androidx.appcompat)
                 implementation(libs.sql.delight.android)
+                implementation(libs.ktor.android)
             }
         }
         val commonMain by getting {
@@ -62,9 +63,15 @@ kotlin {
                 implementation(libs.mvvm.flow)
                 implementation(libs.mvvm.flow.compose)
 
+                implementation(libs.bundles.ktor)
+
                 implementation(libs.kotlin.json.serialization)
+
                 implementation(libs.moko.resources.common)
                 implementation(libs.moko.resources.compose)
+
+                // For async image loading
+                implementation(libs.kamel.image)
             }
         }
 
@@ -84,6 +91,7 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(libs.sql.delight.native)
+                implementation(libs.ktor.ios)
             }
         }
     }
