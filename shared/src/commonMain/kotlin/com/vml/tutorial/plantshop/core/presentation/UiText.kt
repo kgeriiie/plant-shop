@@ -5,7 +5,7 @@ import dev.icerock.moko.resources.StringResource
 
 sealed interface UiText {
     data class DynamicString(val value: String) : UiText
-    class StringRes(val resId: StringResource) : UiText
+    class StringRes(val resId: StringResource, val args: List<Any> = listOf()) : UiText
     object Empty : UiText
 }
 
