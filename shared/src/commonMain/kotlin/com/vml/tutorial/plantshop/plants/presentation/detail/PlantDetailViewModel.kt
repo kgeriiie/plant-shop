@@ -20,11 +20,12 @@ class PlantDetailViewModel(
                 _state.update { it.copy(isFavourite = !it.isFavourite)}
             }
             is PlantDetailEvent.OnQuantityChanged -> {
-                if (event.value > 1) {
+                if (event.value >= 1) {
                     _state.update { it.copy(quantity = event.value) }
                 }
             }
             PlantDetailEvent.OnShareClick -> TODO()
+            PlantDetailEvent.NavigateBack -> TODO()
         }
     }
 }
