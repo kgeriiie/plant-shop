@@ -7,7 +7,7 @@ import dev.icerock.moko.resources.format
 actual fun UiText.asString(): String {
     return when(this) {
         is UiText.DynamicString -> value
-        is UiText.StringRes -> resId.format(args).toString()
+        is UiText.StringRes -> resId.format(args).localized()
         UiText.Empty -> ""
     }
 }
