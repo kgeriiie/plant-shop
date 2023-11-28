@@ -5,4 +5,5 @@ sealed interface PlantDetailEvent {
     object OnFavouriteClick: PlantDetailEvent
     data class OnQuantityChanged(val value: Int): PlantDetailEvent
     object CheckoutPlant: PlantDetailEvent
+    object NavigateBack: PlantDetailEvent
 }
