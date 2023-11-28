@@ -8,6 +8,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.vml.tutorial.plantshop.core.presentation.PlantShopTheme
 import com.vml.tutorial.plantshop.di.AppModule
+import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailViewModel
+import com.vml.tutorial.plantshop.plants.presentation.detail.components.PlantDetailScreen
+import dev.icerock.moko.mvvm.compose.getViewModel
+import dev.icerock.moko.mvvm.compose.viewModelFactory
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenViewModel
 import dev.icerock.moko.mvvm.compose.getViewModel
@@ -18,6 +22,14 @@ fun App(
     appModule: AppModule
 ) {
     PlantShopTheme {
+//        val plantDetailViewModel = getViewModel(
+//            key = "plant-detail-screeen",
+//            factory = viewModelFactory {
+//                PlantDetailViewModel(appModule.plantsDataSource.getPlants().first())
+//            }
+//        )
+//        val plantDetailState by plantDetailViewModel.state.collectAsState()
+
         val homeScreenViewModel = getViewModel(
             key = "home-screen",
             factory = viewModelFactory {
@@ -29,6 +41,9 @@ fun App(
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
+            // Fetch plants -> appModule.plantsDataSource.getPlants()
+            //HomeScreen()
+//            PlantDetailScreen(plantDetailState, plantDetailViewModel::onEvent)
             HomeScreen(homeScreenState, homeScreenViewModel::onEvent)
         }
     }
