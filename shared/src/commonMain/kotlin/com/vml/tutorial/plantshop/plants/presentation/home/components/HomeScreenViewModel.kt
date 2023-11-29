@@ -1,6 +1,7 @@
 package com.vml.tutorial.plantshop.plants.presentation.home.components
 
 import com.vml.tutorial.plantshop.plants.domain.Plant
+import com.vml.tutorial.plantshop.plants.presentation.PlantType
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +18,17 @@ class HomeScreenViewModel(plants: List<Plant>) : ViewModel() {
             HomeScreenEvent.OnOfferClicked -> TODO()
             HomeScreenEvent.OnProfileClicked -> TODO()
             is HomeScreenEvent.OnSearchClicked -> TODO()
+            is HomeScreenEvent.OnCategoryClicked -> {
+                onCategoryClicked(event.plantType)
+            }
+        }
+    }
+
+    private fun onCategoryClicked(plantType: PlantType) {
+        when (plantType) {
+            PlantType.GREEN -> TODO()
+            PlantType.FLOWER -> TODO()
+            PlantType.INDOOR -> TODO()
         }
     }
 }

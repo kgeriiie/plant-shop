@@ -2,10 +2,16 @@
 <resources>
     <string name="app_name">PlantShop</string>
     <string name="plant_image_description">Plant image</string>
-
     <!--Plant extra info-->
     <string name="plant_info_drained_text">Drained</string>
     <string name="plant_info_full_sun_text">Full Sun</string>
-
     <string name="checkout_with_price">Checkout %s</string>
+    <!--Home screen-->
+    <string name="profile_photo_description">Profile photo</string>
+    <string name="discover">Discover</string>
+    <string name="search">Search</string>
+    <string name="green_plants">Green Plants</string>
+    <string name="flowers">Flowers</string>
+    <string name="indoor_plants">Indoor Plants</string>
+    <string name="offer_image_description">Offer</string>
 </resources>
