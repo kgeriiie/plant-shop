@@ -14,4 +14,6 @@
     <string name="flowers">Flowers</string>
     <string name="indoor_plants">Indoor Plants</string>
     <string name="offer_image_description">Offer</string>
+    <!--Item list-->
+    <string name="favorite_icon_description">Favorite</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.vml.tutorial.plantshop.plants.presentation.home.components
+package com.vml.tutorial.plantshop.plants.presentation.home
 
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.PlantType
@@ -13,11 +13,11 @@ class HomeScreenViewModel(plants: List<Plant>) : ViewModel() {
 
     fun onEvent(event: HomeScreenEvent) {
         when (event) {
-            is HomeScreenEvent.OnClicked -> TODO()
-            is HomeScreenEvent.OnFavoriteButtonClicked -> TODO()
-            HomeScreenEvent.OnOfferClicked -> TODO()
-            HomeScreenEvent.OnProfileClicked -> TODO()
-            is HomeScreenEvent.OnSearchClicked -> TODO()
+            is HomeScreenEvent.OnItemClicked -> Unit //TODO()
+            is HomeScreenEvent.OnFavoriteButtonClicked -> Unit //TODO()
+            HomeScreenEvent.OnOfferClicked -> Unit //TODO()
+            HomeScreenEvent.OnProfileClicked -> Unit //TODO()
+            is HomeScreenEvent.OnSearchClicked -> Unit //TODO()
             is HomeScreenEvent.OnCategoryClicked -> {
                 onCategoryClicked(event.plantType)
             }
@@ -26,9 +26,9 @@ class HomeScreenViewModel(plants: List<Plant>) : ViewModel() {
 
     private fun onCategoryClicked(plantType: PlantType) {
         when (plantType) {
-            PlantType.GREEN -> TODO()
-            PlantType.FLOWER -> TODO()
-            PlantType.INDOOR -> TODO()
+            PlantType.GREEN -> Unit //TODO()
+            PlantType.FLOWER -> Unit //TODO()
+            PlantType.INDOOR -> Unit //TODO()
         }
     }
 }

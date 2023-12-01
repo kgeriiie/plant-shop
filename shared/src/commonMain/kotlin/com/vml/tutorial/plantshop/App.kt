@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import com.vml.tutorial.plantshop.core.presentation.PlantShopTheme
 import com.vml.tutorial.plantshop.di.AppModule
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
-import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenViewModel
+import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenViewModel
 import dev.icerock.moko.mvvm.compose.getViewModel
 import dev.icerock.moko.mvvm.compose.viewModelFactory
 
