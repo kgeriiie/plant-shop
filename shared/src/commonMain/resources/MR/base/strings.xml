@@ -14,6 +14,10 @@
     <string name="flowers">Flowers</string>
     <string name="indoor_plants">Indoor Plants</string>
     <string name="offer_image_description">Offer</string>
+    <string name="get">Get</string>
+    <string name="discount_percentage">%d%%&#160;</string>
+    <string name="off">Off</string>
+    <string name="for_today">For Today</string>
     <!--Item list-->
     <string name="favorite_icon_description">Favorite</string>
 </resources>

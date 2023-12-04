@@ -37,15 +37,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.vml.tutorial.plantshop.MR.images.ic_flower
 import com.vml.tutorial.plantshop.MR.images.ic_green_plant
 import com.vml.tutorial.plantshop.MR.images.ic_indoor_plant
 import com.vml.tutorial.plantshop.MR.images.img_offer
+import com.vml.tutorial.plantshop.MR.strings.discount_percentage
 import com.vml.tutorial.plantshop.MR.strings.discover
 import com.vml.tutorial.plantshop.MR.strings.flowers
+import com.vml.tutorial.plantshop.MR.strings.for_today
+import com.vml.tutorial.plantshop.MR.strings.get
 import com.vml.tutorial.plantshop.MR.strings.green_plants
 import com.vml.tutorial.plantshop.MR.strings.indoor_plants
+import com.vml.tutorial.plantshop.MR.strings.off
 import com.vml.tutorial.plantshop.MR.strings.offer_image_description
 import com.vml.tutorial.plantshop.MR.strings.profile_photo_description
 import com.vml.tutorial.plantshop.MR.strings.search
@@ -57,6 +63,7 @@ import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenEvent
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenState
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.DEFAULT_SEARCH_QUERY
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.GRID_COLUMN_COUNT
+import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.OFFER_PERCENTAGE
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.SINGLE_GRID_COLUMN_SPAN
 import com.vml.tutorial.plantshop.plants.presentation.plantList.ItemListEvent
 import com.vml.tutorial.plantshop.plants.presentation.plantList.itemListGrid
@@ -189,15 +196,33 @@ private fun CategoryItem(
 
 @Composable
 private fun ProductOffer(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Image(painter = painterResource(img_offer),
-        contentDescription = UiText.StringRes(offer_image_description).asString(),
-        contentScale = ContentScale.FillWidth,
-        modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).clickable { onClick() })
+    Box {
+        Image(painter = painterResource(img_offer),
+            contentDescription = UiText.StringRes(offer_image_description).asString(),
+            contentScale = ContentScale.FillWidth,
+            modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp))
+                .clickable { onClick() })
+        Column(modifier = Modifier.padding(vertical = 16.dp, horizontal = 32.dp)) {
+            Text(text = UiText.StringRes(get).asString(), style = Typography.bodyMedium)
+            Text(buildAnnotatedString {
+                withStyle(style = Typography.headlineLarge.toSpanStyle()) {
+                    append(
+                        text = UiText.StringRes(discount_percentage, listOf(OFFER_PERCENTAGE))
+                            .asString()
+                    )
+                }
+                withStyle(style = Typography.titleLarge.toSpanStyle()) {
+                    append(text = UiText.StringRes(off).asString())
+                }
+            })
+            Text(text = UiText.StringRes(for_today).asString(), style = Typography.bodyMedium)
+        }
+    }
 }
-
 
 object HomeScreenConstants {
     const val GRID_COLUMN_COUNT = 2
     const val SINGLE_GRID_COLUMN_SPAN = GRID_COLUMN_COUNT
     const val DEFAULT_SEARCH_QUERY = ""
+    const val OFFER_PERCENTAGE = 20
 }
