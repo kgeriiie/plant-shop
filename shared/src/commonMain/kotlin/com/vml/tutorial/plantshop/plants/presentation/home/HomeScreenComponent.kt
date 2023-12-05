@@ -1,20 +1,25 @@
 package com.vml.tutorial.plantshop.plants.presentation.home
 
+import com.arkivanov.decompose.ComponentContext
+import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.PlantType
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-// TODO: remove it before we merge it to main
-class HomeScreenViewModel(plants: List<Plant>) : ViewModel() {
-    private val _state = MutableStateFlow(HomeScreenState(plants))
+class HomeScreenComponent(
+    componentContext: ComponentContext,
+    private val plantsRepository: PlantsRepository,
+    private val onNavigateToDetail: (plant: Plant)-> Unit
+) : ComponentContext by componentContext {
+
+    private val _state = MutableStateFlow(HomeScreenState(plantsRepository.getPlants()))
     val state: StateFlow<HomeScreenState> = _state.asStateFlow()
 
     fun onEvent(event: HomeScreenEvent) {
         when (event) {
-            is HomeScreenEvent.OnItemClicked -> Unit //TODO()
+            is HomeScreenEvent.OnItemClicked -> onNavigateToDetail(event.item)
             is HomeScreenEvent.OnFavoriteButtonClicked -> Unit //TODO()
             HomeScreenEvent.OnOfferClicked -> Unit //TODO()
             HomeScreenEvent.OnProfileClicked -> Unit //TODO()

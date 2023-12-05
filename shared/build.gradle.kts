@@ -45,6 +45,7 @@ kotlin {
                 implementation(libs.androidx.appcompat)
                 implementation(libs.sql.delight.android)
                 implementation(libs.ktor.android)
+                implementation(libs.decompose)
             }
         }
         val commonMain by getting {
@@ -69,6 +70,9 @@ kotlin {
 
                 implementation(libs.moko.resources.common)
                 implementation(libs.moko.resources.compose)
+
+                implementation(libs.decompose)
+                implementation(libs.decompose.jetbrains)
 
                 // For async image loading
                 implementation(libs.kamel.image)

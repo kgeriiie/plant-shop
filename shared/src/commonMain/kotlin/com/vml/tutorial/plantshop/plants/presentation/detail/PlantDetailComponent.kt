@@ -1,16 +1,17 @@
 package com.vml.tutorial.plantshop.plants.presentation.detail
 
+import com.arkivanov.decompose.ComponentContext
 import com.vml.tutorial.plantshop.plants.domain.Plant
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-// TODO: remove it before we merge it to main
-class PlantDetailViewModel(
-    plant: Plant
-): ViewModel() {
+class PlantDetailComponent(
+    plant: Plant,
+    componentContext: ComponentContext,
+    private val onNavigateToBack: ()-> Unit
+): ComponentContext by componentContext {
     private val _state = MutableStateFlow(PlantDetailState(plant))
     val state: StateFlow<PlantDetailState> = _state.asStateFlow()
 
@@ -26,7 +27,7 @@ class PlantDetailViewModel(
                 }
             }
             PlantDetailEvent.OnShareClick -> TODO()
-            PlantDetailEvent.NavigateBack -> TODO()
+            PlantDetailEvent.NavigateBack -> onNavigateToBack()
         }
     }
 }
