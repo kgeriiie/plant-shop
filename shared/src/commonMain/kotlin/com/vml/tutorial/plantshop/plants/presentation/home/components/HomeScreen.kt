@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.buildAnnotatedString
@@ -77,7 +78,7 @@ fun HomeScreen(state: HomeScreenState, onEvent: (HomeScreenEvent) -> Unit) {
     Scaffold {
         Column(modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)) {
             ScreenTitle({ onEvent(HomeScreenEvent.OnProfileClicked) })
-            SearchBar(modifier = Modifier.padding(bottom = 8.dp),
+            SearchBar(modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
                 onSearchClicked = { query -> onEvent(HomeScreenEvent.OnSearchClicked(query)) })
             HomeScreenContent(plants = plants, onEvent = onEvent)
         }
@@ -88,15 +89,16 @@ fun HomeScreen(state: HomeScreenState, onEvent: (HomeScreenEvent) -> Unit) {
 private fun HomeScreenContent(
     plants: List<Plant>, modifier: Modifier = Modifier, onEvent: (HomeScreenEvent) -> Unit
 ) {
-    LazyVerticalGrid(columns = GridCells.Fixed(GRID_COLUMN_COUNT)) {
+    LazyVerticalGrid(modifier = modifier, columns = GridCells.Fixed(GRID_COLUMN_COUNT)) {
         item(span = { GridItemSpan(SINGLE_GRID_COLUMN_SPAN) }) {
-            Column(
-                modifier = Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                CategorySelector { plantType ->
+            Column {
+                Spacer(modifier = Modifier.size(8.dp))
+                CategorySelector(modifier = Modifier.padding(8.dp)) { plantType ->
                     onEvent(HomeScreenEvent.OnCategoryClicked(plantType))
                 }
-                ProductOffer { onEvent(HomeScreenEvent.OnOfferClicked) }
+                ProductOffer(modifier = Modifier.padding(8.dp)) {
+                    onEvent(HomeScreenEvent.OnOfferClicked)
+                }
             }
         }
         itemListGrid(plants, modifier = Modifier.padding(8.dp)) { plantListEvent ->
@@ -116,7 +118,7 @@ private fun getHomeScreenEventFrom(plantListEvent: ItemListEvent): HomeScreenEve
 
 @Composable
 private fun ScreenTitle(onProfileClicked: () -> Unit, modifier: Modifier = Modifier) {
-    Row(modifier = modifier) {
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Text(UiText.StringRes(discover).asString(), style = Typography.headlineMedium)
         Spacer(modifier = Modifier.weight(1.0f))
         IconButton(
@@ -133,7 +135,7 @@ private fun ScreenTitle(onProfileClicked: () -> Unit, modifier: Modifier = Modif
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SearchBar(onSearchClicked: (String) -> Unit, modifier: Modifier = Modifier) {
+private fun SearchBar(modifier: Modifier = Modifier, onSearchClicked: (String) -> Unit) {
     var query by remember { mutableStateOf(DEFAULT_SEARCH_QUERY) }
     var active by remember { mutableStateOf(false) }
 
@@ -153,7 +155,7 @@ private fun SearchBar(onSearchClicked: (String) -> Unit, modifier: Modifier = Mo
 
 @Composable
 private fun CategorySelector(modifier: Modifier = Modifier, onClick: (PlantType) -> Unit) {
-    Row {
+    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         CategoryItem(
             ic_green_plant, UiText.StringRes(green_plants).asString(), Modifier.weight(1f)
         ) { onClick(PlantType.GREEN) }
@@ -173,7 +175,10 @@ private fun CategoryItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Box(modifier = modifier.padding(8.dp).clip(RoundedCornerShape(16.dp)).background(Color.White)
+    val roundedCornerShape = remember { RoundedCornerShape(16.dp) }
+    Box(modifier = modifier.shadow(elevation = 4.dp, shape = roundedCornerShape)
+        .clip(roundedCornerShape)
+        .background(Color.White)
         .clickable { onClick() }) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -196,12 +201,13 @@ private fun CategoryItem(
 
 @Composable
 private fun ProductOffer(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Box {
-        Image(painter = painterResource(img_offer),
+    Box(modifier = modifier.clip(RoundedCornerShape(16.dp)).clickable { onClick() }) {
+        Image(
+            painter = painterResource(img_offer),
             contentDescription = UiText.StringRes(offer_image_description).asString(),
             contentScale = ContentScale.FillWidth,
-            modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp))
-                .clickable { onClick() })
+            modifier = Modifier.fillMaxWidth()
+        )
         Column(modifier = Modifier.padding(vertical = 16.dp, horizontal = 32.dp)) {
             Text(text = UiText.StringRes(get).asString(), style = Typography.bodyMedium)
             Text(buildAnnotatedString {
