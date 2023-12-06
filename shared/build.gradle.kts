@@ -23,7 +23,7 @@ kotlin {
             export(libs.mvvm.core)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -116,8 +116,8 @@ android {
 
 sqldelight {
     databases {
-        create(name = "PlantsDatabase") {
-            packageName.set("com.vml.tutorial.plantshop.database")
+        create(name = "PlantDatabase") {
+            packageName.set("com.vml.tutorial.plantshop")
         }
     }
 }

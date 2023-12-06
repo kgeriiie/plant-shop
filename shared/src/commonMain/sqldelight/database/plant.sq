@@ -1,0 +1,39 @@
+import kotlin.Boolean;
+
+CREATE TABLE favoritePlant (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    originalName TEXT NOT NULL,
+    price TEXT NOT NULL,
+    image TEXT NOT NULL,
+    types TEXT NOT NULL,
+    description TEXT NOT NULL,
+    size TEXT NOT NULL,
+    temperature TEXT NOT NULL,
+    fullSun INTEGER AS Boolean DEFAULT 0 NOT NULL,
+    drained INTEGER AS Boolean DEFAULT 0 NOT NULL
+);
+
+insertFavoritePlant:
+INSERT OR REPLACE INTO favoritePlant (
+    id,
+    name,
+    originalName,
+    price,
+    image,
+    types,
+    description,
+    size,
+    temperature,
+    fullSun,
+    drained
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+removeFavoritePlant:
+DELETE FROM favoritePlant WHERE id = :id;
+
+getFavoritePlantById:
+SELECT * FROM favoritePlant WHERE id = :id;
+
+getFavoritePlants:
+SELECT * FROM favoritePlant;

@@ -1,15 +1,14 @@
 package com.vml.tutorial.plantshop.plants.presentation.home
 
-import com.vml.tutorial.plantshop.plants.domain.Plant
+import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
 import com.vml.tutorial.plantshop.plants.presentation.PlantType
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-// TODO: remove it before we merge it to main
-class HomeScreenViewModel(plants: List<Plant>) : ViewModel() {
-    private val _state = MutableStateFlow(HomeScreenState(plants))
+class HomeScreenViewModel(private val dataSource: PlantsDataSource) : ViewModel() {
+    private val _state = MutableStateFlow(HomeScreenState(dataSource.getPlants()))
     val state: StateFlow<HomeScreenState> = _state.asStateFlow()
 
     fun onEvent(event: HomeScreenEvent) {
