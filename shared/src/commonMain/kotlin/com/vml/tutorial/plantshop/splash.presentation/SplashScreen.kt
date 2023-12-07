@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.vml.tutorial.plantshop.MR
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
+import com.vml.tutorial.plantshop.ui.theme.Typography
 import dev.icerock.moko.resources.compose.painterResource
 
 @Composable
@@ -45,25 +46,23 @@ fun SplashScreen(
         ) {
             Text(
                 text = UiText.StringRes(MR.strings.splash_title_text).asString(),
-                fontWeight = FontWeight.Bold,
+                style = Typography.displayLarge,
+                fontWeight =FontWeight.Bold,
                 color = Color.Black,
-                fontSize = 54.sp,
-                lineHeight = 54.sp
             )
 
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = UiText.StringRes(MR.strings.splash_subtitle_text).asString(),
-                fontWeight = FontWeight.SemiBold,
+                style = Typography.titleSmall,
                 color = Color.Black.copy(alpha = 0.6f),
-                fontSize = 14.sp
             )
 
             Spacer(modifier = Modifier.height(20.dp))
             Button(onClick = component::start) {
                 Text(
                     text = UiText.StringRes(MR.strings.splash_get_started_button_text).asString(),
-                    fontSize = 14.sp
+                    style = Typography.titleSmall
                 )
             }
         }
