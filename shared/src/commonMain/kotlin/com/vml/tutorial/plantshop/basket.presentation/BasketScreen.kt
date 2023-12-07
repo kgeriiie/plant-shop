@@ -18,7 +18,7 @@ fun BasketScreen() {
             .padding(20.dp)
     ) {
         Text(
-            text = "You havn't been implemented basket screen yet.",
+            text = "Basket Screen hasn't been implemented yet.",
             modifier = Modifier
                 .align(Alignment.Center),
             textAlign = TextAlign.Center

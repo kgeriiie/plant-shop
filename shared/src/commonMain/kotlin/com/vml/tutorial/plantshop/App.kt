@@ -11,12 +11,11 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stac
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.vml.tutorial.plantshop.core.presentation.PlantShopTheme
 import com.vml.tutorial.plantshop.main.presentation.MainScreen
-import com.vml.tutorial.plantshop.navigation.RootComponent
 import com.vml.tutorial.plantshop.splash.presentation.SplashScreen
 
 @Composable
 fun App(
-    root: RootComponent
+    root: AppComponent
 ) {
     PlantShopTheme {
         val childStack by root.childStack.subscribeAsState()
@@ -28,8 +27,8 @@ fun App(
                 animation = stackAnimation(slide())
             ) { child ->
                 when(val instance = child.instance) {
-                    is RootComponent.Child.MainScreen -> MainScreen(instance.component)
-                    is RootComponent.Child.SplashScreen -> SplashScreen(instance.component)
+                    is AppComponent.Child.SplashScreen -> SplashScreen(instance.component)
+                    is AppComponent.Child.MainScreen -> MainScreen(instance.component)
                 }
             }
         }

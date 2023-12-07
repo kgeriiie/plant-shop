@@ -18,7 +18,7 @@ fun FavouritesScreen() {
             .padding(20.dp)
     ) {
         Text(
-            text = "You havn't been implemented favourites screen yet.",
+            text = "Favourites screen hasn't been implemented yet.",
             modifier = Modifier
                 .align(Alignment.Center),
             textAlign = TextAlign.Center

@@ -5,11 +5,10 @@ import androidx.compose.ui.window.ComposeUIViewController
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.vml.tutorial.plantshop.di.AppModule
-import com.vml.tutorial.plantshop.navigation.RootComponent
 
 fun MainViewController() = ComposeUIViewController {
     val root = remember {
-        RootComponent(
+        DefaultAppComponent(
             DefaultComponentContext(LifecycleRegistry()),
             AppModule()
         )

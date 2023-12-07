@@ -1,87 +1,113 @@
 package com.vml.tutorial.plantshop.main.presentation
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.vml.tutorial.plantshop.basket.presentation.BasketComponent
+import com.vml.tutorial.plantshop.core.utils.Logger
 import com.vml.tutorial.plantshop.di.AppModule
 import com.vml.tutorial.plantshop.favourites.presentation.FavouritesComponent
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailComponent
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenComponent
+import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.serialization.Serializable
 
-class MainComponent(
+interface MainComponent {
+    val childStack: Value<ChildStack<*, MainChild>>
+    var state: StateFlow<MainScreenState>
+
+    fun onEvent(event: MainScreenEvent)
+    sealed class MainChild{
+        data class HomeScreen(val component: HomeScreenComponent): MainChild()
+        data class FavouritesScreen(val component: FavouritesComponent): MainChild()
+        data class BasketScreen(val component: BasketComponent): MainChild()
+        data class PlantDetailScreen(val component: PlantDetailComponent): MainChild()
+    }
+}
+
+class DefaultMainComponent(
     componentContext: ComponentContext,
     private val appModule: AppModule
-): ComponentContext by componentContext {
+): MainComponent, ComponentContext by componentContext {
 
-    private val navigation = StackNavigation<Configuration>()
-    val childStack = childStack(
+    private val navigation = StackNavigation<MainConfiguration>()
+    override val childStack = childStack(
         source = navigation,
-        serializer = Configuration.serializer(),
-        initialConfiguration = Configuration.HomeScreen,
+        serializer = MainConfiguration.serializer(),
+        initialConfiguration = MainConfiguration.HomeScreen,
         handleBackButton = true,
         childFactory = ::createChild
     )
 
-    private val _navBarVisibility: MutableValue<Boolean> = MutableValue(true)
-    var navigationBarVisible: Value<Boolean> = _navBarVisibility
+    private val _state: MutableStateFlow<MainScreenState> = MutableStateFlow(MainScreenState())
+    override var state: StateFlow<MainScreenState> = _state.asStateFlow()
 
-    fun navigateTo(destination: Configuration) {
-        navigation.pushNew(destination) { success ->
-            _navBarVisibility.value = true
+    override fun onEvent(event: MainScreenEvent) {
+        when(event) {
+            MainScreenEvent.OnBasketTabClicked -> navigateTab(MainConfiguration.BasketScreen)
+            MainScreenEvent.OnFavouriteTabClicked -> navigateTab(MainConfiguration.FavouritesScreen)
+            MainScreenEvent.OnHomeTabClicked -> navigateTab(MainConfiguration.HomeScreen)
         }
+    }
+
+    private fun navigateTab(configuration: MainConfiguration) {
+        _state.update { it.copy(bottomNavigationVisible = true) }
+        navigation.replaceCurrent(configuration)
     }
 
     @OptIn(ExperimentalDecomposeApi::class)
     private fun createChild(
-        config: Configuration,
+        config: MainConfiguration,
         context: ComponentContext
-    ): Child {
+    ): MainComponent.MainChild {
         return when (config) {
-            Configuration.BasketScreen -> Child.BasketScreen(BasketComponent(componentContext = context))
-            Configuration.FavouritesScreen -> Child.FavouritesScreen(FavouritesComponent(componentContext = context))
-            Configuration.HomeScreen -> Child.HomeScreen(HomeScreenComponent(
+            MainConfiguration.BasketScreen -> MainComponent.MainChild.BasketScreen(BasketComponent(componentContext = context))
+            MainConfiguration.FavouritesScreen -> MainComponent.MainChild.FavouritesScreen(FavouritesComponent(componentContext = context))
+            MainConfiguration.HomeScreen -> MainComponent.MainChild.HomeScreen(HomeScreenComponent(
                 componentContext = context,
                 plantsRepository = appModule.plantsRepository,
                 onNavigateToDetail = { plant ->
-                    _navBarVisibility.value = false
-                    navigation.pushNew(Configuration.PlantDetailScreen(plant))
+                    _state.update { it.copy(bottomNavigationVisible = false) }
+                    navigation.pushNew(MainConfiguration.PlantDetailScreen(plant))
                 }
             ))
-            is Configuration.PlantDetailScreen -> Child.PlantDetailScreen(
+            is MainConfiguration.PlantDetailScreen -> MainComponent.MainChild.PlantDetailScreen(
                 PlantDetailComponent(
-                plant = config.plant,
-                componentContext =  context,
+                    plant = config.plant,
+                    componentContext =  context,
                     onNavigateToBack = {
-                        _navBarVisibility.value = true
+                        _state.update { it.copy(bottomNavigationVisible = true) }
                         navigation.pop()
                     }
             ))
         }
     }
 
-    sealed class Child {
-        data class HomeScreen(val component: HomeScreenComponent): Child()
-        data class FavouritesScreen(val component: FavouritesComponent): Child()
-        data class BasketScreen(val component: BasketComponent): Child()
-        data class PlantDetailScreen(val component: PlantDetailComponent): Child()
+    @Serializable
+    sealed class MainConfiguration {
+        @Serializable
+        data object HomeScreen: MainConfiguration()
+        @Serializable
+        data object FavouritesScreen: MainConfiguration()
+        @Serializable
+        data object BasketScreen: MainConfiguration()
+        @Serializable
+        data class PlantDetailScreen(val plant: Plant): MainConfiguration()
     }
 
-    @Serializable
-    sealed class Configuration {
-        @Serializable
-        data object HomeScreen: Configuration()
-        @Serializable
-        data object FavouritesScreen: Configuration()
-        @Serializable
-        data object BasketScreen: Configuration()
-        @Serializable
-        data class PlantDetailScreen(val plant: Plant): Configuration()
-    }
+    data class MainUiState(
+        val bottomNavigationVisible: Boolean = true
+    )
 }
