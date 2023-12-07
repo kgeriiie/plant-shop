@@ -4,12 +4,10 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.vml.tutorial.plantshop.di.AppModule
-import com.vml.tutorial.plantshop.plants.domain.Plant
-import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailComponent
-import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenComponent
+import com.vml.tutorial.plantshop.main.presentation.MainComponent
+import com.vml.tutorial.plantshop.splash.presentation.SplashComponent
 import kotlinx.serialization.Serializable
 
 class RootComponent(
@@ -21,7 +19,7 @@ class RootComponent(
     val childStack = childStack(
         source = navigation,
         serializer = Configuration.serializer(),
-        initialConfiguration = Configuration.HomeScreen,
+        initialConfiguration = Configuration.SplashScreen,
         handleBackButton = true,
         childFactory = ::createChild
     )
@@ -32,34 +30,24 @@ class RootComponent(
         context: ComponentContext
     ): Child {
         return when(config) {
-            Configuration.HomeScreen -> Child.HomeScreen(HomeScreenComponent(
-                componentContext = context,
-                plantsRepository = appModule.plantsRepository,
-                onNavigateToDetail = { plant ->
-                    navigation.pushNew(Configuration.PlantDetailScreen(plant))
-                }
-            ))
-            is Configuration.PlantDetailScreen -> Child.DetailScreen(
-                PlantDetailComponent(
-                plant = config.plant,
-                componentContext =  context,
-                    onNavigateToBack = {
-                        navigation.pop()
-                    }
-            ))
+            Configuration.MainScreen -> Child.MainScreen(MainComponent(context, appModule))
+            Configuration.SplashScreen -> Child.SplashScreen(SplashComponent(context) {
+                navigation.pushNew(Configuration.MainScreen)
+            })
         }
     }
 
     sealed class Child {
-        data class HomeScreen(val component: HomeScreenComponent): Child()
-        data class DetailScreen(val component: PlantDetailComponent): Child()
+        data class SplashScreen(val component: SplashComponent): Child()
+        data class MainScreen(val component: MainComponent): Child()
     }
 
     @Serializable
     sealed class Configuration {
         @Serializable
-        data object HomeScreen: Configuration()
+        data object SplashScreen: Configuration()
         @Serializable
-        data class PlantDetailScreen(val plant: Plant): Configuration()
+        data object MainScreen: Configuration()
+
     }
 }
