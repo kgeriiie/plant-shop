@@ -1,0 +1,141 @@
+package com.vml.tutorial.plantshop.main.presentation
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.ShoppingBasket
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.ShoppingBasket
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
+import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
+import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import com.vml.tutorial.plantshop.basket.presentation.BasketScreen
+import com.vml.tutorial.plantshop.favourites.presentation.FavouritesScreen
+import com.vml.tutorial.plantshop.plants.presentation.detail.components.PlantDetailScreen
+import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
+
+@Composable
+fun MainScreen(
+    component: MainComponent
+) {
+    val childStack by component.childStack.subscribeAsState()
+    val state by component.state.collectAsState()
+
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        // TODO: add animation
+        Children(
+            stack = childStack
+        ) { child ->
+            when(val instance = child.instance) {
+                is MainComponent.MainChild.BasketScreen -> BasketScreen()
+                is MainComponent.MainChild.FavouritesScreen -> FavouritesScreen()
+                is MainComponent.MainChild.HomeScreen -> {
+                    val homeState by instance.component.state.collectAsState()
+                    HomeScreen(homeState) { event ->
+                        instance.component.onEvent(event)
+                    }
+                }
+                is MainComponent.MainChild.PlantDetailScreen -> {
+                    val plantDetailState by instance.component.state.collectAsState()
+                    PlantDetailScreen(plantDetailState) { event ->
+                        instance.component.onEvent(event)
+                    }
+                }
+            }
+        }
+
+        if (state.bottomNavigationVisible) {
+            MainNavigationBar(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+            ) {
+                MainNavigationItem(
+                    active = childStack.active.instance is MainComponent.MainChild.HomeScreen,
+                    defaultIcon = Icons.Outlined.Home,
+                    selectedIcon = Icons.Rounded.Home,
+                    onClick = { component.onEvent(MainScreenEvent.OnHomeTabClicked) }
+                )
+
+                MainNavigationItem(
+                    active = childStack.active.instance is MainComponent.MainChild.FavouritesScreen,
+                    defaultIcon = Icons.Outlined.FavoriteBorder,
+                    selectedIcon = Icons.Rounded.Favorite,
+                    onClick = { component.onEvent(MainScreenEvent.OnFavouriteTabClicked) }
+                )
+
+                MainNavigationItem(
+                    active = childStack.active.instance is MainComponent.MainChild.BasketScreen,
+                    defaultIcon = Icons.Outlined.ShoppingBasket,
+                    selectedIcon = Icons.Rounded.ShoppingBasket,
+                    onClick = { component.onEvent(MainScreenEvent.OnBasketTabClicked) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun MainNavigationBar(
+    modifier: Modifier,
+    content: @Composable RowScope.() -> Unit
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .height(60.dp)
+            .shadow(elevation = 4.dp, shape = RoundedCornerShape(30.dp))
+            .clip(RoundedCornerShape(30.dp))
+            .background(Color.White)
+            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+            .padding(horizontal = 30.dp)
+            .clickable { /* Do nothing */ },
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        content = content
+    )
+}
+
+@Composable
+fun MainNavigationItem(
+    active: Boolean,
+    defaultIcon: ImageVector,
+    selectedIcon: ImageVector,
+    onClick: () -> Unit,
+) {
+    IconButton(
+        onClick = onClick
+    ) {
+        Icon(
+            imageVector = if (active) selectedIcon else defaultIcon,
+            contentDescription = null,
+            tint = Color.White
+        )
+    }
+}

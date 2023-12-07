@@ -3,33 +3,34 @@ package com.vml.tutorial.plantshop
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
+import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slide
+import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
+import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.vml.tutorial.plantshop.core.presentation.PlantShopTheme
-import com.vml.tutorial.plantshop.di.AppModule
-import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
-import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenViewModel
-import dev.icerock.moko.mvvm.compose.getViewModel
-import dev.icerock.moko.mvvm.compose.viewModelFactory
+import com.vml.tutorial.plantshop.main.presentation.MainScreen
+import com.vml.tutorial.plantshop.splash.presentation.SplashScreen
 
 @Composable
 fun App(
-    appModule: AppModule
+    root: AppComponent
 ) {
     PlantShopTheme {
-        val homeScreenViewModel = getViewModel(
-            key = "home-screen",
-            factory = viewModelFactory {
-                HomeScreenViewModel(appModule.plantsDataSource.getPlants())
-            }
-        )
-        val homeScreenState by homeScreenViewModel.state.collectAsState()
-
+        val childStack by root.childStack.subscribeAsState()
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
-            HomeScreen(homeScreenState, homeScreenViewModel::onEvent)
+            Children(
+                stack = childStack,
+                animation = stackAnimation(slide())
+            ) { child ->
+                when(val instance = child.instance) {
+                    is AppComponent.Child.SplashScreen -> SplashScreen(instance.component)
+                    is AppComponent.Child.MainScreen -> MainScreen(instance.component)
+                }
+            }
         }
     }
 }
