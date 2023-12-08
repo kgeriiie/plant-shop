@@ -11,7 +11,8 @@ data class Plant(
     val image: String,
     val types: String,
     val description: String,
-    val details: PlantDetails
+    val details: PlantDetails,
+    var isFavorite: Boolean = false
 )
 
 @Serializable

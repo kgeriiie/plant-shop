@@ -1,16 +1,12 @@
 package com.vml.tutorial.plantshop.plants.data
 
-import app.cash.sqldelight.coroutines.asFlow
-import app.cash.sqldelight.coroutines.mapToList
 import com.vml.tutorial.plantshop.MR.files.plants
 import com.vml.tutorial.plantshop.PlantDatabase
 import com.vml.tutorial.plantshop.core.data.FileReader
+import com.vml.tutorial.plantshop.core.data.toPlant
 import com.vml.tutorial.plantshop.core.data.toPlants
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 class FilePlantsDataSource(
     private val fileReader: FileReader,
@@ -20,17 +16,24 @@ class FilePlantsDataSource(
 
     override fun getPlants(): List<Plant> {
         val rawData: String = fileReader.loadFile(plants) ?: return emptyList()
-        return rawData.toPlants()
+        return getPlantsWithFavoriteState(getFavorites(), rawData.toPlants())
     }
 
-    override fun getFavorites(): Flow<List<Plant>> {
-        return queries.getFavoritePlants()
-            .asFlow().mapToList(Dispatchers.Default)
-            .map { plantEntities ->
-                plantEntities.map { plantEntity ->
-                    plantEntity.toPlant()
-                }
-            }
+    override fun getFavorites(): List<Plant> {
+        return queries.getFavoritePlants().executeAsList().map { plantEntity ->
+            plantEntity.toPlant()
+        }
+    }
+
+    private fun getPlantsWithFavoriteState(
+        favorites: List<Plant>,
+        plants: List<Plant>
+    ): List<Plant> {
+        for (favorite in favorites) {
+            val matchingPlant = plants.find { it.id == favorite.id }
+            matchingPlant?.isFavorite = true
+        }
+        return plants
     }
 
     override suspend fun addToFavorites(plant: Plant) {
@@ -51,5 +54,9 @@ class FilePlantsDataSource(
 
     override suspend fun removeFromFavorites(id: Int) {
         queries.removeFavoritePlant(id.toLong())
+    }
+
+    override suspend fun getFavoritePlantById(id: Int): Plant {
+        return queries.getFavoritePlantById(id.toLong()).executeAsOne().toPlant()
     }
 }

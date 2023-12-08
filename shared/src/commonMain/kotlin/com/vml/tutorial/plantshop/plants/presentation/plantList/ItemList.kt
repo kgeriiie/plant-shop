@@ -55,7 +55,8 @@ fun LazyGridScope.itemListGrid(
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxWidth().height(136.dp)
                     )
-                    FavoriteButton(onClick = {
+                    FavoriteButton(item.isFavorite, onClick = {
+                        item.isFavorite = !item.isFavorite
                         onClickEvent(ItemListEvent.OnFavoriteButtonClicked(item))
                     })
                 }
@@ -66,8 +67,12 @@ fun LazyGridScope.itemListGrid(
 }
 
 @Composable
-private fun FavoriteButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    var isFavorite by remember { mutableStateOf(false) }
+private fun FavoriteButton(
+    isInFavorites: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    var isFavorite by remember { mutableStateOf(isInFavorites) }
     Row(modifier = modifier) {
         Spacer(modifier = Modifier.weight(1f))
         IconButton(modifier = Modifier.size(50.dp), onClick = {
@@ -77,7 +82,8 @@ private fun FavoriteButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
             Icon(
                 imageVector = if (isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
                 tint = if (isFavorite) Color.Red else MaterialTheme.colorScheme.onPrimaryContainer,
-                contentDescription = UiText.StringRes(MR.strings.favorite_icon_description).asString()
+                contentDescription = UiText.StringRes(MR.strings.favorite_icon_description)
+                    .asString()
             )
         }
     }
