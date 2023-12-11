@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.vml.tutorial.plantshop.basket.presentation.BasketScreen
-import com.vml.tutorial.plantshop.favourites.presentation.FavouritesScreen
+import com.vml.tutorial.plantshop.plants.presentation.favourites.components.FavouritesScreen
 import com.vml.tutorial.plantshop.plants.presentation.detail.components.PlantDetailScreen
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
 
@@ -54,7 +54,12 @@ fun MainScreen(
         ) { child ->
             when(val instance = child.instance) {
                 is MainComponent.MainChild.BasketScreen -> BasketScreen()
-                is MainComponent.MainChild.FavouritesScreen -> FavouritesScreen()
+                is MainComponent.MainChild.FavouritesScreen -> {
+                    val favoriteState by instance.component.state.collectAsState()
+                    FavouritesScreen(favoriteState) { event ->
+                        instance.component.onEvent(event)
+                    }
+                }
                 is MainComponent.MainChild.HomeScreen -> {
                     val homeState by instance.component.state.collectAsState()
                     HomeScreen(homeState) { event ->

@@ -25,4 +25,6 @@
     <string name="for_today">For Today</string>
     <!--Item list-->
     <string name="favorite_icon_description">Favorite</string>
+    <!--Favorites Screen list-->
+    <string name="favorites">Favorites</string>
 </resources>

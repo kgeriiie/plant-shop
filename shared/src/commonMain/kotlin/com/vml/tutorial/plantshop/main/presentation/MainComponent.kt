@@ -3,21 +3,17 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.router.stack.replaceCurrent
-import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.vml.tutorial.plantshop.basket.presentation.BasketComponent
-import com.vml.tutorial.plantshop.core.utils.Logger
 import com.vml.tutorial.plantshop.di.AppModule
-import com.vml.tutorial.plantshop.favourites.presentation.FavouritesComponent
+import com.vml.tutorial.plantshop.plants.presentation.favourites.FavouritesComponent
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailComponent
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenComponent
-import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -74,7 +70,15 @@ class DefaultMainComponent(
     ): MainComponent.MainChild {
         return when (config) {
             MainConfiguration.BasketScreen -> MainComponent.MainChild.BasketScreen(BasketComponent(componentContext = context))
-            MainConfiguration.FavouritesScreen -> MainComponent.MainChild.FavouritesScreen(FavouritesComponent(componentContext = context))
+            MainConfiguration.FavouritesScreen -> MainComponent.MainChild.FavouritesScreen(
+                FavouritesComponent(
+                    componentContext = context,
+                    plantsRepository = appModule.plantsRepository
+                ) { plant ->
+                    _state.update { it.copy(bottomNavigationVisible = false) }
+                    navigation.pushNew(MainConfiguration.PlantDetailScreen(plant))
+                }
+            )
             MainConfiguration.HomeScreen -> MainComponent.MainChild.HomeScreen(HomeScreenComponent(
                 componentContext = context,
                 plantsRepository = appModule.plantsRepository,
@@ -87,6 +91,7 @@ class DefaultMainComponent(
                 PlantDetailComponent(
                     plant = config.plant,
                     componentContext =  context,
+                    plantsRepository = appModule.plantsRepository,
                     onNavigateToBack = {
                         _state.update { it.copy(bottomNavigationVisible = true) }
                         navigation.pop()

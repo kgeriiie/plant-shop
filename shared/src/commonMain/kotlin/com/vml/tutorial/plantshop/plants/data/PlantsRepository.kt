@@ -2,34 +2,41 @@ package com.vml.tutorial.plantshop.plants.data
 
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 interface PlantsRepository {
     fun getPlants(): List<Plant>
-    suspend fun getFavorites(): List<Plant>
-    suspend fun addToFavorites(plant: Plant)
-    suspend fun removeFromFavorites(id: Int)
-    suspend fun getFavoritePlantById(id: Int): Plant
+    fun getFavorites(): List<Plant>
+    fun toggleFavoriteStatus(plant: Plant)
 }
 
 class PlantsRepositoryImpl(
     private val localDataSource: PlantsDataSource
-): PlantsRepository {
+) : PlantsRepository {
     override fun getPlants(): List<Plant> {
         return localDataSource.getPlants()
     }
-    override suspend fun getFavorites(): List<Plant> {
+
+    override fun getFavorites(): List<Plant> {
         return localDataSource.getFavorites()
     }
 
-    override suspend fun addToFavorites(plant: Plant) {
-        return localDataSource.addToFavorites(plant)
-    }
-
-    override suspend fun removeFromFavorites(id: Int) {
-        return localDataSource.removeFromFavorites(id)
-    }
-
-    override suspend fun getFavoritePlantById(id: Int): Plant {
-        return localDataSource.getFavoritePlantById(id)
+    override fun toggleFavoriteStatus(plant: Plant) {
+        CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
+            val chosenPlant = try {
+                localDataSource.getFavoritePlantById(plant.id)
+            } catch (err: NullPointerException) {
+                null
+            }
+            chosenPlant?.let {
+                localDataSource.removeFromFavorites(it.id)
+            } ?: run {
+                localDataSource.addToFavorites(plant)
+            }
+        }
     }
 }
