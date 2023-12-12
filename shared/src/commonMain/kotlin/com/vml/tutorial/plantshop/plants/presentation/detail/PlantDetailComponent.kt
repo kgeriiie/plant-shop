@@ -26,7 +26,7 @@ class PlantDetailComponent(
             PlantDetailEvent.CheckoutPlant -> TODO()
             PlantDetailEvent.OnFavouriteClick -> {
                 _state.update { it.copy(isFavourite = !it.plant.isFavorite) }
-                plantsRepository.toggleFavoriteStatus(state.value.plant)
+                plantsRepository.toggleFavoriteStatus(state.value.plant.id)
             }
 
             is PlantDetailEvent.OnQuantityChanged -> {

@@ -26,7 +26,7 @@ class HomeScreenComponent(
                     plant.takeUnless { plant.id == event.item.id }?: plant.copy(isFavorite = !plant.isFavorite) })
                 }
 
-                plantsRepository.toggleFavoriteStatus(event.item)
+                plantsRepository.toggleFavoriteStatus(event.item.id)
             }
 
             HomeScreenEvent.OnOfferClicked -> Unit //TODO()

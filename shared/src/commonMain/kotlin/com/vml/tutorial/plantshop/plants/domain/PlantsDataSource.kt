@@ -1,10 +1,7 @@
 package com.vml.tutorial.plantshop.plants.domain
 
-interface PlantsDataSource {
-    fun getPlants(): List<Plant>
+import kotlinx.coroutines.flow.Flow
 
-    fun getFavorites(): List<Plant>
-    suspend fun addToFavorites(plant: Plant)
-    suspend fun removeFromFavorites(id: Int)
-    suspend fun getFavoritePlantById(id: Int): Plant
+interface PlantsDataSource {
+    fun getPlants(favoriteIds: Flow<List<Long>>): List<Plant>
 }
