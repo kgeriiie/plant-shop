@@ -74,14 +74,11 @@ import dev.icerock.moko.resources.compose.painterResource
 
 @Composable
 fun HomeScreen(state: HomeScreenState, onEvent: (HomeScreenEvent) -> Unit) {
-    val plants by remember { mutableStateOf(state.plants) }
-    Scaffold {
-        Column(modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)) {
-            ScreenTitle({ onEvent(HomeScreenEvent.OnProfileClicked) })
-            SearchBar(modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
-                onSearchClicked = { query -> onEvent(HomeScreenEvent.OnSearchClicked(query)) })
-            HomeScreenContent(plants = plants, onEvent = onEvent)
-        }
+    Column(modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)) {
+        ScreenTitle({ onEvent(HomeScreenEvent.OnProfileClicked) })
+        SearchBar(modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
+            onSearchClicked = { query -> onEvent(HomeScreenEvent.OnSearchClicked(query)) })
+        HomeScreenContent(plants = state.plants, onEvent = onEvent)
     }
 }
 
@@ -101,7 +98,10 @@ private fun HomeScreenContent(
                 }
             }
         }
-        itemListGrid(plants, modifier = Modifier.padding(8.dp)) { plantListEvent ->
+        itemListGrid(
+            plants,
+            modifier = Modifier.padding(8.dp)
+        ) { plantListEvent ->
             onEvent(getHomeScreenEventFrom(plantListEvent))
         }
     }

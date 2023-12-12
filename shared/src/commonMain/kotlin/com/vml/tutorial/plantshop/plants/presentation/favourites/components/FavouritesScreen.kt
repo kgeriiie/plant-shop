@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,16 +24,15 @@ import com.vml.tutorial.plantshop.ui.theme.Typography
 
 @Composable
 fun FavouritesScreen(state: FavoritesScreenState, onEvent: (FavoritesScreenEvent) -> Unit) {
-    val favoritePlants by remember { mutableStateOf(state.favoritePlants) }
-
-    Scaffold {
-        Column(modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)) {
-            Text(UiText.StringRes(MR.strings.favorites).asString(), style = Typography.headlineMedium)
-            Spacer(modifier = Modifier.size(16.dp))
-            LazyVerticalGrid(columns = GridCells.Fixed(FavoritesScreenConstants.GRID_COLUMN_COUNT)) {
-                itemListGrid(favoritePlants, modifier = Modifier.padding(8.dp)) { plantListEvent ->
-                    onEvent(getFavoritesScreenEventFrom(plantListEvent))
-                }
+    Column(modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)) {
+        Text(UiText.StringRes(MR.strings.favorites).asString(), style = Typography.headlineMedium)
+        Spacer(modifier = Modifier.size(16.dp))
+        LazyVerticalGrid(columns = GridCells.Fixed(FavoritesScreenConstants.GRID_COLUMN_COUNT)) {
+            itemListGrid(
+                state.favoritePlants,
+                modifier = Modifier.padding(8.dp)
+            ) { plantListEvent ->
+                onEvent(getFavoritesScreenEventFrom(plantListEvent))
             }
         }
     }

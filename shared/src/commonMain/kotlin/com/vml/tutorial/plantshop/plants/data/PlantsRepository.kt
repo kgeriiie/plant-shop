@@ -1,5 +1,6 @@
 package com.vml.tutorial.plantshop.plants.data
 
+import com.vml.tutorial.plantshop.core.utils.Logger
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
 import kotlinx.coroutines.CoroutineScope
@@ -18,6 +19,7 @@ class PlantsRepositoryImpl(
     private val localDataSource: PlantsDataSource
 ) : PlantsRepository {
     override fun getPlants(): List<Plant> {
+        Logger.d("test--","getPlants called")
         return localDataSource.getPlants()
     }
 

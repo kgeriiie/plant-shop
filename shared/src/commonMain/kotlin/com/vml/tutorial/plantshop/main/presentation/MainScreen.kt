@@ -21,6 +21,7 @@ import androidx.compose.material.icons.rounded.ShoppingBasket
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,61 +46,63 @@ fun MainScreen(
     val childStack by component.childStack.subscribeAsState()
     val state by component.state.collectAsState()
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        // TODO: add animation
-        Children(
-            stack = childStack
-        ) { child ->
-            when(val instance = child.instance) {
-                is MainComponent.MainChild.BasketScreen -> BasketScreen()
-                is MainComponent.MainChild.FavouritesScreen -> {
-                    val favoriteState by instance.component.state.collectAsState()
-                    FavouritesScreen(favoriteState) { event ->
-                        instance.component.onEvent(event)
+    Scaffold {
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // TODO: add animation
+            Children(
+                stack = childStack
+            ) { child ->
+                when(val instance = child.instance) {
+                    is MainComponent.MainChild.BasketScreen -> BasketScreen()
+                    is MainComponent.MainChild.FavouritesScreen -> {
+                        val favoriteState by instance.component.state.collectAsState()
+                        FavouritesScreen(favoriteState) { event ->
+                            instance.component.onEvent(event)
+                        }
                     }
-                }
-                is MainComponent.MainChild.HomeScreen -> {
-                    val homeState by instance.component.state.collectAsState()
-                    HomeScreen(homeState) { event ->
-                        instance.component.onEvent(event)
+                    is MainComponent.MainChild.HomeScreen -> {
+                        val homeState by instance.component.state.collectAsState()
+                        HomeScreen(homeState) { event ->
+                            instance.component.onEvent(event)
+                        }
                     }
-                }
-                is MainComponent.MainChild.PlantDetailScreen -> {
-                    val plantDetailState by instance.component.state.collectAsState()
-                    PlantDetailScreen(plantDetailState) { event ->
-                        instance.component.onEvent(event)
+                    is MainComponent.MainChild.PlantDetailScreen -> {
+                        val plantDetailState by instance.component.state.collectAsState()
+                        PlantDetailScreen(plantDetailState) { event ->
+                            instance.component.onEvent(event)
+                        }
                     }
                 }
             }
-        }
 
-        if (state.bottomNavigationVisible) {
-            MainNavigationBar(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-            ) {
-                MainNavigationItem(
-                    active = childStack.active.instance is MainComponent.MainChild.HomeScreen,
-                    defaultIcon = Icons.Outlined.Home,
-                    selectedIcon = Icons.Rounded.Home,
-                    onClick = { component.onEvent(MainScreenEvent.OnHomeTabClicked) }
-                )
+            if (state.bottomNavigationVisible) {
+                MainNavigationBar(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                ) {
+                    MainNavigationItem(
+                        active = childStack.active.instance is MainComponent.MainChild.HomeScreen,
+                        defaultIcon = Icons.Outlined.Home,
+                        selectedIcon = Icons.Rounded.Home,
+                        onClick = { component.onEvent(MainScreenEvent.OnHomeTabClicked) }
+                    )
 
-                MainNavigationItem(
-                    active = childStack.active.instance is MainComponent.MainChild.FavouritesScreen,
-                    defaultIcon = Icons.Outlined.FavoriteBorder,
-                    selectedIcon = Icons.Rounded.Favorite,
-                    onClick = { component.onEvent(MainScreenEvent.OnFavouriteTabClicked) }
-                )
+                    MainNavigationItem(
+                        active = childStack.active.instance is MainComponent.MainChild.FavouritesScreen,
+                        defaultIcon = Icons.Outlined.FavoriteBorder,
+                        selectedIcon = Icons.Rounded.Favorite,
+                        onClick = { component.onEvent(MainScreenEvent.OnFavouriteTabClicked) }
+                    )
 
-                MainNavigationItem(
-                    active = childStack.active.instance is MainComponent.MainChild.BasketScreen,
-                    defaultIcon = Icons.Outlined.ShoppingBasket,
-                    selectedIcon = Icons.Rounded.ShoppingBasket,
-                    onClick = { component.onEvent(MainScreenEvent.OnBasketTabClicked) }
-                )
+                    MainNavigationItem(
+                        active = childStack.active.instance is MainComponent.MainChild.BasketScreen,
+                        defaultIcon = Icons.Outlined.ShoppingBasket,
+                        selectedIcon = Icons.Rounded.ShoppingBasket,
+                        onClick = { component.onEvent(MainScreenEvent.OnBasketTabClicked) }
+                    )
+                }
             }
         }
     }
