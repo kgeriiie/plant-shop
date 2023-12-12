@@ -17,19 +17,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.DeviceThermostat
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Remove
-import androidx.compose.material.icons.rounded.Rule
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Straighten
-import androidx.compose.material.icons.rounded.WaterDamage
 import androidx.compose.material.icons.rounded.WaterDrop
 import androidx.compose.material.icons.rounded.WbSunny
 import androidx.compose.material3.Button
@@ -38,7 +34,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -66,33 +61,31 @@ fun PlantDetailScreen(
     state: PlantDetailState,
     onEvent: (PlantDetailEvent) -> Unit
 ) {
-    Scaffold {
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            // COVER IMAGE
-            PlantImage(
-                url = state.plant.image,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.6f)
-            )
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        // COVER IMAGE
+        PlantImage(
+            url = state.plant.image,
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.6f)
+        )
 
-            // TOOLBAR
-            PlantDetailToolbar(
-                isFavourite = state.isFavourite,
-                onEvent = onEvent
-            )
+        // TOOLBAR
+        PlantDetailToolbar(
+            isFavourite = state.isFavourite,
+            onEvent = onEvent
+        )
 
-            PlantDetails(
-                plant = state.plant,
-                quantity = state.quantity,
-                onEvent = onEvent,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-            )
-        }
+        PlantDetails(
+            plant = state.plant,
+            quantity = state.quantity,
+            onEvent = onEvent,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+        )
     }
 }
 

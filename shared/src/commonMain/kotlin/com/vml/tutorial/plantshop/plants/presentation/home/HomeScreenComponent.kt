@@ -7,6 +7,7 @@ import com.vml.tutorial.plantshop.plants.presentation.PlantType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.updateAndGet
 
 class HomeScreenComponent(
     componentContext: ComponentContext,
@@ -17,13 +18,16 @@ class HomeScreenComponent(
     private val _state = MutableStateFlow(HomeScreenState(plantsRepository.getPlants()))
     val state: StateFlow<HomeScreenState> = _state.asStateFlow()
 
-
     fun onEvent(event: HomeScreenEvent) {
         when (event) {
             is HomeScreenEvent.OnItemClicked -> onNavigateToDetail(event.item)
-            is HomeScreenEvent.OnFavoriteButtonClicked -> plantsRepository.toggleFavoriteStatus(
-                event.item
-            )
+            is HomeScreenEvent.OnFavoriteButtonClicked -> {
+                _state.updateAndGet { it.copy(plants = it.plants.map { plant ->
+                    plant.takeUnless { plant.id == event.item.id }?: plant.copy(isFavorite = !plant.isFavorite) })
+                }
+
+                plantsRepository.toggleFavoriteStatus(event.item)
+            }
 
             HomeScreenEvent.OnOfferClicked -> Unit //TODO()
             HomeScreenEvent.OnProfileClicked -> Unit //TODO()
