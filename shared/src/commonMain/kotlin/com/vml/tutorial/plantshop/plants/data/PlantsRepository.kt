@@ -1,11 +1,14 @@
 package com.vml.tutorial.plantshop.plants.data
 
+import com.vml.tutorial.plantshop.core.data.toPlant
 import com.vml.tutorial.plantshop.core.utils.Logger
 import com.vml.tutorial.plantshop.plants.domain.DbDataSource
-import com.vml.tutorial.plantshop.plants.domain.FavoritesDataSource
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.supervisorScope
 
 interface PlantsRepository {
     fun getPlants(): List<Plant>
@@ -15,8 +18,7 @@ interface PlantsRepository {
 
 class PlantsRepositoryImpl(
     private val localDataSource: PlantsDataSource,
-    private val dbDataSource: DbDataSource,
-    private val favoritesDataSource: FavoritesDataSource
+    private val dbDataSource: DbDataSource
 ) : PlantsRepository {
     override fun getPlants(): List<Plant> {
         Logger.d("test--", "getPlants called")
@@ -24,7 +26,16 @@ class PlantsRepositoryImpl(
     }
 
     override fun getFavorites(): Flow<List<Plant>> {
-        return favoritesDataSource.getFavorites(dbDataSource.getIds(), getPlants())
+        val plants = getPlants()
+        return dbDataSource.getIds().map { plantEntities ->
+            supervisorScope {
+                plantEntities.map {
+                    async { it.toPlant(plants) }
+                }.map {
+                    it.await()
+                }
+            }
+        }
     }
 
     override suspend fun toggleFavoriteStatus(plantId: Int) {

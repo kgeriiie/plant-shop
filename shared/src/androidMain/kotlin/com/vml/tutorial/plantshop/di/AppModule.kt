@@ -5,7 +5,6 @@ import com.vml.tutorial.plantshop.PlantDatabase
 import com.vml.tutorial.plantshop.core.data.DatabaseDriverFactory
 import com.vml.tutorial.plantshop.core.data.FileReader
 import com.vml.tutorial.plantshop.plants.data.DbPlantsDataSource
-import com.vml.tutorial.plantshop.plants.data.FavoritePlantsDataSource
 import com.vml.tutorial.plantshop.plants.data.FilePlantsDataSource
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.data.PlantsRepositoryImpl
@@ -23,7 +22,7 @@ actual class AppModule(private val context: Context) {
                 db = PlantDatabase(
                     driver = DatabaseDriverFactory(context).create()
                 )
-            ), FavoritePlantsDataSource()
+            )
         )
     }
 }
