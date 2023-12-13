@@ -5,9 +5,14 @@ import com.vml.tutorial.plantshop.core.utils.Logger
 import com.vml.tutorial.plantshop.plants.domain.DbDataSource
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 
 interface PlantsRepository {
@@ -18,11 +23,23 @@ interface PlantsRepository {
 
 class PlantsRepositoryImpl(
     private val localDataSource: PlantsDataSource,
-    private val dbDataSource: DbDataSource
+    private val dbDataSource: DbDataSource,
+    private val coroutineScope: CoroutineScope
 ) : PlantsRepository {
     override fun getPlants(): List<Plant> {
         Logger.d("test--", "getPlants called")
-        return localDataSource.getPlants(dbDataSource.getIds())
+        return getPlantsWithFavoriteState(localDataSource.getPlants())
+    }
+
+    private fun getPlantsWithFavoriteState(plants: List<Plant>): List<Plant> {
+        coroutineScope.launch {
+            dbDataSource.getIds().collect { favoritePlantIds ->
+                plants.map { plant ->
+                    plant.isFavorite = favoritePlantIds.any { it == plant.id.toLong() }
+                }
+            }
+        }
+        return plants
     }
 
     override fun getFavorites(): Flow<List<Plant>> {
@@ -31,9 +48,7 @@ class PlantsRepositoryImpl(
             supervisorScope {
                 plantEntities.map {
                     async { it.toPlant(plants) }
-                }.map {
-                    it.await()
-                }
+                }.map { it.await() }
             }
         }
     }

@@ -3,6 +3,7 @@ package com.vml.tutorial.plantshop.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.lifecycle.lifecycleScope
 import com.arkivanov.decompose.retainedComponent
 import com.vml.tutorial.plantshop.App
 import com.vml.tutorial.plantshop.di.AppModule
@@ -14,7 +15,7 @@ class MainActivity : ComponentActivity() {
         val root = retainedComponent { context ->
             DefaultAppComponent(
                 componentContext = context,
-                appModule = AppModule(this)
+                appModule = AppModule(this, lifecycleScope)
             )
         }
 

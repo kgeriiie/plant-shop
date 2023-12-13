@@ -13,22 +13,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class FilePlantsDataSource(private val fileReader: FileReader) : PlantsDataSource {
-    override fun getPlants(favoriteIds: Flow<List<Long>>): List<Plant> {
+    override fun getPlants(): List<Plant> {
         val rawData: String = fileReader.loadFile(plants) ?: return emptyList()
-        return getPlantsWithFavoriteState(rawData.toPlants(), favoriteIds)
-    }
-
-    private fun getPlantsWithFavoriteState(
-        plants: List<Plant>,
-        favoriteIds: Flow<List<Long>>
-    ): List<Plant> {
-        CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
-            favoriteIds.collect { favoritePlantIds ->
-                plants.map { plant ->
-                    plant.isFavorite = favoritePlantIds.any { it == plant.id.toLong() }
-                }
-            }
-        }
-        return plants
+        return rawData.toPlants()
     }
 }
