@@ -3,5 +3,6 @@ package com.vml.tutorial.plantshop.plants.presentation.home
 import com.vml.tutorial.plantshop.plants.domain.Plant
 
 data class HomeScreenState(
-    val plants: List<Plant>
+    val plants: List<Plant> = emptyList(),
+    val favoritePlants: List<Plant> = emptyList()
 )

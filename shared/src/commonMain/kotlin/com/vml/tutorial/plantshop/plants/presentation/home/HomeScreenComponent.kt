@@ -6,9 +6,10 @@ import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.PlantType
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.updateAndGet
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class HomeScreenComponent(
@@ -16,17 +17,27 @@ class HomeScreenComponent(
     private val plantsRepository: PlantsRepository,
     private val onNavigateToDetail: (plant: Plant) -> Unit
 ) : ComponentContext by componentContext {
+    private val plantsFlow: MutableStateFlow<List<Plant>> =
+        MutableStateFlow(plantsRepository.getPlants())
 
-    private val _state = MutableStateFlow(HomeScreenState(plantsRepository.getPlants()))
-    val state: StateFlow<HomeScreenState> = _state.asStateFlow()
+    private val _state = MutableStateFlow(HomeScreenState())
+    val state: StateFlow<HomeScreenState> =
+        combine(_state, plantsFlow, plantsRepository.getFavorites()) { state, plants, favorites ->
+            state.copy(
+                plants = plants,
+                favoritePlants = favorites
+            )
+        }.stateIn(
+            componentContext.componentCoroutineScope(),
+            SharingStarted.WhileSubscribed(),
+            HomeScreenState()
+        )
+
 
     fun onEvent(event: HomeScreenEvent) {
         when (event) {
             is HomeScreenEvent.OnItemClicked -> onNavigateToDetail(event.item)
             is HomeScreenEvent.OnFavoriteButtonClicked -> {
-                _state.updateAndGet { it.copy(plants = it.plants.map { plant ->
-                    plant.takeUnless { plant.id == event.item.id }?: plant.copy(isFavorite = !plant.isFavorite) })
-                }
                 componentCoroutineScope().launch {
                     plantsRepository.toggleFavoriteStatus(event.item.id)
                 }

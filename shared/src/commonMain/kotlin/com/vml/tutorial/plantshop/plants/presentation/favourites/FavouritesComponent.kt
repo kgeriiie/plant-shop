@@ -4,9 +4,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.Plant
-import com.vml.tutorial.plantshop.plants.presentation.favourites.FavouritesComponentConstants.STOP_TIMEOUT_MILLIS
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -22,8 +19,8 @@ class FavouritesComponent(
     val state = combine(_state, plantsRepository.getFavorites()) { state, plants ->
         state.copy(favoritePlants = plants)
     }.stateIn(
-        CoroutineScope(Dispatchers.Main),
-        SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
+        componentContext.componentCoroutineScope(),
+        SharingStarted.WhileSubscribed(),
         FavoritesScreenState()
     )
 
@@ -38,8 +35,4 @@ class FavouritesComponent(
             is FavoritesScreenEvent.OnItemClicked -> onNavigateToDetail(event.item)
         }
     }
-}
-
-object FavouritesComponentConstants {
-    const val STOP_TIMEOUT_MILLIS = 5000L
 }
