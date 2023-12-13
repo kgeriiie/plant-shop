@@ -7,13 +7,18 @@ data class Plant(
     val id: Int,
     val name: String,
     val originalName: String,
-    val price: String,
+    val price: Double,
+    val currency: String,
     val image: String,
     val types: String,
     val description: String,
     val details: PlantDetails,
     var isFavorite: Boolean = false
-)
+) {
+    val priceText: String get() {
+        return "$currency $price"
+    }
+}
 
 @Serializable
 data class PlantDetails(

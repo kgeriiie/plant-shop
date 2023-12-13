@@ -22,9 +22,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,7 +38,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
-import com.vml.tutorial.plantshop.basket.presentation.BasketScreen
+import com.vml.tutorial.plantshop.basket.presentation.components.BasketScreen
+import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.plants.presentation.favourites.components.FavouritesScreen
 import com.vml.tutorial.plantshop.plants.presentation.detail.components.PlantDetailScreen
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
@@ -43,10 +48,24 @@ import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
 fun MainScreen(
     component: MainComponent
 ) {
+    val snackBarHostState: SnackbarHostState = remember{ SnackbarHostState() }
     val childStack by component.childStack.subscribeAsState()
     val state by component.state.collectAsState()
+    val actions: DefaultMainComponent.Actions? by component.actions.collectAsState(null)
 
-    Scaffold {
+    when(actions) {
+        is DefaultMainComponent.Actions.ShowMessageAction -> {
+            val message = (actions as DefaultMainComponent.Actions.ShowMessageAction).message.asString()
+            LaunchedEffect(message) {
+                snackBarHostState.showSnackbar(message = message)
+            }
+        }
+        else -> Unit
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackBarHostState) }
+    ) {
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -55,7 +74,12 @@ fun MainScreen(
                 stack = childStack
             ) { child ->
                 when(val instance = child.instance) {
-                    is MainComponent.MainChild.BasketScreen -> BasketScreen()
+                    is MainComponent.MainChild.BasketScreen -> {
+                        val basketState by instance.component.state.collectAsState()
+                        BasketScreen(basketState) { event ->
+                            instance.component.onEvent(event)
+                        }
+                    }
                     is MainComponent.MainChild.FavouritesScreen -> {
                         val favoriteState by instance.component.state.collectAsState()
                         FavouritesScreen(favoriteState) { event ->

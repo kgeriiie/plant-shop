@@ -1,16 +1,14 @@
 package com.vml.tutorial.plantshop.plants.presentation.detail
 
 import com.arkivanov.decompose.ComponentContext
+import com.vml.tutorial.plantshop.basket.data.BasketRepository
 import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.Plant
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -19,7 +17,8 @@ class PlantDetailComponent(
     plant: Plant,
     componentContext: ComponentContext,
     private val plantsRepository: PlantsRepository,
-    private val onNavigateToBack: () -> Unit
+    private val basketRepository: BasketRepository,
+    private val onComponentEvent: (event: PlantDetailEvent) -> Unit,
 ) : ComponentContext by componentContext {
     private val _state = MutableStateFlow(PlantDetailState(plant))
     val state: StateFlow<PlantDetailState> =
@@ -31,7 +30,15 @@ class PlantDetailComponent(
 
     fun onEvent(event: PlantDetailEvent) {
         when (event) {
-            PlantDetailEvent.CheckoutPlant -> TODO()
+            PlantDetailEvent.CheckoutPlant -> {
+                componentCoroutineScope().launch {
+                    basketRepository.insertItem(state.value.plant.id, state.value.quantity)
+                    _state.update { it.copy(
+                        showAddToBasketDialog = true,
+                        quantity = 1
+                    )}
+                }
+            }
             PlantDetailEvent.OnFavouriteClick -> {
                 componentCoroutineScope().launch {
                     plantsRepository.toggleFavoriteStatus(state.value.plant.id)
@@ -45,7 +52,8 @@ class PlantDetailComponent(
             }
 
             PlantDetailEvent.OnShareClick -> TODO()
-            PlantDetailEvent.NavigateBack -> onNavigateToBack()
+            PlantDetailEvent.DismissDialog -> _state.update { it.copy(showAddToBasketDialog = false) }
+            else -> onComponentEvent.invoke(event)
         }
     }
 }
