@@ -1,6 +1,7 @@
 package com.vml.tutorial.plantshop.plants.presentation.home
 
 import com.arkivanov.decompose.ComponentContext
+import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.PlantType
@@ -8,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.updateAndGet
+import kotlinx.coroutines.launch
 
 class HomeScreenComponent(
     componentContext: ComponentContext,
@@ -25,8 +27,9 @@ class HomeScreenComponent(
                 _state.updateAndGet { it.copy(plants = it.plants.map { plant ->
                     plant.takeUnless { plant.id == event.item.id }?: plant.copy(isFavorite = !plant.isFavorite) })
                 }
-
-                plantsRepository.toggleFavoriteStatus(event.item.id)
+                componentCoroutineScope().launch {
+                    plantsRepository.toggleFavoriteStatus(event.item.id)
+                }
             }
 
             HomeScreenEvent.OnOfferClicked -> Unit //TODO()

@@ -1,6 +1,7 @@
 package com.vml.tutorial.plantshop.plants.presentation.favourites
 
 import com.arkivanov.decompose.ComponentContext
+import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.favourites.FavouritesComponentConstants.STOP_TIMEOUT_MILLIS
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class FavouritesComponent(
     componentContext: ComponentContext,
@@ -28,7 +30,9 @@ class FavouritesComponent(
     fun onEvent(event: FavoritesScreenEvent) {
         when (event) {
             is FavoritesScreenEvent.OnFavoriteButtonClicked -> {
-                plantsRepository.toggleFavoriteStatus(event.item.id)
+                componentCoroutineScope().launch {
+                    plantsRepository.toggleFavoriteStatus(event.item.id)
+                }
             }
 
             is FavoritesScreenEvent.OnItemClicked -> onNavigateToDetail(event.item)

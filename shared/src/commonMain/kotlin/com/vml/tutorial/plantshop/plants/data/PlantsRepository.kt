@@ -5,17 +5,12 @@ import com.vml.tutorial.plantshop.plants.domain.DbDataSource
 import com.vml.tutorial.plantshop.plants.domain.FavoritesDataSource
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 
 interface PlantsRepository {
     fun getPlants(): List<Plant>
     fun getFavorites(): Flow<List<Plant>>
-    fun toggleFavoriteStatus(plantId: Int)
+    suspend fun toggleFavoriteStatus(plantId: Int)
 }
 
 class PlantsRepositoryImpl(
@@ -24,7 +19,7 @@ class PlantsRepositoryImpl(
     private val favoritesDataSource: FavoritesDataSource
 ) : PlantsRepository {
     override fun getPlants(): List<Plant> {
-        Logger.d("test--","getPlants called")
+        Logger.d("test--", "getPlants called")
         return localDataSource.getPlants(dbDataSource.getIds())
     }
 
@@ -32,13 +27,11 @@ class PlantsRepositoryImpl(
         return favoritesDataSource.getFavorites(dbDataSource.getIds(), getPlants())
     }
 
-    override fun toggleFavoriteStatus(plantId: Int) {
-        CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
-            if (dbDataSource.isIdInDatabase(plantId)) {
-                dbDataSource.removeFromDatabase(plantId)
-            } else {
-                dbDataSource.insertToDatabase(plantId)
-            }
+    override suspend fun toggleFavoriteStatus(plantId: Int) {
+        if (dbDataSource.isIdInDatabase(plantId)) {
+            dbDataSource.removeFromDatabase(plantId)
+        } else {
+            dbDataSource.insertToDatabase(plantId)
         }
     }
 }
