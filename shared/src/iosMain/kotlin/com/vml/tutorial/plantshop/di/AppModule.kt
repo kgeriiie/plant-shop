@@ -10,17 +10,18 @@ import com.vml.tutorial.plantshop.plants.data.PlantsRepositoryImpl
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
 import kotlinx.coroutines.CoroutineScope
 
-actual class AppModule (private val lifecycleScope: CoroutineScope) {
+actual class AppModule {
     actual val plantsDataSource: PlantsDataSource by lazy {
         FilePlantsDataSource(FileReader())
     }
-    actual val plantsRepository: PlantsRepository by lazy {
-        PlantsRepositoryImpl(
-            plantsDataSource, DbPlantsDataSource(
-                db = PlantDatabase(
-                    driver = DatabaseDriverFactory().create()
-                )
-            ), lifecycleScope
+    actual val dbPlantsDataSource: DbPlantsDataSource by lazy {
+        DbPlantsDataSource(
+            db = PlantDatabase(
+                driver = DatabaseDriverFactory().create()
+            )
         )
+    }
+    actual val plantsRepository: PlantsRepository by lazy {
+        PlantsRepositoryImpl(plantsDataSource, dbPlantsDataSource)
     }
 }

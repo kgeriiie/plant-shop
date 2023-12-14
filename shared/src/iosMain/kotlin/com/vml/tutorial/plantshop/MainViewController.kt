@@ -11,14 +11,10 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.SupervisorJob
 
 fun MainViewController() = ComposeUIViewController {
-    val coroutineScope: CoroutineScope = remember {
-        CoroutineScope(Dispatchers.IO + SupervisorJob())
-    }
-
     val root = remember {
         DefaultAppComponent(
             DefaultComponentContext(LifecycleRegistry()),
-            AppModule(coroutineScope)
+            AppModule()
         )
     }
 

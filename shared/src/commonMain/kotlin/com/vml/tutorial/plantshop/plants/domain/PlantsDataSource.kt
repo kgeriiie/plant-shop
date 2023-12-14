@@ -1,5 +1,7 @@
 package com.vml.tutorial.plantshop.plants.domain
 
+import kotlinx.coroutines.flow.Flow
+
 interface PlantsDataSource {
-    fun getPlants(): List<Plant>
+    fun getPlants(): Flow<List<Plant>>
 }

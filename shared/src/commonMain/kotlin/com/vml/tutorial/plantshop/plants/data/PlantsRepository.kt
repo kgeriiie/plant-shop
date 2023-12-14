@@ -1,46 +1,37 @@
 package com.vml.tutorial.plantshop.plants.data
 
-import com.vml.tutorial.plantshop.core.utils.Logger
 import com.vml.tutorial.plantshop.plants.domain.DbDataSource
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.combine
 
 interface PlantsRepository {
-    fun getPlants(): List<Plant>
-    fun getFavorites(): Flow<List<Plant>>
+    suspend fun getPlants(): Flow<List<Plant>>
+    suspend fun getFavorites(): Flow<List<Plant>>
     suspend fun toggleFavoriteStatus(plantId: Int)
 }
 
 class PlantsRepositoryImpl(
     private val localDataSource: PlantsDataSource,
-    private val dbDataSource: DbDataSource,
-    private val coroutineScope: CoroutineScope
+    private val dbDataSource: DbDataSource
 ) : PlantsRepository {
-    override fun getPlants(): List<Plant> {
-        Logger.d("test--", "getPlants called")
+    override suspend fun getPlants(): Flow<List<Plant>> {
         return getPlantsWithFavoriteState(localDataSource.getPlants())
     }
 
-    private fun getPlantsWithFavoriteState(plants: List<Plant>): List<Plant> {
-        coroutineScope.launch {
-            dbDataSource.getIds().collect { favoritePlantIds ->
-                plants.map { plant ->
-                    plant.isFavorite = favoritePlantIds.any { it == plant.id.toLong() }
-                }
+    private fun getPlantsWithFavoriteState(plants: Flow<List<Plant>>): Flow<List<Plant>> {
+        return combine(plants, dbDataSource.getIds()) { plantList, favoriteIdsList ->
+            plantList.map { plant ->
+                plant.copy(isFavorite = favoriteIdsList.contains(plant.id.toLong()))
             }
         }
-        return plants
     }
 
-    override fun getFavorites(): Flow<List<Plant>> {
-        val plants = getPlants()
-        return dbDataSource.getIds().map { ids ->
-            ids.mapNotNull { id ->
-                plants.firstOrNull { it.id.toLong() == id }
+    override suspend fun getFavorites(): Flow<List<Plant>> {
+        return combine(getPlants(), dbDataSource.getIds()) { plantList, favoriteIds ->
+            plantList.filter { plant ->
+                favoriteIds.contains(plant.id.toLong())
             }
         }
     }

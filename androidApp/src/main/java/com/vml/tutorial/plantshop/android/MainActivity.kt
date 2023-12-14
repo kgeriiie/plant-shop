@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         val root = retainedComponent { context ->
             DefaultAppComponent(
                 componentContext = context,
-                appModule = AppModule(this, lifecycleScope)
+                appModule = AppModule(this)
             )
         }
 
