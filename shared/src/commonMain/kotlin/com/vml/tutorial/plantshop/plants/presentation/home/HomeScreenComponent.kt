@@ -24,21 +24,22 @@ class HomeScreenComponent(
     private val plantsRepository: PlantsRepository,
     private val onNavigateToDetail: (plant: Plant) -> Unit
 ) : ComponentContext by componentContext {
-    private val plantsFlow: Flow<List<Plant>> =
-        flow { emitAll(plantsRepository.getPlants()) }
-
-    private var favoritePlants: Flow<List<Plant>> =
-        flow { emitAll(plantsRepository.getFavorites()) }
-
+    private val plantsFlow: MutableStateFlow<List<Plant>> = MutableStateFlow(listOf())
     private val _state = MutableStateFlow(HomeScreenState())
     val state: StateFlow<HomeScreenState> =
-        combine(_state, plantsFlow, favoritePlants) { state, plants, favorites ->
-            state.copy(plants = plants, favoritePlants = favorites)
+        combine(_state, plantsFlow, plantsRepository.getFavorites()) { state, plants, favorites ->
+            state.copy(
+                plants = plants.map { plant -> plant.copy(isFavorite = favorites.any { it.id == plant.id}) },
+            )
         }.stateIn(
             componentContext.componentCoroutineScope(),
             SharingStarted.WhileSubscribed(),
             HomeScreenState()
         )
+
+    init {
+        plantsFlow.tryEmit(plantsRepository.getPlants())
+    }
 
     fun onEvent(event: HomeScreenEvent) {
         when (event) {

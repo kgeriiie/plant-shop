@@ -21,12 +21,9 @@ class PlantDetailComponent(
     private val plantsRepository: PlantsRepository,
     private val onNavigateToBack: () -> Unit
 ) : ComponentContext by componentContext {
-    private var favoritePlants: Flow<List<Plant>> =
-        flow { emitAll(plantsRepository.getFavorites()) }
-
     private val _state = MutableStateFlow(PlantDetailState(plant))
     val state: StateFlow<PlantDetailState> =
-        _state.combine(favoritePlants) { state, favourites ->
+        _state.combine(plantsRepository.getFavorites()) { state, favourites ->
             state.copy(
                 isFavourite = favourites.any { it.id == state.plant.id }
             )
