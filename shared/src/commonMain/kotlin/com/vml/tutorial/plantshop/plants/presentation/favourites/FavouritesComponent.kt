@@ -18,11 +18,8 @@ class FavouritesComponent(
     private val plantsRepository: PlantsRepository,
     private val onNavigateToDetail: (plant: Plant) -> Unit
 ) : ComponentContext by componentContext {
-    private var favoritePlants: Flow<List<Plant>> =
-        flow { emitAll(plantsRepository.getFavorites()) }
-
     private val _state = MutableStateFlow(FavoritesScreenState())
-    val state = combine(_state, favoritePlants) { state, plants ->
+    val state = combine(_state, plantsRepository.getFavorites()) { state, plants ->
         state.copy(favoritePlants = plants)
     }.stateIn(
         componentContext.componentCoroutineScope(),
