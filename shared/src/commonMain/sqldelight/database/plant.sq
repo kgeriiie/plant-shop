@@ -1,0 +1,15 @@
+CREATE TABLE favoritePlant (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+);
+
+insertFavoritePlant:
+INSERT OR REPLACE INTO favoritePlant (id) VALUES (?);
+
+removeFavoritePlant:
+DELETE FROM favoritePlant WHERE id = :id;
+
+getFavoritePlantById:
+SELECT * FROM favoritePlant WHERE id = :id;
+
+getFavoritePlants:
+SELECT * FROM favoritePlant;

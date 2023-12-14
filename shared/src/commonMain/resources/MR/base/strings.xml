@@ -25,4 +25,7 @@
     <string name="for_today">For Today</string>
     <!--Item list-->
     <string name="favorite_icon_description">Favorite</string>
+    <!--Favorites Screen list-->
+    <string name="favorites">Favorites</string>
+    <string name="empty_list_message">Your favorite plant list is feeling a bit minimalist right now!</string>
 </resources>
