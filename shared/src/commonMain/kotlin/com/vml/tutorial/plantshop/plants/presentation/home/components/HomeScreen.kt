@@ -24,7 +24,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,7 +58,7 @@ import com.vml.tutorial.plantshop.MR.strings.search
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.plants.domain.Plant
-import com.vml.tutorial.plantshop.plants.presentation.PlantType
+import com.vml.tutorial.plantshop.plants.presentation.PlantCategory
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenEvent
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenState
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.DEFAULT_SEARCH_QUERY
@@ -78,19 +77,29 @@ fun HomeScreen(state: HomeScreenState, onEvent: (HomeScreenEvent) -> Unit) {
         ScreenTitle({ onEvent(HomeScreenEvent.OnProfileClicked) })
         SearchBar(modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
             onSearchClicked = { query -> onEvent(HomeScreenEvent.OnSearchClicked(query)) })
-        HomeScreenContent(plants = state.plants, onEvent = onEvent)
+        HomeScreenContent(
+            plants = state.plants,
+            chosenCategory = state.chosenCategory,
+            onEvent = onEvent
+        )
     }
 }
 
 @Composable
 private fun HomeScreenContent(
-    plants: List<Plant>, modifier: Modifier = Modifier, onEvent: (HomeScreenEvent) -> Unit
+    plants: List<Plant>,
+    chosenCategory: PlantCategory,
+    modifier: Modifier = Modifier,
+    onEvent: (HomeScreenEvent) -> Unit
 ) {
     LazyVerticalGrid(modifier = modifier, columns = GridCells.Fixed(GRID_COLUMN_COUNT)) {
         item(span = { GridItemSpan(SINGLE_GRID_COLUMN_SPAN) }) {
             Column {
                 Spacer(modifier = Modifier.size(8.dp))
-                CategorySelector(modifier = Modifier.padding(8.dp)) { plantType ->
+                CategorySelector(
+                    modifier = Modifier.padding(8.dp),
+                    chosenCategory = chosenCategory
+                ) { plantType ->
                     onEvent(HomeScreenEvent.OnCategoryClicked(plantType))
                 }
                 ProductOffer(modifier = Modifier.padding(8.dp)) {
@@ -154,17 +163,30 @@ private fun SearchBar(modifier: Modifier = Modifier, onSearchClicked: (String) -
 }
 
 @Composable
-private fun CategorySelector(modifier: Modifier = Modifier, onClick: (PlantType) -> Unit) {
+private fun CategorySelector(
+    modifier: Modifier = Modifier,
+    chosenCategory: PlantCategory,
+    onClick: (PlantCategory) -> Unit
+) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         CategoryItem(
-            ic_green_plant, UiText.StringRes(green_plants).asString(), Modifier.weight(1f)
-        ) { onClick(PlantType.GREEN) }
+            ic_green_plant,
+            UiText.StringRes(green_plants).asString(),
+            chosenCategory == PlantCategory.GREEN,
+            Modifier.weight(1f)
+        ) { onClick(PlantCategory.GREEN) }
         CategoryItem(
-            ic_flower, UiText.StringRes(flowers).asString(), Modifier.weight(1f)
-        ) { onClick(PlantType.FLOWER) }
+            ic_flower,
+            UiText.StringRes(flowers).asString(),
+            chosenCategory == PlantCategory.FLOWER,
+            Modifier.weight(1f)
+        ) { onClick(PlantCategory.FLOWER) }
         CategoryItem(
-            ic_indoor_plant, UiText.StringRes(indoor_plants).asString(), Modifier.weight(1f)
-        ) { onClick(PlantType.INDOOR) }
+            ic_indoor_plant,
+            UiText.StringRes(indoor_plants).asString(),
+            chosenCategory == PlantCategory.INDOOR,
+            Modifier.weight(1f)
+        ) { onClick(PlantCategory.INDOOR) }
     }
 }
 
@@ -172,13 +194,20 @@ private fun CategorySelector(modifier: Modifier = Modifier, onClick: (PlantType)
 private fun CategoryItem(
     iconResource: ImageResource,
     categoryText: String,
+    isChosen: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     val roundedCornerShape = remember { RoundedCornerShape(16.dp) }
+    val backgroundColor = if (isChosen) {
+        MaterialTheme.colorScheme.surfaceVariant
+    } else {
+        Color.White
+    }
+
     Box(modifier = modifier.shadow(elevation = 4.dp, shape = roundedCornerShape)
         .clip(roundedCornerShape)
-        .background(Color.White)
+        .background(backgroundColor)
         .clickable { onClick() }) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
