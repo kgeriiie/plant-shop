@@ -7,14 +7,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -51,6 +54,7 @@ import com.vml.tutorial.plantshop.MR.strings.for_today
 import com.vml.tutorial.plantshop.MR.strings.get
 import com.vml.tutorial.plantshop.MR.strings.green_plants
 import com.vml.tutorial.plantshop.MR.strings.indoor_plants
+import com.vml.tutorial.plantshop.MR.strings.no_search_result
 import com.vml.tutorial.plantshop.MR.strings.off
 import com.vml.tutorial.plantshop.MR.strings.offer_image_description
 import com.vml.tutorial.plantshop.MR.strings.profile_photo_description
@@ -61,6 +65,7 @@ import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.PlantCategory
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenEvent
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenState
+import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.DEFAULT_SEARCH_ACTIVE_STATE
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.DEFAULT_SEARCH_QUERY
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.GRID_COLUMN_COUNT
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.OFFER_PERCENTAGE
@@ -75,8 +80,11 @@ import dev.icerock.moko.resources.compose.painterResource
 fun HomeScreen(state: HomeScreenState, onEvent: (HomeScreenEvent) -> Unit) {
     Column(modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)) {
         ScreenTitle({ onEvent(HomeScreenEvent.OnProfileClicked) })
-        SearchBar(modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
-            onSearchClicked = { query -> onEvent(HomeScreenEvent.OnSearchClicked(query)) })
+        SearchBar(
+            state.searchResults,
+            onSearchEvent = onEvent,
+            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+        )
         HomeScreenContent(
             plants = state.plants,
             chosenCategory = state.chosenCategory,
@@ -144,22 +152,53 @@ private fun ScreenTitle(onProfileClicked: () -> Unit, modifier: Modifier = Modif
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SearchBar(modifier: Modifier = Modifier, onSearchClicked: (String) -> Unit) {
+private fun SearchBar(
+    searchResults: List<Plant>,
+    modifier: Modifier = Modifier,
+    onSearchEvent: (HomeScreenEvent) -> Unit
+) {
     var query by remember { mutableStateOf(DEFAULT_SEARCH_QUERY) }
-    var active by remember { mutableStateOf(false) }
+    var isActive by remember { mutableStateOf(DEFAULT_SEARCH_ACTIVE_STATE) }
 
     SearchBar(modifier = modifier.fillMaxWidth(), query = query, onQueryChange = {
         query = it
+        onSearchEvent(HomeScreenEvent.OnSearchQueryChanged(it))
     }, onSearch = {
-        active = false
-        onSearchClicked(it)
-    }, active = active, onActiveChange = {
-        active = it
+        isActive = false
+    }, active = query.isNotBlank() && isActive, onActiveChange = {
+        if (!it) {
+            query = DEFAULT_SEARCH_QUERY
+        }
+        isActive = it
     }, placeholder = {
         Text(text = UiText.StringRes(search).asString())
     }, trailingIcon = {
         Icon(imageVector = Icons.Default.Search, contentDescription = null)
-    }) { }
+    }) {
+        SearchResult(searchResults = searchResults, onSearchEvent = onSearchEvent)
+    }
+}
+
+@Composable
+private fun SearchResult(
+    searchResults: List<Plant>,
+    modifier: Modifier = Modifier,
+    onSearchEvent: (HomeScreenEvent) -> Unit
+) {
+    if (searchResults.isNotEmpty()) {
+        LazyColumn(modifier = modifier, contentPadding = PaddingValues(horizontal = 8.dp)) {
+            items(searchResults) { plant ->
+                Text(text = plant.name, modifier = Modifier.padding(8.dp).fillMaxWidth().clickable {
+                    onSearchEvent(HomeScreenEvent.OnResultItemClicked(plant))
+                })
+            }
+        }
+    } else {
+        Text(
+            text = UiText.StringRes(no_search_result).asString(),
+            modifier = Modifier.padding(8.dp)
+        )
+    }
 }
 
 @Composable
@@ -259,5 +298,6 @@ object HomeScreenConstants {
     const val GRID_COLUMN_COUNT = 2
     const val SINGLE_GRID_COLUMN_SPAN = GRID_COLUMN_COUNT
     const val DEFAULT_SEARCH_QUERY = ""
+    const val DEFAULT_SEARCH_ACTIVE_STATE = false
     const val OFFER_PERCENTAGE = 20
 }
