@@ -18,6 +18,7 @@ class HomeScreenComponent(
     private val plantsRepository: PlantsRepository,
     private val onNavigateToDetail: (plant: Plant) -> Unit
 ) : ComponentContext by componentContext {
+    private val allPlants by lazy { plantsRepository.getPlants(PlantCategory.NONE) }
     private val plantsFlow: MutableStateFlow<List<Plant>> = MutableStateFlow(listOf())
     private val _state = MutableStateFlow(HomeScreenState())
     val state: StateFlow<HomeScreenState> =
@@ -33,7 +34,7 @@ class HomeScreenComponent(
 
     init {
         plantsFlow.tryEmit(plantsRepository.getPlants(PlantCategory.GREEN))
-        _state.update { it.copy( chosenCategory = PlantCategory.GREEN ) }
+        _state.update { it.copy(chosenCategory = PlantCategory.GREEN) }
     }
 
     fun onEvent(event: HomeScreenEvent) {
@@ -47,11 +48,31 @@ class HomeScreenComponent(
 
             HomeScreenEvent.OnOfferClicked -> Unit //TODO()
             HomeScreenEvent.OnProfileClicked -> Unit //TODO()
-            is HomeScreenEvent.OnSearchClicked -> Unit //TODO()
+            is HomeScreenEvent.OnSearchQueryChanged -> {
+                if (event.query.isNotBlank()) {
+                    _state.update {
+                        it.copy(searchResults = filterPlantsByName(event.query))
+                    }
+                }
+            }
+
             is HomeScreenEvent.OnCategoryClicked -> {
                 plantsFlow.update { plantsRepository.getPlants(event.plantCategory) }
-                _state.update { it.copy( chosenCategory = event.plantCategory ) }
+                _state.update { it.copy(chosenCategory = event.plantCategory) }
             }
+
+            is HomeScreenEvent.OnResultItemClicked -> {
+                onNavigateToDetail(event.item)
+                _state.update {
+                    it.copy(searchResults = emptyList())
+                }
+            }
+        }
+    }
+
+    private fun filterPlantsByName(query: String): List<Plant> {
+        return allPlants.filter { plant ->
+            plant.name.contains(query, ignoreCase = true)
         }
     }
 }

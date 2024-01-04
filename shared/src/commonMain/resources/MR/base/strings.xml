@@ -27,6 +27,7 @@
     <string name="discount_percentage">%d%%&#160;</string>
     <string name="off">Off</string>
     <string name="for_today">For Today</string>
+    <string name="no_search_result">Your search didn\'t bloom into results, but don\'t worry, the garden of possibilities is still vast!</string>
     <!--Item list-->
     <string name="favorite_icon_description">Favorite</string>
     <!--Favorites Screen list-->
