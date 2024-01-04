@@ -10,7 +10,11 @@
     <!--Plant extra info-->
     <string name="plant_info_drained_text">Drained</string>
     <string name="plant_info_full_sun_text">Full Sun</string>
-    <string name="checkout_with_price">Checkout %s</string>
+    <string name="checkout_with_price">Add to Basket %s</string>
+    <string name="plant_added_dialog_title">Plant Added</string>
+    <string name="plant_added_dialog_message">You have added %s to your shopping cart. Would you like to open your basket or discover our other great plants?</string>
+    <string name="plant_added_dialog_basket_text">Go to basket</string>
+    <string name="plant_added_dialog_discover_text">Discover</string>
     <!--Home screen-->
     <string name="profile_photo_description">Profile photo</string>
     <string name="discover">Discover</string>
@@ -28,4 +32,16 @@
     <!--Favorites Screen list-->
     <string name="favorites">Favorites</string>
     <string name="empty_list_message">Your favorite plant list is feeling a bit minimalist right now!</string>
+
+    <!--Basket Screen-->
+    <string name="basket_screen_title">My Cart</string>
+    <string name="basket_summary_items_title">Items</string>
+    <string name="basket_summary_discount_title">Discounts</string>
+    <string name="basket_summary_total_price_title">Total Price:</string>
+    <string name="basket_summary_checkout_button">Proceed To Checkout</string>
+    <string name="basket_empty_title">I\'m so light, I\'m floating</string>
+    <string name="basket_empty_message">It seems you forgot to add any of our amazing plants to my cart! Hurry up I will fly away if you leave me empty!</string>
+    <string name="basket_empty_Button">Explore</string>
+    <string name="basket_checkout_message">Thanks so much for your order! I hope you enjoy your new purchase!</string>
+
 </resources>

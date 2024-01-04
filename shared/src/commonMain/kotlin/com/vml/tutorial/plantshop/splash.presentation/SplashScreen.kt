@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.vml.tutorial.plantshop.MR
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString

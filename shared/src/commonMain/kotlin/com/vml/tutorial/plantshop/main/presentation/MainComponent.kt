@@ -9,20 +9,26 @@ import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import com.vml.tutorial.plantshop.basket.presentation.BasketComponent
+import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.di.AppModule
 import com.vml.tutorial.plantshop.plants.presentation.favourites.FavouritesComponent
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailComponent
+import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailEvent
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenComponent
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.serialization.Serializable
 
 interface MainComponent {
     val childStack: Value<ChildStack<*, MainChild>>
     var state: StateFlow<MainScreenState>
+    val actions: Flow<DefaultMainComponent.Actions>
 
     fun onEvent(event: MainScreenEvent)
     sealed class MainChild{
@@ -50,6 +56,9 @@ class DefaultMainComponent(
     private val _state: MutableStateFlow<MainScreenState> = MutableStateFlow(MainScreenState())
     override var state: StateFlow<MainScreenState> = _state.asStateFlow()
 
+    private val _actions = Channel<Actions>(Channel.UNLIMITED)
+    override val actions = _actions.receiveAsFlow()
+
     override fun onEvent(event: MainScreenEvent) {
         when(event) {
             MainScreenEvent.OnBasketTabClicked -> navigateTab(MainConfiguration.BasketScreen)
@@ -69,7 +78,15 @@ class DefaultMainComponent(
         context: ComponentContext
     ): MainComponent.MainChild {
         return when (config) {
-            MainConfiguration.BasketScreen -> MainComponent.MainChild.BasketScreen(BasketComponent(componentContext = context))
+            MainConfiguration.BasketScreen -> MainComponent.MainChild.BasketScreen(
+                BasketComponent(
+                    componentContext = context,
+                    plantsRepository = appModule.plantsRepository,
+                    basketRepository = appModule.basketRepository,
+                    onNavigateToHome = { onEvent(MainScreenEvent.OnHomeTabClicked) },
+                    onShowMessage = ::showMessage
+                )
+            )
             MainConfiguration.FavouritesScreen -> MainComponent.MainChild.FavouritesScreen(
                 FavouritesComponent(
                     componentContext = context,
@@ -92,12 +109,26 @@ class DefaultMainComponent(
                     plant = config.plant,
                     componentContext =  context,
                     plantsRepository = appModule.plantsRepository,
-                    onNavigateToBack = {
-                        _state.update { it.copy(bottomNavigationVisible = true) }
-                        navigation.pop()
-                    }
+                    basketRepository = appModule.basketRepository,
+                    onComponentEvent = { event ->
+                        when(event) {
+                            PlantDetailEvent.NavigateBack -> {
+                                _state.update { it.copy(bottomNavigationVisible = true) }
+                                navigation.pop()
+                            }
+                            PlantDetailEvent.NavigateToBasket -> {
+                                navigation.pop()
+                                onEvent(MainScreenEvent.OnBasketTabClicked)
+                            }
+                            else -> Unit
+                        }
+                    },
             ))
         }
+    }
+
+    private fun showMessage(message: UiText) {
+        _actions.trySend(Actions.ShowMessageAction(message))
     }
 
     @Serializable
@@ -115,4 +146,8 @@ class DefaultMainComponent(
     data class MainUiState(
         val bottomNavigationVisible: Boolean = true
     )
+
+    sealed interface Actions {
+        data class ShowMessageAction(val message: UiText): Actions
+    }
 }

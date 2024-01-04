@@ -1,0 +1,29 @@
+CREATE TABLE basketEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    plantId INTEGER NOT NULL,
+    quantity INTEGER NOT NULL
+);
+
+getBasketItems:
+SELECT *
+FROM basketEntity;
+
+insertBasketItem:
+INSERT OR REPLACE
+INTO basketEntity(
+    id,
+    plantId,
+    quantity
+) VALUES (?, ?, ?);
+
+updateQuantity:
+UPDATE basketEntity
+SET quantity = :quantity
+WHERE plantId = :plantId;
+
+deleteBasketItem:
+DELETE FROM basketEntity
+WHERE plantId = :plantId;
+
+deleteBasketItems:
+DELETE FROM basketEntity;

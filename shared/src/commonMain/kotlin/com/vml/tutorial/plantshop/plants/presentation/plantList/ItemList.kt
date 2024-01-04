@@ -88,7 +88,7 @@ fun PlantListItem(
         }
         ItemInfo(
             name = item.name,
-            price = item.price,
+            price = item.priceText,
             modifier = Modifier.padding(8.dp)
         )
     }
