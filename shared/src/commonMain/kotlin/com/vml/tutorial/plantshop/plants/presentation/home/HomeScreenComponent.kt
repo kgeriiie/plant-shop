@@ -4,19 +4,13 @@ import com.arkivanov.decompose.ComponentContext
 import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.Plant
-import com.vml.tutorial.plantshop.plants.presentation.PlantType
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.Flow
+import com.vml.tutorial.plantshop.plants.presentation.PlantCategory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeScreenComponent(
@@ -24,12 +18,13 @@ class HomeScreenComponent(
     private val plantsRepository: PlantsRepository,
     private val onNavigateToDetail: (plant: Plant) -> Unit
 ) : ComponentContext by componentContext {
+    private val allPlants by lazy { plantsRepository.getPlants(PlantCategory.NONE) }
     private val plantsFlow: MutableStateFlow<List<Plant>> = MutableStateFlow(listOf())
     private val _state = MutableStateFlow(HomeScreenState())
     val state: StateFlow<HomeScreenState> =
         combine(_state, plantsFlow, plantsRepository.getFavorites()) { state, plants, favorites ->
             state.copy(
-                plants = plants.map { plant -> plant.copy(isFavorite = favorites.any { it.id == plant.id}) },
+                plants = plants.map { plant -> plant.copy(isFavorite = favorites.any { it.id == plant.id}) }
             )
         }.stateIn(
             componentContext.componentCoroutineScope(),
@@ -38,7 +33,8 @@ class HomeScreenComponent(
         )
 
     init {
-        plantsFlow.tryEmit(plantsRepository.getPlants())
+        plantsFlow.tryEmit(plantsRepository.getPlants(PlantCategory.GREEN))
+        _state.update { it.copy(chosenCategory = PlantCategory.GREEN) }
     }
 
     fun onEvent(event: HomeScreenEvent) {
@@ -52,18 +48,31 @@ class HomeScreenComponent(
 
             HomeScreenEvent.OnOfferClicked -> Unit //TODO()
             HomeScreenEvent.OnProfileClicked -> Unit //TODO()
-            is HomeScreenEvent.OnSearchClicked -> Unit //TODO()
+            is HomeScreenEvent.OnSearchQueryChanged -> {
+                if (event.query.isNotBlank()) {
+                    _state.update {
+                        it.copy(searchResults = filterPlantsByName(event.query))
+                    }
+                }
+            }
+
             is HomeScreenEvent.OnCategoryClicked -> {
-                onCategoryClicked(event.plantType)
+                plantsFlow.update { plantsRepository.getPlants(event.plantCategory) }
+                _state.update { it.copy(chosenCategory = event.plantCategory) }
+            }
+
+            is HomeScreenEvent.OnResultItemClicked -> {
+                onNavigateToDetail(event.item)
+                _state.update {
+                    it.copy(searchResults = emptyList())
+                }
             }
         }
     }
 
-    private fun onCategoryClicked(plantType: PlantType) {
-        when (plantType) {
-            PlantType.GREEN -> Unit //TODO()
-            PlantType.FLOWER -> Unit //TODO()
-            PlantType.INDOOR -> Unit //TODO()
+    private fun filterPlantsByName(query: String): List<Plant> {
+        return allPlants.filter { plant ->
+            plant.name.contains(query, ignoreCase = true)
         }
     }
 }

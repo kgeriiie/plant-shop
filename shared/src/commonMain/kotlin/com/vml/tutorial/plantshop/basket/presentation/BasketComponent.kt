@@ -8,6 +8,7 @@ import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.Plant
+import com.vml.tutorial.plantshop.plants.presentation.PlantCategory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -36,7 +37,7 @@ class BasketComponent(
 
     init {
         componentCoroutineScope().launch {
-            plantsFlow.emit(plantsRepository.getPlants())
+            plantsFlow.emit(plantsRepository.getPlants(PlantCategory.NONE))
             basketRepository.getBasketItems()
         }
     }
