@@ -49,6 +49,7 @@ import com.vml.tutorial.plantshop.MR.strings.plant_added_dialog_message
 import com.vml.tutorial.plantshop.MR.strings.plant_added_dialog_title
 import com.vml.tutorial.plantshop.MR.strings.plant_info_drained_text
 import com.vml.tutorial.plantshop.MR.strings.plant_info_full_sun_text
+import com.vml.tutorial.plantshop.MR.strings.share_plant_content_text
 import com.vml.tutorial.plantshop.core.presentation.DefaultDialog
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
@@ -89,6 +90,7 @@ fun PlantDetailScreen(
 
         // TOOLBAR
         PlantDetailToolbar(
+            plantName = state.plant.name,
             isFavourite = state.isFavourite,
             onEvent = onEvent
         )
@@ -106,6 +108,7 @@ fun PlantDetailScreen(
 
 @Composable
 private fun PlantDetailToolbar(
+    plantName: String,
     isFavourite: Boolean,
     onEvent: (PlantDetailEvent) -> Unit,
     modifier: Modifier = Modifier
@@ -132,10 +135,11 @@ private fun PlantDetailToolbar(
         Spacer(modifier = Modifier.weight(1.0f))
 
         // SHARE
+        val shareContent = UiText.StringRes(share_plant_content_text, listOf(plantName)).asString()
         IconButton(
             modifier = Modifier.size(50.dp),
             onClick = {
-                onEvent(PlantDetailEvent.OnShareClick)
+                onEvent(PlantDetailEvent.OnShareClick(content = shareContent))
             }
         ) {
             Icon(

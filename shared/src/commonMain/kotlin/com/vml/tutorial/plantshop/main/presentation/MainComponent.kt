@@ -108,6 +108,7 @@ class DefaultMainComponent(
                 PlantDetailComponent(
                     plant = config.plant,
                     componentContext =  context,
+                    shareUtils = appModule.shareUtils,
                     plantsRepository = appModule.plantsRepository,
                     basketRepository = appModule.basketRepository,
                     onComponentEvent = { event ->

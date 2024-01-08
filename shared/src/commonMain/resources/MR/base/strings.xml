@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-    <string name="app_name">PlantShop</string>
+    <string name="app_name">Plant Shop</string>
     <string name="plant_image_description">Plant image</string>
     <string name="background_image">Background image</string>
+    <string name="share_plant_content_text">Hey, check out this super fantastic offer about %s in our Plant Shop App!</string>
     <!--Splash screen-->
     <string name="splash_title_text">Magical\nThings</string>
     <string name="splash_subtitle_text">Let\'s make the world green again.</string>

@@ -1,7 +1,7 @@
 package com.vml.tutorial.plantshop.plants.presentation.detail
 
 sealed interface PlantDetailEvent {
-    data object OnShareClick: PlantDetailEvent
+    data class OnShareClick(val content: String): PlantDetailEvent
     data object OnFavouriteClick: PlantDetailEvent
     data class OnQuantityChanged(val value: Int): PlantDetailEvent
     data object CheckoutPlant: PlantDetailEvent

@@ -1,7 +1,9 @@
 package com.vml.tutorial.plantshop.plants.domain
 
+import androidx.compose.runtime.Stable
 import kotlinx.serialization.Serializable
 
+@Stable
 @Serializable
 data class Plant(
     val id: Int,
@@ -20,6 +22,7 @@ data class Plant(
     }
 }
 
+@Stable
 @Serializable
 data class PlantDetails(
     val size: String,
