@@ -2,8 +2,6 @@ package com.vml.tutorial.plantshop.core.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import dev.icerock.moko.resources.desc.ResourceFormatted
-import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.format
 
 @Composable
