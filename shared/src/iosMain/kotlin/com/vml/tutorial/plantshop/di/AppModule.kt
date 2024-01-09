@@ -7,7 +7,7 @@ import com.vml.tutorial.plantshop.basket.data.DbBasketItemsDataSource
 import com.vml.tutorial.plantshop.core.data.DatabaseDriverFactory
 import com.vml.tutorial.plantshop.core.data.FileReader
 import com.vml.tutorial.plantshop.core.utils.ShareUtils
-import com.vml.tutorial.plantshop.plants.data.DbPlantsDataSource
+import com.vml.tutorial.plantshop.plants.data.DbFavoritesDataSource
 import com.vml.tutorial.plantshop.plants.data.FilePlantsDataSource
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.data.PlantsRepositoryImpl
@@ -24,13 +24,13 @@ actual class AppModule {
         FilePlantsDataSource(FileReader())
     }
 
-    actual val dbPlantsDataSource: DbPlantsDataSource
-        get() = DbPlantsDataSource(db)
+    actual val dbFavoritesDataSource: DbFavoritesDataSource
+        get() = DbFavoritesDataSource(db)
 
     actual val plantsRepository: PlantsRepository by lazy {
         PlantsRepositoryImpl(
             plantsDataSource,
-            dbPlantsDataSource
+            dbFavoritesDataSource
         )
     }
     actual val basketRepository: BasketRepository by lazy {

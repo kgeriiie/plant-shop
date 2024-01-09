@@ -1,6 +1,6 @@
 package com.vml.tutorial.plantshop.plants.data
 
-import com.vml.tutorial.plantshop.plants.domain.DbDataSource
+import com.vml.tutorial.plantshop.plants.domain.FavoritesDataSource
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
 import com.vml.tutorial.plantshop.plants.presentation.PlantCategory
@@ -15,7 +15,7 @@ interface PlantsRepository {
 
 class PlantsRepositoryImpl(
     private val localDataSource: PlantsDataSource,
-    private val dbDataSource: DbDataSource
+    private val favoritesDataSource: FavoritesDataSource
 ) : PlantsRepository {
     override fun getPlants(category: PlantCategory): List<Plant> {
         return localDataSource.getPlants().filter { plant ->
@@ -24,7 +24,7 @@ class PlantsRepositoryImpl(
     }
 
     override fun getFavorites(): Flow<List<Plant>> {
-        return dbDataSource.getIds().map { favouriteIds ->
+        return favoritesDataSource.getIds().map { favouriteIds ->
             favouriteIds.mapNotNull { id ->
                 getPlants(PlantCategory.NONE)
                     .firstOrNull { it.id.toLong() == id }
@@ -34,10 +34,10 @@ class PlantsRepositoryImpl(
     }
 
     override suspend fun toggleFavoriteStatus(plantId: Int) {
-        if (dbDataSource.isIdInDatabase(plantId)) {
-            dbDataSource.removeFromDatabase(plantId)
+        if (favoritesDataSource.isIdInDatabase(plantId)) {
+            favoritesDataSource.removeFromDatabase(plantId)
         } else {
-            dbDataSource.insertToDatabase(plantId)
+            favoritesDataSource.insertToDatabase(plantId)
         }
     }
 }

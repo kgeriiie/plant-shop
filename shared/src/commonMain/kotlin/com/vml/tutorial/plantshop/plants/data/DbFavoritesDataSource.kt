@@ -3,12 +3,12 @@ package com.vml.tutorial.plantshop.plants.data
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.vml.tutorial.plantshop.PlantDatabase
-import com.vml.tutorial.plantshop.plants.domain.DbDataSource
+import com.vml.tutorial.plantshop.plants.domain.FavoritesDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 
-class DbPlantsDataSource(db: PlantDatabase) : DbDataSource {
-    private val queries = db.plantQueries
+class DbFavoritesDataSource(db: PlantDatabase) : FavoritesDataSource {
+    private val queries = db.favoritesQueries
     override fun getIds(): Flow<List<Long>> {
         return queries.getFavoritePlants()
             .asFlow()
