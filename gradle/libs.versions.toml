@@ -1,5 +1,7 @@
 [versions]
 agp = "8.1.3"
+firebaseCommonKtx = "20.4.2"
+firebaseFirestore = "1.8.1"
 kotlin = "1.9.20"
 kotlin-json = "1.6.1"
 compose = "1.5.4"
@@ -19,11 +21,15 @@ ktor-version = "2.3.4"
 extensionsComposeJetbrains = "2.1.4-compose-experimental"
 decompose = "2.2.0-alpha03"
 kotlinxSerializationJson = "1.6.1"
+googleServices = "4.4.0"
 
 [libraries]
 decompose-jetbrains = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "extensionsComposeJetbrains" }
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 
+firebase-common = { module = "dev.gitlive:firebase-common", version.ref = "firebaseFirestore" }
+firebase-common-ktx = { module = "com.google.firebase:firebase-common-ktx", version.ref = "firebaseCommonKtx" }
+firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebaseFirestore" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlinx-date = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
@@ -55,16 +61,16 @@ moko-resources-compose = { group = "dev.icerock.moko", name = "resources-compose
 moko-resources-generator = { group = "dev.icerock.moko", name = "resources-generator", version.ref = "moko-resources" }
 
 #Asyn image loading
-kamel-image = {group = "media.kamel", name = "kamel-image", version.ref = "kamel-image-version"}
+kamel-image = { group = "media.kamel", name = "kamel-image", version.ref = "kamel-image-version" }
 
 # For network https://ktor.io/docs/client-logging.html#install_plugin
-ktor-bom = {group = "io.ktor", name = "ktor-bom", version.ref= "ktor-version"}
-ktor-client-core = {group = "io.ktor", name = "ktor-client-core", version.ref= "ktor-version"}
-ktor-android = {group = "io.ktor", name = "ktor-client-android", version.ref = "ktor-version" }
-ktor-ios = {group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor-version"}
+ktor-bom = { group = "io.ktor", name = "ktor-bom", version.ref = "ktor-version" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor-version" }
+ktor-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor-version" }
+ktor-ios = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor-version" }
 # To access content negotiation
-ktor-client-content-negotiation = {group = "io.ktor", name = "ktor-client-content-negotiation", version.ref= "ktor-version"}
-ktor-serialization-kotlinx-json = {group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref= "ktor-version"}
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor-version" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
 
 [bundles]
 ktor = ["ktor-client-core", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
@@ -79,3 +85,4 @@ jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin
 sqlDelight = { id = "app.cash.sqldelight", version.ref = "sql-delight" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 mokoResourcesMultiplatform = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resources" }
+googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" }

@@ -41,8 +41,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.vml.tutorial.plantshop.MR
 import com.vml.tutorial.plantshop.MR.images.ic_flower
 import com.vml.tutorial.plantshop.MR.images.ic_green_plant
 import com.vml.tutorial.plantshop.MR.images.ic_indoor_plant
@@ -95,7 +97,7 @@ fun HomeScreen(state: HomeScreenState, onEvent: (HomeScreenEvent) -> Unit) {
 
 @Composable
 private fun HomeScreenContent(
-    plants: List<Plant>,
+    plants: List<Plant>?,
     chosenCategory: PlantCategory,
     modifier: Modifier = Modifier,
     onEvent: (HomeScreenEvent) -> Unit
@@ -115,11 +117,29 @@ private fun HomeScreenContent(
                 }
             }
         }
-        itemListGrid(
-            plants,
-            modifier = Modifier.padding(8.dp)
-        ) { plantListEvent ->
-            onEvent(getHomeScreenEventFrom(plantListEvent))
+        when {
+            plants.isNullOrEmpty() -> {
+                item(span = { GridItemSpan(SINGLE_GRID_COLUMN_SPAN) }) {
+                    Text(
+                        text = if (plants == null) {
+                            UiText.StringRes(MR.strings.error)
+                        } else {
+                            UiText.StringRes(MR.strings.empty_plant_list)
+                        }.asString(),
+                        modifier = Modifier.padding(top = 64.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
+            else -> {
+                itemListGrid(
+                    plants,
+                    modifier = Modifier.padding(8.dp)
+                ) { plantListEvent ->
+                    onEvent(getHomeScreenEventFrom(plantListEvent))
+                }
+            }
         }
     }
 }

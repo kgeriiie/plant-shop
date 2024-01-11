@@ -37,7 +37,7 @@ class BasketComponent(
 
     init {
         componentCoroutineScope().launch {
-            plantsFlow.emit(plantsRepository.getPlants(PlantCategory.NONE))
+            plantsRepository.getPlants()?.let { plantsFlow.emit(it) }
             basketRepository.getBasketItems()
         }
     }
