@@ -8,8 +8,8 @@ import dev.gitlive.firebase.firestore.firestore
 class DbPlantsDataSource : PlantsDataSource {
     override suspend fun getPlants(): List<Plant>? {
         return try {
-            val userResponse = Firebase.firestore.collection("plants").get()
-            userResponse.documents.map { it.data() }
+            val response = Firebase.firestore.collection("plants").get()
+            response.documents.map { it.data() }
         } catch (err: Exception) {
             null
         }
