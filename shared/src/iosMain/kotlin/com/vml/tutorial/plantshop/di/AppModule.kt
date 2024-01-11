@@ -1,10 +1,20 @@
 package com.vml.tutorial.plantshop.di
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.vml.tutorial.plantshop.PlantDatabase
 import com.vml.tutorial.plantshop.basket.data.BasketRepository
 import com.vml.tutorial.plantshop.basket.data.BasketRepositoryImpl
 import com.vml.tutorial.plantshop.basket.data.DbBasketItemsDataSource
+import com.vml.tutorial.plantshop.core.data.AppDataStore
+import com.vml.tutorial.plantshop.core.data.AppDataStoreImpl
 import com.vml.tutorial.plantshop.core.data.DatabaseDriverFactory
+import com.vml.tutorial.plantshop.core.data.FileReader
+import com.vml.tutorial.plantshop.core.data.account.AuthRepository
+import com.vml.tutorial.plantshop.core.data.account.AuthRepositoryImpl
+import com.vml.tutorial.plantshop.core.data.account.FirebaseAuthDataSource
+import com.vml.tutorial.plantshop.core.data.account.FirebaseAuthDataSourceImpl
+import com.vml.tutorial.plantshop.core.utils.DataStoreUtil
 import com.vml.tutorial.plantshop.core.utils.ShareUtils
 import com.vml.tutorial.plantshop.plants.data.DbFavoritesDataSource
 import com.vml.tutorial.plantshop.plants.data.DbPlantsDataSource
@@ -12,11 +22,25 @@ import com.vml.tutorial.plantshop.plants.data.RemoteDbPlantsDataSource
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.data.PlantsRepositoryImpl
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.auth.auth
 
 actual class AppModule {
     private val db: PlantDatabase by lazy {
         PlantDatabase(
             driver = DatabaseDriverFactory().create()
+        )
+    }
+
+    private val firebaseAuthDataSource: FirebaseAuthDataSource by lazy {
+        FirebaseAuthDataSourceImpl(
+            Firebase.auth
+        )
+    }
+
+    actual val authRepository: AuthRepository by lazy {
+        AuthRepositoryImpl(
+            firebaseAuthDataSource
         )
     }
 
@@ -46,5 +70,8 @@ actual class AppModule {
     }
     actual val shareUtils: ShareUtils by lazy {
         ShareUtils()
+    }
+    actual val dataStore: AppDataStore by lazy {
+        AppDataStoreImpl(DataStoreUtil().dataStore())
     }
 }
