@@ -8,6 +8,7 @@ import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
 
 expect class AppModule {
     val dbPlantsDataSource: PlantsDataSource
+    val remoteDbPlantsDataSource: PlantsDataSource
     val plantsRepository: PlantsRepository
     val dbFavoritesDataSource: DbFavoritesDataSource
     val basketRepository: BasketRepository
