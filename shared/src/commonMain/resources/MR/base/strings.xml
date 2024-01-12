@@ -29,11 +29,13 @@
     <string name="off">Off</string>
     <string name="for_today">For Today</string>
     <string name="no_search_result">Your search didn\'t bloom into results, but don\'t worry, the garden of possibilities is still vast!</string>
+    <string name="empty_plant_list">Garden gossip: Our plants are plotting a comeback! Stay patient, the green revolution is on the horizon!</string>
+    <string name="error">Error: Garden gate jammed! Our plants are momentarily stuck behind a tech hiccup. We\'re untangling the vines for a swift comeback. Hold tight!</string>
     <!--Item list-->
     <string name="favorite_icon_description">Favorite</string>
     <!--Favorites Screen list-->
     <string name="favorites">Favorites</string>
-    <string name="empty_list_message">Your favorite plant list is feeling a bit minimalist right now!</string>
+    <string name="empty_favorites_list">Your favorite plant list is feeling a bit minimalist right now!</string>
 
     <!--Basket Screen-->
     <string name="basket_screen_title">My Cart</string>

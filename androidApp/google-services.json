@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "566505477038",
+    "project_id": "plant-shop-30cae",
+    "storage_bucket": "plant-shop-30cae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566505477038:android:a7bed0929329e2b92a6e3f",
+        "android_client_info": {
+          "package_name": "com.vml.tutorial.plantshop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXnjFHWhZuB9askHGMEIiy-vBGdEwaP7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

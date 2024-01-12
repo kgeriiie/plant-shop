@@ -28,7 +28,7 @@ fun FavouritesScreen(state: FavoritesScreenState, onEvent: (FavoritesScreenEvent
         Spacer(modifier = Modifier.size(16.dp))
         if (state.favoritePlants.isEmpty()) {
             Text(
-                text = UiText.StringRes(MR.strings.empty_list_message).asString(),
+                text = UiText.StringRes(MR.strings.empty_favorites_list).asString(),
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally).padding(top = 136.dp),
                 textAlign = TextAlign.Center

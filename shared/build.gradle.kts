@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.sqlDelight)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.mokoResourcesMultiplatform)
+    alias(libs.plugins.googleServices)
 }
 
 kotlin {
@@ -76,6 +77,9 @@ kotlin {
 
                 // For async image loading
                 implementation(libs.kamel.image)
+
+                implementation(libs.firebase.firestore)
+                implementation(libs.firebase.common)
             }
         }
 

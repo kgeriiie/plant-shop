@@ -18,13 +18,13 @@ class HomeScreenComponent(
     private val plantsRepository: PlantsRepository,
     private val onNavigateToDetail: (plant: Plant) -> Unit
 ) : ComponentContext by componentContext {
-    private val allPlants by lazy { plantsRepository.getPlants(PlantCategory.NONE) }
-    private val plantsFlow: MutableStateFlow<List<Plant>> = MutableStateFlow(listOf())
+    private var allPlants: List<Plant>? = null
+    private val plantsFlow: MutableStateFlow<List<Plant>?> = MutableStateFlow(listOf())
     private val _state = MutableStateFlow(HomeScreenState())
     val state: StateFlow<HomeScreenState> =
         combine(_state, plantsFlow, plantsRepository.getFavorites()) { state, plants, favorites ->
             state.copy(
-                plants = plants.map { plant -> plant.copy(isFavorite = favorites.any { it.id == plant.id}) }
+                plants = plants?.map { plant -> plant.copy(isFavorite = favorites.any { it.id == plant.id }) }
             )
         }.stateIn(
             componentContext.componentCoroutineScope(),
@@ -33,7 +33,10 @@ class HomeScreenComponent(
         )
 
     init {
-        plantsFlow.tryEmit(plantsRepository.getPlants(PlantCategory.GREEN))
+        componentCoroutineScope().launch {
+            allPlants = plantsRepository.getPlants()
+            plantsFlow.emit(filterPlants(plantCategory = PlantCategory.GREEN))
+        }
         _state.update { it.copy(chosenCategory = PlantCategory.GREEN) }
     }
 
@@ -51,13 +54,15 @@ class HomeScreenComponent(
             is HomeScreenEvent.OnSearchQueryChanged -> {
                 if (event.query.isNotBlank()) {
                     _state.update {
-                        it.copy(searchResults = filterPlantsByName(event.query))
+                        it.copy(
+                            searchResults = filterPlants(plantName = event.query) ?: emptyList()
+                        )
                     }
                 }
             }
 
             is HomeScreenEvent.OnCategoryClicked -> {
-                plantsFlow.update { plantsRepository.getPlants(event.plantCategory) }
+                plantsFlow.update { filterPlants(plantCategory = event.plantCategory) }
                 _state.update { it.copy(chosenCategory = event.plantCategory) }
             }
 
@@ -70,9 +75,15 @@ class HomeScreenComponent(
         }
     }
 
-    private fun filterPlantsByName(query: String): List<Plant> {
-        return allPlants.filter { plant ->
-            plant.name.contains(query, ignoreCase = true)
+    private fun filterPlants(
+        plantName: String? = null,
+        plantCategory: PlantCategory? = null
+    ): List<Plant>? {
+        return allPlants?.filter { plant ->
+            val nameMatches =
+                plantName.isNullOrBlank() || plant.name.contains(plantName, ignoreCase = true)
+            val categoryMatches = plantCategory == null || plant.types.contains(plantCategory.type)
+            nameMatches && categoryMatches
         }
     }
 }

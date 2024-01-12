@@ -1,13 +1,14 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.googleServices)
 }
 
 android {
     namespace = "com.vml.tutorial.plantshop.android"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.vml.tutorial.plantshop.android"
+        applicationId = "com.vml.tutorial.plantshop"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -46,4 +47,5 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.decompose)
     debugImplementation(libs.compose.ui.tooling)
+    implementation(libs.firebase.common.ktx)
 }

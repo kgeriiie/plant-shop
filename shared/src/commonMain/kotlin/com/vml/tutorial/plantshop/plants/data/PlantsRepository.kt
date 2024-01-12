@@ -1,43 +1,46 @@
 package com.vml.tutorial.plantshop.plants.data
 
-import com.vml.tutorial.plantshop.plants.domain.DbDataSource
+import com.vml.tutorial.plantshop.core.utils.Logger
+import com.vml.tutorial.plantshop.plants.domain.FavoritesDataSource
 import com.vml.tutorial.plantshop.plants.domain.Plant
+import com.vml.tutorial.plantshop.plants.domain.PlantDetails
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
-import com.vml.tutorial.plantshop.plants.presentation.PlantCategory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 interface PlantsRepository {
-    fun getPlants(category: PlantCategory): List<Plant>
+    suspend fun getPlants(): List<Plant>?
     fun getFavorites(): Flow<List<Plant>>
     suspend fun toggleFavoriteStatus(plantId: Int)
 }
 
 class PlantsRepositoryImpl(
-    private val localDataSource: PlantsDataSource,
-    private val dbDataSource: DbDataSource
+    private val dbPlantsDataSource: PlantsDataSource,
+    private val remoteDbPlantsDataSource: PlantsDataSource,
+    private val favoritesDataSource: FavoritesDataSource
 ) : PlantsRepository {
-    override fun getPlants(category: PlantCategory): List<Plant> {
-        return localDataSource.getPlants().filter { plant ->
-            plant.types.contains(category.type)
+    override suspend fun getPlants(): List<Plant>? {
+        if (dbPlantsDataSource.getPlantCount() == 0) {
+            remoteDbPlantsDataSource.getPlants()?.forEach { plant ->
+                dbPlantsDataSource.addToPlants(plant)
+            }
         }
+        return dbPlantsDataSource.getPlants()
     }
 
     override fun getFavorites(): Flow<List<Plant>> {
-        return dbDataSource.getIds().map { favouriteIds ->
+        return favoritesDataSource.getIds().map { favouriteIds ->
             favouriteIds.mapNotNull { id ->
-                getPlants(PlantCategory.NONE)
-                    .firstOrNull { it.id.toLong() == id }
-                    ?.copy(isFavorite = true)
+                getPlants()?.firstOrNull { it.id.toLong() == id }?.copy(isFavorite = true)
             }
         }
     }
 
     override suspend fun toggleFavoriteStatus(plantId: Int) {
-        if (dbDataSource.isIdInDatabase(plantId)) {
-            dbDataSource.removeFromDatabase(plantId)
+        if (favoritesDataSource.isIdInDatabase(plantId)) {
+            favoritesDataSource.removeFromDatabase(plantId)
         } else {
-            dbDataSource.insertToDatabase(plantId)
+            favoritesDataSource.insertToDatabase(plantId)
         }
     }
 }

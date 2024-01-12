@@ -1,34 +1,51 @@
 package com.vml.tutorial.plantshop.plants.data
 
-import app.cash.sqldelight.coroutines.asFlow
-import app.cash.sqldelight.coroutines.mapToList
 import com.vml.tutorial.plantshop.PlantDatabase
-import com.vml.tutorial.plantshop.plants.domain.DbDataSource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
+import com.vml.tutorial.plantshop.plants.domain.Plant
+import com.vml.tutorial.plantshop.plants.domain.PlantDetails
+import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
 
-class DbPlantsDataSource(db: PlantDatabase) : DbDataSource {
-    private val queries = db.plantQueries
-    override fun getIds(): Flow<List<Long>> {
-        return queries.getFavoritePlants()
-            .asFlow()
-            .mapToList(Dispatchers.Default)
-    }
-
-    override suspend fun insertToDatabase(id: Int) {
-        queries.insertFavoritePlant(id.toLong())
-    }
-
-    override suspend fun removeFromDatabase(id: Int) {
-        queries.removeFavoritePlant(id.toLong())
-    }
-
-    override suspend fun isIdInDatabase(id: Int): Boolean {
-        try {
-            queries.getFavoritePlantById(id.toLong()).executeAsOne()
-        } catch (err: NullPointerException) {
-            return false
+class DbPlantsDataSource(db: PlantDatabase) : PlantsDataSource {
+    private val queries = db.plantsQueries
+    override suspend fun getPlants(): List<Plant> {
+        return queries.getPlants().executeAsList().map { plantEntity ->
+            Plant(
+                id = plantEntity.id.toInt(),
+                name = plantEntity.name,
+                originalName = plantEntity.originalName,
+                price = plantEntity.price.toDouble(),
+                currency = plantEntity.currency,
+                image = plantEntity.image,
+                types = plantEntity.types,
+                description = plantEntity.description,
+                details = PlantDetails(
+                    size = plantEntity.size,
+                    temperature = plantEntity.temperature,
+                    fullSun = plantEntity.fullSun,
+                    drained = plantEntity.drained
+                )
+            )
         }
-        return true
+    }
+
+    override suspend fun addToPlants(plant: Plant) {
+        queries.insertPlant(
+            id = plant.id.toLong(),
+            name = plant.name,
+            originalName = plant.originalName,
+            price = plant.price.toString(),
+            image = plant.image,
+            types = plant.types,
+            description = plant.description,
+            currency = plant.currency,
+            size = plant.details.size,
+            temperature = plant.details.temperature,
+            fullSun = plant.details.fullSun,
+            drained = plant.details.drained
+        )
+    }
+
+    override suspend fun getPlantCount(): Int {
+        return queries.getPlantCount().executeAsOne().toInt()
     }
 }
