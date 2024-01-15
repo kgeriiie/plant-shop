@@ -8,7 +8,9 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
+import com.vml.tutorial.plantshop.core.data.AppDataStoreImpl
 import com.vml.tutorial.plantshop.di.AppModule
+import com.vml.tutorial.plantshop.login.presentation.LoginComponent
 import com.vml.tutorial.plantshop.main.presentation.DefaultMainComponent
 import com.vml.tutorial.plantshop.main.presentation.MainComponent
 import com.vml.tutorial.plantshop.splash.presentation.SplashComponent
@@ -21,6 +23,7 @@ interface AppComponent {
 
     sealed class Child {
         data class SplashScreen(val component: SplashComponent): Child()
+        data class LoginScreen(val component: LoginComponent): Child()
         data class MainScreen(val component: MainComponent): Child()
     }
 }
@@ -50,9 +53,19 @@ class DefaultAppComponent(
     ): AppComponent.Child {
         return when(config) {
             Configuration.MainScreen -> AppComponent.Child.MainScreen(DefaultMainComponent(context, appModule))
-            Configuration.SplashScreen -> AppComponent.Child.SplashScreen(SplashComponent(context) {
+            Configuration.LoginScreen -> AppComponent.Child.LoginScreen(LoginComponent(context) {
                 navigation.pushNew(Configuration.MainScreen)
             })
+            Configuration.SplashScreen -> AppComponent.Child.SplashScreen(SplashComponent(
+                componentContext = context,
+                appDataStore = appModule.dataStore,
+                onNavigateToLogin = {
+                    navigation.pushNew(Configuration.LoginScreen)
+                },
+                onNavigateToMain = {
+                    navigation.pushNew(Configuration.MainScreen)
+                }
+            ))
         }
     }
 
@@ -60,6 +73,8 @@ class DefaultAppComponent(
     sealed class Configuration {
         @Serializable
         data object SplashScreen: Configuration()
+        @Serializable
+        data object LoginScreen: Configuration()
         @Serializable
         data object MainScreen: Configuration()
     }

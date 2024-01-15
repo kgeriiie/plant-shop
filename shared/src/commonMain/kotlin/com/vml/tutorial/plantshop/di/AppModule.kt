@@ -1,6 +1,9 @@
 package com.vml.tutorial.plantshop.di
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.vml.tutorial.plantshop.basket.data.BasketRepository
+import com.vml.tutorial.plantshop.core.data.AppDataStore
 import com.vml.tutorial.plantshop.core.utils.ShareUtils
 import com.vml.tutorial.plantshop.plants.data.DbFavoritesDataSource
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
@@ -13,4 +16,5 @@ expect class AppModule {
     val dbFavoritesDataSource: DbFavoritesDataSource
     val basketRepository: BasketRepository
     val shareUtils: ShareUtils
+    val dataStore: AppDataStore
 }

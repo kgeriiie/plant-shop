@@ -80,6 +80,8 @@ kotlin {
 
                 implementation(libs.firebase.firestore)
                 implementation(libs.firebase.common)
+
+                implementation(libs.datastore)
             }
         }
 
@@ -128,6 +130,7 @@ sqldelight {
 
 dependencies {
     implementation(libs.androidx.core)
+    implementation(libs.firebase.firestore)
     commonMainApi(libs.mvvm.core)
     commonMainApi(libs.mvvm.compose)
     commonMainApi(libs.mvvm.flow)

@@ -1,11 +1,16 @@
 package com.vml.tutorial.plantshop.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.vml.tutorial.plantshop.PlantDatabase
 import com.vml.tutorial.plantshop.basket.data.BasketRepository
 import com.vml.tutorial.plantshop.basket.data.BasketRepositoryImpl
 import com.vml.tutorial.plantshop.basket.data.DbBasketItemsDataSource
+import com.vml.tutorial.plantshop.core.data.AppDataStore
+import com.vml.tutorial.plantshop.core.data.AppDataStoreImpl
 import com.vml.tutorial.plantshop.core.data.DatabaseDriverFactory
+import com.vml.tutorial.plantshop.core.utils.DataStoreUtil
 import com.vml.tutorial.plantshop.core.utils.ShareUtils
 import com.vml.tutorial.plantshop.plants.data.DbFavoritesDataSource
 import com.vml.tutorial.plantshop.plants.data.DbPlantsDataSource
@@ -49,5 +54,9 @@ actual class AppModule(private val context: Context) {
 
     actual val shareUtils: ShareUtils by lazy {
         ShareUtils(context)
+    }
+
+    actual val dataStore: AppDataStore by lazy {
+        AppDataStoreImpl(DataStoreUtil(context).dataStore())
     }
 }

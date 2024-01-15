@@ -20,10 +20,12 @@ kamel-image-version = "0.7.3"
 ktor-version = "2.3.4"
 extensionsComposeJetbrains = "2.1.4-compose-experimental"
 decompose = "2.2.0-alpha03"
-kotlinxSerializationJson = "1.6.1"
 googleServices = "4.4.0"
+datastore = "1.1.0-alpha06"
 
 [libraries]
+datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore"}
+
 decompose-jetbrains = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "extensionsComposeJetbrains" }
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 
