@@ -6,6 +6,7 @@ import com.vml.tutorial.plantshop.core.data.account.AuthRepository
 import com.vml.tutorial.plantshop.core.domain.DataResult
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
+import com.vml.tutorial.plantshop.core.utils.exts.isValidEmail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -49,7 +50,7 @@ class LoginComponent(
     }
 
     private fun isValid(): Boolean {
-        return _uiState.value.username.isNotEmpty() && _uiState.value.password.isNotEmpty()
+        return _uiState.value.username.isValidEmail() && _uiState.value.password.isNotEmpty()
     }
 }
 

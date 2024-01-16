@@ -29,7 +29,12 @@ fun App(
                 animation = stackAnimation(slide())
             ) { child ->
                 when(val instance = child.instance) {
-                    is AppComponent.Child.SplashScreen -> SplashScreen(instance.component)
+                    is AppComponent.Child.SplashScreen -> {
+                        val state by instance.component.uiState.collectAsState()
+                        SplashScreen(state) {
+                            instance.component.start()
+                        }
+                    }
                     is AppComponent.Child.MainScreen -> MainScreen(instance.component)
                     is AppComponent.Child.LoginScreen -> {
                         val state by instance.component.uiState.collectAsState()
