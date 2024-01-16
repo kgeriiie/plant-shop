@@ -53,17 +53,18 @@ class DefaultAppComponent(
     ): AppComponent.Child {
         return when(config) {
             Configuration.MainScreen -> AppComponent.Child.MainScreen(DefaultMainComponent(context, appModule))
-            Configuration.LoginScreen -> AppComponent.Child.LoginScreen(LoginComponent(context) {
-                navigation.pushNew(Configuration.MainScreen)
+            Configuration.LoginScreen -> AppComponent.Child.LoginScreen(LoginComponent(context, appModule.authRepository) {
+                navigation.replaceAll(Configuration.MainScreen)
             })
             Configuration.SplashScreen -> AppComponent.Child.SplashScreen(SplashComponent(
                 componentContext = context,
                 appDataStore = appModule.dataStore,
+                authRepository = appModule.authRepository,
                 onNavigateToLogin = {
-                    navigation.pushNew(Configuration.LoginScreen)
+                    navigation.replaceAll(Configuration.LoginScreen)
                 },
                 onNavigateToMain = {
-                    navigation.pushNew(Configuration.MainScreen)
+                    navigation.replaceAll(Configuration.MainScreen)
                 }
             ))
         }

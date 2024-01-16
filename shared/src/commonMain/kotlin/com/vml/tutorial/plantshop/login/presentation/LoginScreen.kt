@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,8 +29,11 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -54,6 +59,8 @@ fun LoginScreen(
     state: LoginUiState,
     onEvent: (event: LoginEvent) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -93,7 +100,10 @@ fun LoginScreen(
                 value = state.username,
                 label = { Text(UiText.StringRes(login_username_placeholder_text).asString()) },
                 onValueChange = { onEvent(LoginEvent.UsernameChanged(it)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                ),
                 modifier = Modifier
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(25.dp),
@@ -119,7 +129,13 @@ fun LoginScreen(
                 label = { Text(UiText.StringRes(login_password_placeholder_text).asString()) },
                 onValueChange = { onEvent(LoginEvent.PasswordChanged(it)) },
                 visualTransformation = if (state.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                        onEvent(LoginEvent.LoginClicked)
+                    }
+                ),
                 modifier = Modifier
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(25.dp),
@@ -170,6 +186,7 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .height(50.dp),
                 onClick = {
+                    focusManager.clearFocus()
                     onEvent(LoginEvent.LoginClicked)
                 }
             ) {
@@ -177,6 +194,14 @@ fun LoginScreen(
                     UiText.StringRes(login_button_text).asString()
                 )
             }
+        }
+
+        if (state.loading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .padding(20.dp)
+                    .align(Alignment.BottomCenter)
+            )
         }
     }
 }
