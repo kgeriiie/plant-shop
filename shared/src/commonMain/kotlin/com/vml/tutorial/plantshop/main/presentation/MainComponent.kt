@@ -16,6 +16,10 @@ import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailComponent
 import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailEvent
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenComponent
+import com.vml.tutorial.plantshop.profile.data.ProfileRepository
+import com.vml.tutorial.plantshop.profile.domain.User
+import com.vml.tutorial.plantshop.profile.presentation.ProfileComponent
+import com.vml.tutorial.plantshop.profile.presentation.components.ProfileEvent
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,6 +40,7 @@ interface MainComponent {
         data class FavouritesScreen(val component: FavouritesComponent): MainChild()
         data class BasketScreen(val component: BasketComponent): MainChild()
         data class PlantDetailScreen(val component: PlantDetailComponent): MainChild()
+        data class ProfileScreen(val component: ProfileComponent): MainChild()
     }
 }
 
@@ -99,9 +104,14 @@ class DefaultMainComponent(
             MainConfiguration.HomeScreen -> MainComponent.MainChild.HomeScreen(HomeScreenComponent(
                 componentContext = context,
                 plantsRepository = appModule.plantsRepository,
+                profileRepository = appModule.profileRepository,
                 onNavigateToDetail = { plant ->
                     _state.update { it.copy(bottomNavigationVisible = false) }
                     navigation.pushNew(MainConfiguration.PlantDetailScreen(plant))
+                },
+                onNavigateToProfile = { user ->
+                    _state.update { it.copy(bottomNavigationVisible = false) }
+                    navigation.pushNew(MainConfiguration.ProfileScreen(user))
                 }
             ))
             is MainConfiguration.PlantDetailScreen -> MainComponent.MainChild.PlantDetailScreen(
@@ -125,6 +135,17 @@ class DefaultMainComponent(
                         }
                     },
             ))
+            is MainConfiguration.ProfileScreen -> MainComponent.MainChild.ProfileScreen(
+                ProfileComponent(
+                    user = config.user,
+                    componentContext = context
+                ) { event ->
+                    when (event) {
+                        ProfileEvent.NavigateBack -> navigation.pop()
+                        else -> Unit
+                    }
+                }
+            )
         }
     }
 
@@ -142,6 +163,8 @@ class DefaultMainComponent(
         data object BasketScreen: MainConfiguration()
         @Serializable
         data class PlantDetailScreen(val plant: Plant): MainConfiguration()
+        @Serializable
+        data class ProfileScreen(val user: User?): MainConfiguration()
     }
 
     data class MainUiState(

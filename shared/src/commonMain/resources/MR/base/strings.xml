@@ -58,5 +58,11 @@
     <string name="basket_empty_message">It seems you forgot to add any of our amazing plants to my cart! Hurry up I will fly away if you leave me empty!</string>
     <string name="basket_empty_Button">Explore</string>
     <string name="basket_checkout_message">Thanks so much for your order! I hope you enjoy your new purchase!</string>
+    <!--Profile Screen-->
+    <string name="my_orders">My Orders</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="get_help">Get Help</string>
+    <string name="settings">Settings</string>
+    <string name="log_out">Log Out</string>
 
 </resources>
