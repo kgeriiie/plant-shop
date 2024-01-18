@@ -28,10 +28,6 @@ class RemoteDbUserDataSource : UserDataSource {
         return users?.firstOrNull()
     }
 
-    override suspend fun isThereUser(): Boolean {
-        return true
-    }
-
     companion object {
         const val COLLECTION_ID = "users"
         const val EMAIL_FIELD_NAME = "email"
