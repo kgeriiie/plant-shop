@@ -8,6 +8,7 @@ import com.vml.tutorial.plantshop.profile.presentation.components.ProfileEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
@@ -17,7 +18,7 @@ class ProfileComponent(
     private val onComponentEvent: (event: ProfileEvent) -> Unit
 ) : ComponentContext by componentContext {
     private val _state = MutableStateFlow(ProfileState(user))
-    val state: StateFlow<ProfileState> = _state
+    val state: StateFlow<ProfileState> = _state.asStateFlow()
 
     fun onEvent(event: ProfileEvent) {
         when (event) {
