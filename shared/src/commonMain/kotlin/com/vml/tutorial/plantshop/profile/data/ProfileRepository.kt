@@ -2,6 +2,8 @@ package com.vml.tutorial.plantshop.profile.data
 
 import com.vml.tutorial.plantshop.profile.domain.User
 import com.vml.tutorial.plantshop.profile.domain.UserDataSource
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.auth.auth
 
 interface ProfileRepository {
     suspend fun insertToDatabase(user: User)
@@ -23,8 +25,10 @@ class ProfileRepositoryImpl(
 
     override suspend fun getUser(): User? {
         if (!dbUserDataSource.isThereUser()) {
-            remoteDbUserDataSource.getUser()?.let { dbUserDataSource.insertToDatabase(it) }
+            Firebase.auth.currentUser?.email?.let { email ->
+                remoteDbUserDataSource.getUser(email)?.let { dbUserDataSource.insertToDatabase(it) }
+            }
         }
-        return dbUserDataSource.getUser()
+        return dbUserDataSource.getUser(null)
     }
 }

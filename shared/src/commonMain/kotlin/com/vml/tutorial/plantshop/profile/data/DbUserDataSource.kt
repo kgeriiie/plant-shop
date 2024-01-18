@@ -28,7 +28,7 @@ class DbUserDataSource(db: PlantDatabase) : UserDataSource {
         queries.removeUser()
     }
 
-    override suspend fun getUser(): User {
+    override suspend fun getUser(email: String?): User {
         val user = queries.getUser().executeAsOne()
         return User(
             firstName = user.firstName,
