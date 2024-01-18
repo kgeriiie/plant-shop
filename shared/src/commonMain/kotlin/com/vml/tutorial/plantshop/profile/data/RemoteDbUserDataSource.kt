@@ -4,29 +4,36 @@ import com.vml.tutorial.plantshop.profile.domain.User
 import com.vml.tutorial.plantshop.profile.domain.UserDataSource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
+import dev.gitlive.firebase.firestore.where
 
 class RemoteDbUserDataSource : UserDataSource {
-    private val collection = Firebase.firestore.collection("user")
+    private val collection = Firebase.firestore
     override suspend fun insertToDatabase(user: User) {
-        collection.add(user)
+        collection.collection(COLLECTION_ID).add(user)
     }
 
     override suspend fun removeFromDatabase() {
-        collection.get().documents.map { document ->
+        collection.collection(COLLECTION_ID).get().documents.map { document ->
             collection.document(document.id).delete()
         }
     }
 
-    override suspend fun getUser(): User? {
+    override suspend fun getUser(email: String?): User? {
         val users: List<User>? = try {
-            collection.get().documents.map { it.data() }
+            collection.collectionGroup(COLLECTION_ID).where(EMAIL_FIELD_NAME, email)
+                .get().documents.map { it.data() }
         } catch (err: Exception) {
-            null
+            return null
         }
         return users?.firstOrNull()
     }
 
     override suspend fun isThereUser(): Boolean {
-        return getUser() != null
+        return true
+    }
+
+    companion object {
+        const val COLLECTION_ID = "users"
+        const val EMAIL_FIELD_NAME = "email"
     }
 }
