@@ -8,6 +8,17 @@
     <string name="splash_title_text">Magical\nThings</string>
     <string name="splash_subtitle_text">Let\'s make the world green again.</string>
     <string name="splash_get_started_button_text">Get Started</string>
+    <!--Login screen-->
+    <string name="login_title_text">Login</string>
+    <string name="login_subtitle_text">Please Sign in to continue</string>
+    <string name="login_username_placeholder_text">Username</string>
+    <string name="login_password_placeholder_text">Password</string>
+    <string name="login_button_text">Sign in</string>
+    <string name="login_error_text">Username or password does not match. Please try again.</string>
+    <string name="login_icon_content_description">Login screen icon.</string>
+    <string name="login_show_pw_content_description">Show password</string>
+    <string name="login_hide_pw_content_description">Hide password</string>
+
     <!--Plant extra info-->
     <string name="plant_info_drained_text">Drained</string>
     <string name="plant_info_full_sun_text">Full Sun</string>
