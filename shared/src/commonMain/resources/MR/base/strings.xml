@@ -18,6 +18,8 @@
     <string name="login_icon_content_description">Login screen icon.</string>
     <string name="login_show_pw_content_description">Show password</string>
     <string name="login_hide_pw_content_description">Hide password</string>
+    <string name="login_not_registered_text">Not registered?&#160;</string>
+    <string name="login_create_acc_button_text">Create account</string>
     <!--Plant extra info-->
     <string name="plant_info_drained_text">Drained</string>
     <string name="plant_info_full_sun_text">Full Sun</string>
@@ -105,4 +107,37 @@
     <string name="card_holder_name_placeholder_text">Card holder name</string>
     <string name="cc_show_info_description">Show credit card details</string>
     <string name="cc_hide_info_description">Hide credit card details</string>
+    <!--Register Screen-->
+    <string name="register_title_text">Register</string>
+    <string name="register_subtitle_text">Please enter your details</string>
+    <string name="register_email_title_text">Email:</string>
+    <string name="register_email_placeholder_text">Your email</string>
+    <string name="register_first_password_title_text">Password:</string>
+    <string name="register_first_password_placeholder_text">Your password</string>
+    <string name="register_second_password_title_text">Repeat password:</string>
+    <string name="register_second_password_placeholder_text">Repeat your password</string>
+    <string name="register_name_title_text">First name:</string>
+    <string name="register_name_placeholder_text">Your first name</string>
+    <string name="register_lastName_title_text">Last name:</string>
+    <string name="register_lastName_placeholder_text">Your last name</string>
+    <string name="register_phone_title_text">Phone number:</string>
+    <string name="register_phone_placeholder_text">Your phone number</string>
+    <string name="register_birthday_title_text">Birth date:</string>
+    <string name="register_address_title_text">Please enter your address</string>
+    <string name="register_street_name_title_text">Street name:</string>
+    <string name="register_street_name_placeholder_text">Your street name</string>
+    <string name="register_door_number_title_text">Door number:</string>
+    <string name="register_door_number_placeholder_text">Your door number</string>
+    <string name="register_city_title_text">City:</string>
+    <string name="register_city_placeholder_text">Your city</string>
+    <string name="register_postal_code_title_text">Postal code:</string>
+    <string name="register_postal_code_placeholder_text">Your postal code</string>
+    <string name="register_country_title_text">Country:</string>
+    <string name="register_country_placeholder_text">Your country</string>
+    <string name="additional_desc_title_text">Additional description:</string>
+    <string name="additional_desc_placeholder_text">Additional description</string>
+    <string name="register_button_text">Register</string>
+    <string name="register_error_text">Registration failed. Please ensure you\'ve entered a valid email address and that your passwords match.</string>
+    <string name="pick_birth_date_dialog_confirm_text">OK</string>
+    <string name="pick_birth_date_dialog_dismiss_text">CANCEL</string>
 </resources>

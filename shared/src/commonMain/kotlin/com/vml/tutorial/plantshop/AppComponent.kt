@@ -5,12 +5,15 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
 import com.vml.tutorial.plantshop.di.AppModule
 import com.vml.tutorial.plantshop.login.presentation.LoginComponent
 import com.vml.tutorial.plantshop.main.presentation.DefaultMainComponent
 import com.vml.tutorial.plantshop.main.presentation.MainComponent
+import com.vml.tutorial.plantshop.register.presentation.RegisterComponent
 import com.vml.tutorial.plantshop.splash.presentation.SplashComponent
 import kotlinx.serialization.Serializable
 
@@ -23,6 +26,7 @@ interface AppComponent {
         data class SplashScreen(val component: SplashComponent) : Child()
         data class LoginScreen(val component: LoginComponent) : Child()
         data class MainScreen(val component: MainComponent) : Child()
+        data class RegisterScreen(val component: RegisterComponent) : Child()
     }
 }
 
@@ -61,11 +65,15 @@ class DefaultAppComponent(
 
             Configuration.LoginScreen -> AppComponent.Child.LoginScreen(
                 LoginComponent(
-                    context,
-                    appModule.authRepository
-                ) {
-                    navigation.replaceAll(Configuration.MainScreen)
-                })
+                    componentContext = context,
+                    authRepository = appModule.authRepository,
+                    onNavigateToMain = {
+                        navigation.replaceAll(Configuration.MainScreen)
+                    },
+                    onNavigateRegister = {
+                        navigation.pushNew(Configuration.RegisterScreen)
+                    })
+            )
 
             Configuration.SplashScreen -> AppComponent.Child.SplashScreen(SplashComponent(
                 componentContext = context,
@@ -78,6 +86,20 @@ class DefaultAppComponent(
                     navigation.replaceAll(Configuration.MainScreen)
                 }
             ))
+
+            Configuration.RegisterScreen -> AppComponent.Child.RegisterScreen(
+                RegisterComponent(
+                    componentContext = context,
+                    authRepository = appModule.authRepository,
+                    registerUserRepository = appModule.registerUserRepository,
+                    onNavigateBack = {
+                        navigation.pop()
+                    },
+                    onNavigateToMain = {
+                        navigation.replaceAll(Configuration.MainScreen)
+                    }
+                )
+            )
         }
     }
 
@@ -91,5 +113,8 @@ class DefaultAppComponent(
 
         @Serializable
         data object MainScreen : Configuration()
+
+        @Serializable
+        data object RegisterScreen : Configuration()
     }
 }
