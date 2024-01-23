@@ -159,9 +159,9 @@ class RegisterComponent(
 
     private fun isInfoValid(): Boolean {
         return uiState.value.username.isValidEmail() &&
-                return uiState.value.firstPassword.isNotEmpty() &&
-                        uiState.value.secondPassword.isNotEmpty() &&
-                        uiState.value.firstPassword == uiState.value.secondPassword
+                uiState.value.firstPassword.isNotEmpty() &&
+                uiState.value.secondPassword.isNotEmpty() &&
+                uiState.value.firstPassword == uiState.value.secondPassword
     }
 
     companion object {
