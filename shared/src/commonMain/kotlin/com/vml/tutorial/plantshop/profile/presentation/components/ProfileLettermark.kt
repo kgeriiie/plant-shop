@@ -30,7 +30,11 @@ fun ProfilePhoto(
             .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
         Text(
-            text = "${user?.firstName?.first()} ${user?.lastName?.first()}".uppercase(),
+            text = if (user?.firstName.isNullOrEmpty()) {
+                "${user?.email?.first()}"
+            } else {
+                "${user?.firstName?.first()} ${user?.lastName?.first()}".uppercase()
+            },
             style = textStyle
         )
     }

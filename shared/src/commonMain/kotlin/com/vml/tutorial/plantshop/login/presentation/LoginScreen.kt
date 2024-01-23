@@ -1,7 +1,9 @@
 package com.vml.tutorial.plantshop.login.presentation
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,8 +43,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.vml.tutorial.plantshop.MR.images.ic_login
 import com.vml.tutorial.plantshop.MR.strings.login_button_text
+import com.vml.tutorial.plantshop.MR.strings.login_create_acc_button_text
 import com.vml.tutorial.plantshop.MR.strings.login_hide_pw_content_description
 import com.vml.tutorial.plantshop.MR.strings.login_icon_content_description
+import com.vml.tutorial.plantshop.MR.strings.login_not_registered_text
 import com.vml.tutorial.plantshop.MR.strings.login_password_placeholder_text
 import com.vml.tutorial.plantshop.MR.strings.login_show_pw_content_description
 import com.vml.tutorial.plantshop.MR.strings.login_subtitle_text
@@ -100,7 +104,10 @@ fun LoginScreen(
                 value = state.username,
                 label = { Text(UiText.StringRes(login_username_placeholder_text).asString()) },
                 onValueChange = { onEvent(LoginEvent.UsernameChanged(it)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
+                ),
                 keyboardActions = KeyboardActions(
                     onNext = { focusManager.moveFocus(FocusDirection.Down) }
                 ),
@@ -193,6 +200,17 @@ fun LoginScreen(
                 Text(
                     UiText.StringRes(login_button_text).asString()
                 )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row {
+                Text(UiText.StringRes(login_not_registered_text).asString())
+                Text(text = UiText.StringRes(login_create_acc_button_text).asString(),
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable {
+                        onEvent(LoginEvent.RegisterClicked)
+                    })
             }
         }
 

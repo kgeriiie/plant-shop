@@ -7,6 +7,7 @@ interface AuthRepository {
     suspend fun login(email: String, password: String): DataResult<FirebaseUser>
     suspend fun logout()
     suspend fun isAuthenticated(): Boolean
+    suspend fun register(email: String, password: String): DataResult<FirebaseUser>
 }
 
 class AuthRepositoryImpl(
@@ -22,5 +23,9 @@ class AuthRepositoryImpl(
 
     override suspend fun isAuthenticated(): Boolean {
         return firebaseDataSource.getCurrentUser() != null
+    }
+
+    override suspend fun register(email: String, password: String): DataResult<FirebaseUser> {
+        return firebaseDataSource.register(email, password)
     }
 }
