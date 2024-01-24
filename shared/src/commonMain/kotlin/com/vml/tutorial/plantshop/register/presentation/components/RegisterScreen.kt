@@ -103,7 +103,7 @@ private fun UserInfoSection(state: RegisterUiState, onEvent: (event: RegisterEve
                 Spacer(modifier = Modifier.height(8.dp))
 
                 UserInput(
-                    state = state.username,
+                    state = state.email,
                     titleText = UiText.StringRes(MR.strings.register_email_title_text).asString(),
                     placeholderText = UiText.StringRes(MR.strings.register_email_placeholder_text)
                         .asString(),
@@ -111,7 +111,7 @@ private fun UserInfoSection(state: RegisterUiState, onEvent: (event: RegisterEve
                         keyboardType = KeyboardType.Email, imeAction = ImeAction.Next
                     )
                 ) {
-                    onEvent(RegisterEvent.UsernameChanged(it))
+                    onEvent(RegisterEvent.EmailChanged(it))
                 }
 
                 UserInput(
@@ -212,7 +212,7 @@ private fun UserInfoSection(state: RegisterUiState, onEvent: (event: RegisterEve
                 }
 
                 UserInput(
-                    state = if (state.doorNumber == DEFAULT_VALUE_UNFILLED) "" else state.doorNumber.toString(),
+                    state =  state.postalCode?.toString().orEmpty(),
                     titleText = UiText.StringRes(MR.strings.register_door_number_title_text)
                         .asString(),
                     placeholderText = UiText.StringRes(MR.strings.register_door_number_placeholder_text)
@@ -237,7 +237,7 @@ private fun UserInfoSection(state: RegisterUiState, onEvent: (event: RegisterEve
                 }
 
                 UserInput(
-                    state = if (state.postalCode == DEFAULT_VALUE_UNFILLED) "" else state.postalCode.toString(),
+                    state =  state.postalCode?.toString().orEmpty(),
                     titleText = UiText.StringRes(MR.strings.register_postal_code_title_text)
                         .asString(),
                     placeholderText = UiText.StringRes(MR.strings.register_postal_code_placeholder_text)
@@ -341,5 +341,3 @@ private fun UserInput(
         )
     )
 }
-
-const val DEFAULT_VALUE_UNFILLED = -1
