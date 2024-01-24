@@ -33,8 +33,8 @@ class RegisterComponent(
     fun onEvent(event: RegisterEvent) {
         when (event) {
             RegisterEvent.RegisterClicked -> registerUser()
-            is RegisterEvent.UsernameChanged -> {
-                _uiState.update { it.copy(username = event.username) }
+            is RegisterEvent.EmailChanged -> {
+                _uiState.update { it.copy(email = event.email) }
             }
 
             is RegisterEvent.FirstPasswordChanged -> {
@@ -102,7 +102,7 @@ class RegisterComponent(
             componentCoroutineScope().launch {
                 _uiState.update { it.copy(loading = true, errorMessage = null) }
                 when (val result = authRepository.register(
-                    uiState.value.username,
+                    uiState.value.email,
                     uiState.value.firstPassword
                 )) {
                     is DataResult.Failed -> _uiState.update {
@@ -122,7 +122,7 @@ class RegisterComponent(
 
     private suspend fun signUserIn() {
         when (val result = authRepository.login(
-            uiState.value.username,
+            uiState.value.email,
             uiState.value.firstPassword
         )) {
             is DataResult.Failed -> _uiState.update {
@@ -142,7 +142,7 @@ class RegisterComponent(
             User(
                 firstName = uiState.value.firstName,
                 lastName = uiState.value.lastName,
-                email = uiState.value.username,
+                email = uiState.value.email,
                 birthDate = uiState.value.birthDate,
                 phoneNumber = uiState.value.phoneNumber,
                 address = Address(
@@ -158,7 +158,7 @@ class RegisterComponent(
     }
 
     private fun isInfoValid(): Boolean {
-        return uiState.value.username.isValidEmail() &&
+        return uiState.value.email.isValidEmail() &&
                 uiState.value.firstPassword.isNotEmpty() &&
                 uiState.value.secondPassword.isNotEmpty() &&
                 uiState.value.firstPassword == uiState.value.secondPassword

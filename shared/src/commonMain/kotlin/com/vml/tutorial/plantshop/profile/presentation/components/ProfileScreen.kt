@@ -73,8 +73,8 @@ fun ProfileScreen(profileState: ProfileState, onEvent: (ProfileEvent) -> Unit) {
 @Composable
 fun UserInfo(user: User?, modifier: Modifier = Modifier) {
     Row(modifier = modifier) {
-        ProfilePhoto(
-            user = user,
+        ProfileLettermark(
+            monogram = user?.monogram.orEmpty(),
             modifier = Modifier.size(96.dp)
         )
         Column {

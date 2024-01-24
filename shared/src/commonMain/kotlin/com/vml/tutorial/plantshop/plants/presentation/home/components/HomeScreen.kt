@@ -70,7 +70,7 @@ import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
 import com.vml.tutorial.plantshop.plants.presentation.plantList.ItemListEvent
 import com.vml.tutorial.plantshop.plants.presentation.plantList.itemListGrid
 import com.vml.tutorial.plantshop.profile.domain.User
-import com.vml.tutorial.plantshop.profile.presentation.components.ProfilePhoto
+import com.vml.tutorial.plantshop.profile.presentation.components.ProfileLettermark
 import com.vml.tutorial.plantshop.ui.theme.Typography
 import dev.icerock.moko.resources.ImageResource
 import dev.icerock.moko.resources.compose.painterResource
@@ -155,8 +155,8 @@ private fun ScreenTitle(user: User?, onProfileClicked: () -> Unit, modifier: Mod
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Text(UiText.StringRes(discover).asString(), style = Typography.headlineMedium)
         Spacer(modifier = Modifier.weight(1.0f))
-        ProfilePhoto(
-            user,
+        ProfileLettermark(
+            user?.monogram.orEmpty(),
             textStyle = Typography.titleSmall,
             modifier = Modifier.size(32.dp).clickable {
                 onProfileClicked()
