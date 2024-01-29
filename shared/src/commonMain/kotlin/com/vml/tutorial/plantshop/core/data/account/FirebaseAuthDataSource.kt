@@ -4,6 +4,7 @@ import com.vml.tutorial.plantshop.MR.strings.login_error_text
 import com.vml.tutorial.plantshop.MR.strings.register_error_text
 import com.vml.tutorial.plantshop.core.domain.DataResult
 import com.vml.tutorial.plantshop.core.presentation.UiText
+import com.vml.tutorial.plantshop.profile.domain.User
 import dev.gitlive.firebase.auth.FirebaseAuth
 import dev.gitlive.firebase.auth.FirebaseAuthInvalidCredentialsException
 import dev.gitlive.firebase.auth.FirebaseUser

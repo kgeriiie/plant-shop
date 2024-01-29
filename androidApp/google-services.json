@@ -12,7 +12,12 @@
           "package_name": "com.vml.tutorial.plantshop"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "566505477038-b4ccjptpgs1enf48oeq7utts065n4uka.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAXnjFHWhZuB9askHGMEIiy-vBGdEwaP7U"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "566505477038-b4ccjptpgs1enf48oeq7utts065n4uka.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "566505477038-1cv5d49j35ltkir9dcvv2l0ov9d7me45.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vml.tutorial.plantshop"
+              }
+            }
+          ]
         }
       }
     }

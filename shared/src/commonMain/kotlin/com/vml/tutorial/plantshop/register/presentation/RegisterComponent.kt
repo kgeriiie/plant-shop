@@ -53,46 +53,6 @@ class RegisterComponent(
                 _uiState.update { it.copy(lastName = event.lastName) }
             }
 
-            is RegisterEvent.PhoneNumberChanged -> {
-                _uiState.update { it.copy(phoneNumber = event.phoneNumber) }
-            }
-
-            is RegisterEvent.DateConfirmed -> {
-                _uiState.update { it.copy(birthDate = formatDate(event.birthDate, DATE_FORMAT)) }
-            }
-
-            RegisterEvent.DismissBirthdayDialog -> {
-                _uiState.update { it.copy(showDatePickerDialog = false) }
-            }
-
-            RegisterEvent.ShowBirthdayDialog -> {
-                _uiState.update { it.copy(showDatePickerDialog = true) }
-            }
-
-            is RegisterEvent.StreetNameChanged -> {
-                _uiState.update { it.copy(streetName = event.streetName) }
-            }
-
-            is RegisterEvent.DoorNumberChanged -> {
-                _uiState.update { it.copy(doorNumber = event.doorNumber) }
-            }
-
-            is RegisterEvent.CityChanged -> {
-                _uiState.update { it.copy(city = event.city) }
-            }
-
-            is RegisterEvent.CountryChanged -> {
-                _uiState.update { it.copy(country = event.country) }
-            }
-
-            is RegisterEvent.PostalCodeChanged -> {
-                _uiState.update { it.copy(postalCode = event.postalCode) }
-            }
-
-            is RegisterEvent.AdditionalDescriptionChanged -> {
-                _uiState.update { it.copy(additionalDescription = event.additionalDescription) }
-            }
-
             RegisterEvent.NavigateBack -> onNavigateBack()
         }
     }
@@ -145,14 +105,7 @@ class RegisterComponent(
                 email = uiState.value.email,
                 birthDate = uiState.value.birthDate,
                 phoneNumber = uiState.value.phoneNumber,
-                address = Address(
-                    streetName = uiState.value.streetName,
-                    doorNumber = uiState.value.doorNumber,
-                    city = uiState.value.city,
-                    postalCode = uiState.value.postalCode,
-                    country = uiState.value.country,
-                    additionalDescription = uiState.value.additionalDescription
-                )
+                address = uiState.value.address
             )
         )
     }
@@ -162,9 +115,5 @@ class RegisterComponent(
                 uiState.value.firstPassword.isNotEmpty() &&
                 uiState.value.secondPassword.isNotEmpty() &&
                 uiState.value.firstPassword == uiState.value.secondPassword
-    }
-
-    companion object {
-        const val DATE_FORMAT = "dd/MM/yyyy"
     }
 }

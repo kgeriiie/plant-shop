@@ -67,16 +67,11 @@
     <!--Register Screen-->
     <string name="register_title_text">Register</string>
     <string name="register_subtitle_text">Please enter your details</string>
-    <string name="register_email_title_text">Email:</string>
-    <string name="register_email_placeholder_text">Your email</string>
-    <string name="register_first_password_title_text">Password:</string>
-    <string name="register_first_password_placeholder_text">Your password</string>
-    <string name="register_second_password_title_text">Repeat password:</string>
-    <string name="register_second_password_placeholder_text">Repeat your password</string>
-    <string name="register_name_title_text">First name:</string>
-    <string name="register_name_placeholder_text">Your first name</string>
-    <string name="register_lastName_title_text">Last name:</string>
-    <string name="register_lastName_placeholder_text">Your last name</string>
+    <string name="register_email_placeholder_text">Email</string>
+    <string name="register_first_password_placeholder_text">Password</string>
+    <string name="register_second_password_placeholder_text">Repeat password</string>
+    <string name="register_name_placeholder_text">First name</string>
+    <string name="register_lastName_placeholder_text">Last name</string>
     <string name="register_phone_title_text">Phone number:</string>
     <string name="register_phone_placeholder_text">Your phone number</string>
     <string name="register_birthday_title_text">Birth date:</string>

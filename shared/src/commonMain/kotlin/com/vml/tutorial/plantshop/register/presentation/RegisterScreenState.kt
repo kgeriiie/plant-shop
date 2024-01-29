@@ -1,6 +1,7 @@
 package com.vml.tutorial.plantshop.register.presentation
 
 import com.vml.tutorial.plantshop.core.presentation.UiText
+import com.vml.tutorial.plantshop.profile.domain.Address
 
 data class RegisterUiState(
     val email: String = "",
@@ -10,13 +11,8 @@ data class RegisterUiState(
     val lastName: String = "",
     val phoneNumber: String = "",
     val showDatePickerDialog: Boolean = false,
-    val birthDate: String = "DD/MM/YYYY",
-    val streetName: String = "",
-    val doorNumber: Int? = null,
-    val city: String = "",
-    val postalCode: Int? = null,
-    val country: String = "",
-    val additionalDescription: String = "",
+    val birthDate: String? = null,
+    val address: Address? = null,
     val errorMessage: UiText? = null,
     val loading: Boolean = false
 )
