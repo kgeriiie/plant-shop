@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.map
 
 interface PlantsRepository {
     suspend fun getPlants(): List<Plant>?
+
+    suspend fun getPlant(id: Int): Plant?
     fun getFavorites(): Flow<List<Plant>>
     suspend fun toggleFavoriteStatus(plantId: Int)
 }
@@ -26,6 +28,10 @@ class PlantsRepositoryImpl(
             }
         }
         return dbPlantsDataSource.getPlants()
+    }
+
+    override suspend fun getPlant(id: Int): Plant? {
+        return dbPlantsDataSource.getPlant(id)?: remoteDbPlantsDataSource.getPlant(id)
     }
 
     override fun getFavorites(): Flow<List<Plant>> {

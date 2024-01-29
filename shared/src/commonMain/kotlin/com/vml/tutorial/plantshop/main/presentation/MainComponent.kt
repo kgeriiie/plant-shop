@@ -16,6 +16,7 @@ import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailComponent
 import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailEvent
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenComponent
+import com.vml.tutorial.plantshop.profile.orders.OrderHistoryComponent
 import com.vml.tutorial.plantshop.profile.data.ProfileRepository
 import com.vml.tutorial.plantshop.profile.domain.User
 import com.vml.tutorial.plantshop.profile.presentation.ProfileComponent
@@ -41,6 +42,7 @@ interface MainComponent {
         data class BasketScreen(val component: BasketComponent): MainChild()
         data class PlantDetailScreen(val component: PlantDetailComponent): MainChild()
         data class ProfileScreen(val component: ProfileComponent): MainChild()
+        data class OrderHistoryScreen(val component: OrderHistoryComponent): MainChild()
     }
 }
 
@@ -67,7 +69,8 @@ class DefaultMainComponent(
     override fun onEvent(event: MainScreenEvent) {
         when(event) {
             MainScreenEvent.OnBasketTabClicked -> navigateTab(MainConfiguration.BasketScreen)
-            MainScreenEvent.OnFavouriteTabClicked -> navigateTab(MainConfiguration.FavouritesScreen)
+            MainScreenEvent.OnFavouriteTabClicked -> navigateTab(MainConfiguration.OrderHistoryScreen)
+//            MainScreenEvent.OnFavouriteTabClicked -> navigateTab(MainConfiguration.FavouritesScreen) TODO: undo if profile is available on this branch
             MainScreenEvent.OnHomeTabClicked -> navigateTab(MainConfiguration.HomeScreen)
         }
     }
@@ -146,6 +149,14 @@ class DefaultMainComponent(
                     }
                 }
             )
+
+            is MainConfiguration.OrderHistoryScreen -> MainComponent.MainChild.OrderHistoryScreen(
+                OrderHistoryComponent(
+                    componentContext = context,
+                    plantsRepository = appModule.plantsRepository,
+                    ordersRepository = appModule.orderRepository
+                )
+            )
         }
     }
 
@@ -165,6 +176,8 @@ class DefaultMainComponent(
         data class PlantDetailScreen(val plant: Plant): MainConfiguration()
         @Serializable
         data class ProfileScreen(val user: User?): MainConfiguration()
+        @Serializable
+        data object OrderHistoryScreen: MainConfiguration()
     }
 
     data class MainUiState(

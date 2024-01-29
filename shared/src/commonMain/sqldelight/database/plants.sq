@@ -34,5 +34,8 @@ INSERT OR REPLACE INTO plants (
 getPlants:
 SELECT plants.* FROM plants ORDER BY id ASC;
 
+getPlant:
+SELECT * FROM plants WHERE id = :id;
+
 getPlantCount:
 SELECT COUNT(*) FROM plants;

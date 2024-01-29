@@ -44,6 +44,7 @@ import com.vml.tutorial.plantshop.plants.presentation.favourites.components.Favo
 import com.vml.tutorial.plantshop.plants.presentation.detail.components.PlantDetailScreen
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
 import com.vml.tutorial.plantshop.profile.presentation.components.ProfileScreen
+import com.vml.tutorial.plantshop.profile.orders.OrderHistoryScreen
 
 @Composable
 fun MainScreen(
@@ -102,6 +103,13 @@ fun MainScreen(
                     is MainComponent.MainChild.ProfileScreen -> {
                         val profileState by instance.component.state.collectAsState()
                         ProfileScreen(profileState) {event ->
+                            instance.component.onEvent(event)
+                        }
+                    }
+
+                    is MainComponent.MainChild.OrderHistoryScreen -> {
+                        val orderHistoryState by instance.component.uiState.collectAsState()
+                        OrderHistoryScreen(orderHistoryState) { event ->
                             instance.component.onEvent(event)
                         }
                     }
