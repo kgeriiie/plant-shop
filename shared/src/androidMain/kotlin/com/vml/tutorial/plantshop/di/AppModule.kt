@@ -100,6 +100,9 @@ actual class AppModule(private val context: Context) {
     }
 
     actual val orderRepository: OrdersRepository by lazy {
-        OrdersRepositoryImpl(FirebaseOrdersDataSource())
+        OrdersRepositoryImpl(
+            firebaseAuthDataSource,
+            FirebaseOrdersDataSource()
+        )
     }
 }

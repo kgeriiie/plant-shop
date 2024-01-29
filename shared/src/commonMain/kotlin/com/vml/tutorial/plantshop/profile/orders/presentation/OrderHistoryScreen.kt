@@ -1,4 +1,4 @@
-package com.vml.tutorial.plantshop.profile.orders
+package com.vml.tutorial.plantshop.profile.orders.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,9 +18,14 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -42,6 +47,7 @@ import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.core.utils.exts.orZero
 import com.vml.tutorial.plantshop.plants.presentation.PlantImage
+import com.vml.tutorial.plantshop.profile.presentation.components.ProfileEvent
 import com.vml.tutorial.plantshop.ui.theme.Typography
 
 @Composable
@@ -54,14 +60,31 @@ fun OrderHistoryScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 16.dp)
+            .padding(bottom = 16.dp)
     ) {
-        Text(
-            modifier = Modifier
-                .padding(horizontal = paddingHorizontal + paddingHorizontalOffset),
-            text = UiText.StringRes(MR.strings.orders_screen_title).asString(),
-            style = Typography.headlineMedium
-        )
+        Row(
+            modifier = Modifier.padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            IconButton(
+                modifier = Modifier.size(50.dp),
+                onClick = {
+                    onEvent(OrderHistoryEvents.NavigateBack)
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.ArrowBack,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+
+            Text(
+                text = UiText.StringRes(MR.strings.orders_screen_title).asString(),
+                style = Typography.headlineMedium
+            )
+        }
 
         if (state.displayEmptyMessage) {
             EmptyMessage {

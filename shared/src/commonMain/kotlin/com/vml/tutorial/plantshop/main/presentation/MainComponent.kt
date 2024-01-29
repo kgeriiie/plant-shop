@@ -16,9 +16,9 @@ import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailComponent
 import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailEvent
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenComponent
-import com.vml.tutorial.plantshop.profile.orders.OrderHistoryComponent
-import com.vml.tutorial.plantshop.profile.data.ProfileRepository
+import com.vml.tutorial.plantshop.profile.orders.presentation.OrderHistoryComponent
 import com.vml.tutorial.plantshop.profile.domain.User
+import com.vml.tutorial.plantshop.profile.orders.presentation.OrderHistoryEvents
 import com.vml.tutorial.plantshop.profile.presentation.ProfileComponent
 import com.vml.tutorial.plantshop.profile.presentation.components.ProfileEvent
 import kotlinx.coroutines.channels.Channel
@@ -69,8 +69,7 @@ class DefaultMainComponent(
     override fun onEvent(event: MainScreenEvent) {
         when(event) {
             MainScreenEvent.OnBasketTabClicked -> navigateTab(MainConfiguration.BasketScreen)
-            MainScreenEvent.OnFavouriteTabClicked -> navigateTab(MainConfiguration.OrderHistoryScreen)
-//            MainScreenEvent.OnFavouriteTabClicked -> navigateTab(MainConfiguration.FavouritesScreen) TODO: undo if profile is available on this branch
+            MainScreenEvent.OnFavouriteTabClicked -> navigateTab(MainConfiguration.FavouritesScreen)
             MainScreenEvent.OnHomeTabClicked -> navigateTab(MainConfiguration.HomeScreen)
         }
     }
@@ -145,6 +144,10 @@ class DefaultMainComponent(
                 ) { event ->
                     when (event) {
                         ProfileEvent.NavigateBack -> navigation.pop()
+                        ProfileEvent.OnMyOrdersClick -> {
+                            _state.update { it.copy(bottomNavigationVisible = false) }
+                            navigation.pushNew(MainConfiguration.OrderHistoryScreen)
+                        }
                         else -> Unit
                     }
                 }
@@ -155,7 +158,12 @@ class DefaultMainComponent(
                     componentContext = context,
                     plantsRepository = appModule.plantsRepository,
                     ordersRepository = appModule.orderRepository
-                )
+                ) { event ->
+                    when (event) {
+                        OrderHistoryEvents.NavigateBack -> navigation.pop()
+                        else -> Unit
+                    }
+                }
             )
         }
     }

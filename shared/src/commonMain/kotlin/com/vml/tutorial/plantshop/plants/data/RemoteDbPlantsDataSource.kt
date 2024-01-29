@@ -10,7 +10,7 @@ import dev.gitlive.firebase.firestore.where
 class RemoteDbPlantsDataSource : PlantsDataSource {
     private val collection = Firebase.firestore.collection("plants")
 
-    override suspend fun getPlants(): List<Plant>? {
+    override suspend fun getPlants(): List<Plant> {
         return collection.getCollection()
     }
 
@@ -23,6 +23,6 @@ class RemoteDbPlantsDataSource : PlantsDataSource {
     }
 
     override suspend fun getPlantCount(): Int {
-        return getPlants()?.count() ?: -1
+        return getPlants().count() ?: -1
     }
 }

@@ -44,7 +44,7 @@ import com.vml.tutorial.plantshop.plants.presentation.favourites.components.Favo
 import com.vml.tutorial.plantshop.plants.presentation.detail.components.PlantDetailScreen
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
 import com.vml.tutorial.plantshop.profile.presentation.components.ProfileScreen
-import com.vml.tutorial.plantshop.profile.orders.OrderHistoryScreen
+import com.vml.tutorial.plantshop.profile.orders.presentation.OrderHistoryScreen
 
 @Composable
 fun MainScreen(
