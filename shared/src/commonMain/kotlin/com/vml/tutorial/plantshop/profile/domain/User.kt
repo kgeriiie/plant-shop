@@ -9,7 +9,7 @@ data class User (
     val email: String,
     val birthDate: String,
     val phoneNumber: String,
-    val address: Address
+    val address: Address?
 )
 
 @Serializable

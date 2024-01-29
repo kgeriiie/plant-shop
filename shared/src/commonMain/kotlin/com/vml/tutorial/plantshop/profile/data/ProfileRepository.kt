@@ -29,6 +29,6 @@ class ProfileRepositoryImpl(
                 remoteDbUserDataSource.getUser(email)?.let { dbUserDataSource.insertToDatabase(it) }
             }
         }
-        return dbUserDataSource.getUser(null)
+        return dbUserDataSource.getUser()
     }
 }
