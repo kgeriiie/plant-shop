@@ -44,6 +44,9 @@ import com.vml.tutorial.plantshop.plants.presentation.favourites.components.Favo
 import com.vml.tutorial.plantshop.plants.presentation.detail.components.PlantDetailScreen
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
 import com.vml.tutorial.plantshop.profile.presentation.components.ProfileScreen
+import com.vml.tutorial.plantshop.profile.orders.presentation.OrderHistoryScreen
+import com.vml.tutorial.plantshop.profile.orders.presentation.all.OrderHistoryAllScreen
+import com.vml.tutorial.plantshop.profile.orders.presentation.track.TrackOrderScreen
 
 @Composable
 fun MainScreen(
@@ -56,8 +59,9 @@ fun MainScreen(
 
     when(actions) {
         is DefaultMainComponent.Actions.ShowMessageAction -> {
-            val message = (actions as DefaultMainComponent.Actions.ShowMessageAction).message.asString()
-            LaunchedEffect(message) {
+            val action = (actions as DefaultMainComponent.Actions.ShowMessageAction)
+            val message = action.message.asString()
+            LaunchedEffect(action.id) {
                 snackBarHostState.showSnackbar(message = message)
             }
         }
@@ -102,6 +106,27 @@ fun MainScreen(
                     is MainComponent.MainChild.ProfileScreen -> {
                         val profileState by instance.component.state.collectAsState()
                         ProfileScreen(profileState) {event ->
+                            instance.component.onEvent(event)
+                        }
+                    }
+
+                    is MainComponent.MainChild.OrderHistoryScreen -> {
+                        val orderHistoryState by instance.component.uiState.collectAsState()
+                        OrderHistoryScreen(orderHistoryState) { event ->
+                            instance.component.onEvent(event)
+                        }
+                    }
+
+                    is MainComponent.MainChild.OrderHistoryAllScreen -> {
+                        val orderHistoryState by instance.component.state.collectAsState()
+                        OrderHistoryAllScreen(orderHistoryState) { event ->
+                            instance.component.onEvent(event)
+                        }
+                    }
+
+                    is MainComponent.MainChild.TrackOrderScreen -> {
+                        val trackOrderState by instance.component.uiState.collectAsState()
+                        TrackOrderScreen(trackOrderState) { event ->
                             instance.component.onEvent(event)
                         }
                     }

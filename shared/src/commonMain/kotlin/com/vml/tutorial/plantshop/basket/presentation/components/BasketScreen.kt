@@ -27,12 +27,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.vml.tutorial.plantshop.MR
+import com.vml.tutorial.plantshop.basket.presentation.BasketError
 import com.vml.tutorial.plantshop.basket.presentation.BasketItemState
 import com.vml.tutorial.plantshop.basket.presentation.BasketScreenState
+import com.vml.tutorial.plantshop.core.presentation.DefaultDialog
+import com.vml.tutorial.plantshop.core.presentation.DefaultProgressDialog
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.plants.presentation.PlantImage
 import com.vml.tutorial.plantshop.plants.presentation.detail.components.QuantityController
+import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryEvents
 import com.vml.tutorial.plantshop.ui.theme.Typography
 import dev.icerock.moko.resources.compose.painterResource
 
@@ -41,6 +45,27 @@ fun BasketScreen(
     state: BasketScreenState,
     onEvent: (BasketEvent) -> Unit
 ) {
+    if (state.checkoutInProgress) {
+        DefaultProgressDialog(UiText.StringRes(MR.strings.basket_purchasing_message).asString())
+    }
+
+    state.error?.let { error ->
+        DefaultDialog(
+            title = UiText.StringRes(MR.strings.warning_text).asString(),
+            message = error.errorMessage.asString(),
+            primaryText = error.positiveButton.asString(),
+            primaryCallback = {
+                when(error) {
+                    BasketError.AddressMissingError -> onEvent(BasketEvent.ComponentEvents.NavigateToEditAddress)
+                    is BasketError.DefaultError -> onEvent(BasketEvent.DismissErrorDialog)
+                    BasketError.PhoneNumberMissingError -> onEvent(BasketEvent.ComponentEvents.NavigateToEditProfile)
+                }},
+            secondaryText = error.negativeButton?.asString(),
+            secondaryCallback = { onEvent(BasketEvent.DismissErrorDialog) },
+            onDismissRequest = { onEvent(BasketEvent.DismissErrorDialog) }
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -55,7 +80,7 @@ fun BasketScreen(
         if (state.displayEmptyMessage) {
             // EMPTY MESSAGE
             EmptyMessage {
-                onEvent(BasketEvent.ExplorePlants)
+                onEvent(BasketEvent.ComponentEvents.NavigateToHome)
             }
         } else {
             LazyColumn {

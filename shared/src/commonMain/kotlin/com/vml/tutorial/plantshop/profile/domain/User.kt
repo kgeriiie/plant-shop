@@ -9,7 +9,7 @@ data class User (
     val email: String,
     val birthDate: String,
     val phoneNumber: String,
-    val address: Address
+    val address: Address?
 )
 
 @Serializable
@@ -20,4 +20,12 @@ data class Address (
     val postalCode: Int,
     val country: String,
     val additionalDescription: String
-)
+) {
+    fun isFilled(): Boolean {
+        return streetName.isNotEmpty()
+            && city.isNotEmpty()
+            && country.isNotEmpty()
+            && postalCode > 0
+            && doorNumber > 0
+    }
+}

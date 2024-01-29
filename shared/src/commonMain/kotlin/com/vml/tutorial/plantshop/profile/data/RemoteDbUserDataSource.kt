@@ -19,10 +19,13 @@ class RemoteDbUserDataSource : UserDataSource {
     }
 
     override suspend fun getUser(email: String?): User? {
+        if (email.isNullOrEmpty()) return null
+
         val users: List<User>? = try {
             collection.collectionGroup(COLLECTION_ID).where(EMAIL_FIELD_NAME, email)
                 .get().documents.map { it.data() }
         } catch (err: Exception) {
+            err.printStackTrace()
             return null
         }
         return users?.firstOrNull()

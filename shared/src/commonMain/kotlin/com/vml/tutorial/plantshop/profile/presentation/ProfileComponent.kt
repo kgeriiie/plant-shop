@@ -24,7 +24,6 @@ class ProfileComponent(
         when (event) {
             ProfileEvent.OnGetHelpClick -> TODO()
             ProfileEvent.OnLogOutClick -> TODO()
-            ProfileEvent.OnMyOrdersClick -> TODO()
             ProfileEvent.OnPaymentMethodClick -> TODO()
             ProfileEvent.OnSettingsClick -> TODO()
             else -> onComponentEvent.invoke(event)

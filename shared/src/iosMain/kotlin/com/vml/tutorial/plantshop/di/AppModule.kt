@@ -24,6 +24,11 @@ import com.vml.tutorial.plantshop.profile.data.ProfileRepository
 import com.vml.tutorial.plantshop.profile.data.ProfileRepositoryImpl
 import com.vml.tutorial.plantshop.profile.data.RemoteDbUserDataSource
 import com.vml.tutorial.plantshop.profile.domain.UserDataSource
+import com.vml.tutorial.plantshop.profile.orders.data.FirebaseOrdersDataSource
+import com.vml.tutorial.plantshop.profile.orders.data.OrdersRepository
+import com.vml.tutorial.plantshop.profile.orders.data.OrdersRepositoryImpl
+import com.vml.tutorial.plantshop.rate.data.FirebaseRatingsDataSource
+import com.vml.tutorial.plantshop.rate.domain.RatingsDataSource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 
@@ -38,6 +43,10 @@ actual class AppModule {
         FirebaseAuthDataSourceImpl(
             Firebase.auth
         )
+    }
+
+    private val ratingsDataSource: RatingsDataSource by lazy {
+        FirebaseRatingsDataSource()
     }
 
     actual val authRepository: AuthRepository by lazy {
@@ -91,7 +100,15 @@ actual class AppModule {
     actual val profileRepository: ProfileRepository by lazy {
         ProfileRepositoryImpl(
             dbUserDataSource = dbUserDataSource,
-            remoteDbUserDataSource = remoteDbUserDataSource
+            remoteDbUserDataSource = remoteDbUserDataSource,
+            ratingsDataSource = ratingsDataSource
+        )
+    }
+
+    actual val orderRepository: OrdersRepository by lazy {
+        OrdersRepositoryImpl(
+            firebaseAuthDataSource,
+            FirebaseOrdersDataSource()
         )
     }
 }

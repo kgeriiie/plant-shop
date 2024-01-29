@@ -2,11 +2,8 @@ package com.vml.tutorial.plantshop.plants.presentation.detail
 
 import com.arkivanov.decompose.ComponentContext
 import com.vml.tutorial.plantshop.basket.data.BasketRepository
-import com.vml.tutorial.plantshop.core.presentation.UiText
-import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.core.utils.ShareUtils
 import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
-import com.vml.tutorial.plantshop.di.AppModule
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import kotlinx.coroutines.flow.MutableStateFlow

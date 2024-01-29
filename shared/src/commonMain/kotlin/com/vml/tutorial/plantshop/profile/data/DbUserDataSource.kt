@@ -1,6 +1,7 @@
 package com.vml.tutorial.plantshop.profile.data
 
 import com.vml.tutorial.plantshop.PlantDatabase
+import com.vml.tutorial.plantshop.core.utils.exts.orZero
 import com.vml.tutorial.plantshop.profile.domain.Address
 import com.vml.tutorial.plantshop.profile.domain.User
 import com.vml.tutorial.plantshop.profile.domain.UserDataSource
@@ -15,12 +16,12 @@ class DbUserDataSource(db: PlantDatabase) : UserDataSource {
             email = user.email,
             birthDate = user.birthDate,
             phoneNumber = user.phoneNumber,
-            streetName = user.address.streetName,
-            doorNumber = user.address.doorNumber.toLong(),
-            city = user.address.city,
-            postalCode = user.address.postalCode.toLong(),
-            country = user.address.country,
-            additionalDescription = user.address.additionalDescription
+            streetName = user.address?.streetName.orEmpty(),
+            doorNumber = user.address?.doorNumber.orZero().toLong(),
+            city = user.address?.city.orEmpty(),
+            postalCode = user.address?.postalCode.orZero().toLong(),
+            country = user.address?.country.orEmpty(),
+            additionalDescription = user.address?.additionalDescription.orEmpty()
         )
     }
 
@@ -28,23 +29,24 @@ class DbUserDataSource(db: PlantDatabase) : UserDataSource {
         queries.removeUser()
     }
 
-    override suspend fun getUser(email: String?): User {
-        val user = queries.getUser().executeAsOne()
-        return User(
-            firstName = user.firstName,
-            lastName = user.lastName,
-            email = user.email,
-            birthDate = user.birthDate,
-            phoneNumber = user.phoneNumber,
-            Address(
-                streetName = user.streetName,
-                doorNumber = user.doorNumber.toInt(),
-                city = user.city,
-                postalCode = user.postalCode.toInt(),
-                country = user.country,
-                additionalDescription = user.additionalDescription
+    override suspend fun getUser(email: String?): User? {
+        return queries.getUser().executeAsOneOrNull()?.let { user ->
+            User(
+                firstName = user.firstName,
+                lastName = user.lastName,
+                email = user.email,
+                birthDate = user.birthDate,
+                phoneNumber = user.phoneNumber,
+                Address(
+                    streetName = user.streetName,
+                    doorNumber = user.doorNumber.toInt(),
+                    city = user.city,
+                    postalCode = user.postalCode.toInt(),
+                    country = user.country,
+                    additionalDescription = user.additionalDescription
+                )
             )
-        )
+        }
     }
 
     override suspend fun isThereUser(): Boolean {
