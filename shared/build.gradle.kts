@@ -2,6 +2,7 @@ import org.jetbrains.compose.ExperimentalComposeLibrary
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinCocoapods)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.sqlDelight)
@@ -17,6 +18,13 @@ kotlin {
                 jvmTarget = "17"
             }
         }
+    }
+
+    cocoapods {
+        version = "1.0"
+        ios.deploymentTarget = "14.5"
+        pod("FirebaseFirestore")
+        pod("FirebaseAuth")
     }
 
     targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java).all {
