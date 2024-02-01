@@ -24,8 +24,6 @@ import com.vml.tutorial.plantshop.profilePreferences.data.ProfileRepository
 import com.vml.tutorial.plantshop.profilePreferences.data.ProfileRepositoryImpl
 import com.vml.tutorial.plantshop.profilePreferences.data.RemoteDbUserDataSource
 import com.vml.tutorial.plantshop.profilePreferences.domain.UserDataSource
-import com.vml.tutorial.plantshop.register.data.RegisterUserRepository
-import com.vml.tutorial.plantshop.register.data.RegisterUserRepositoryImpl
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 
@@ -95,9 +93,5 @@ actual class AppModule {
             dbUserDataSource = dbUserDataSource,
             remoteDbUserDataSource = remoteDbUserDataSource
         )
-    }
-
-    actual val registerUserRepository: RegisterUserRepository by lazy {
-        RegisterUserRepositoryImpl(remoteDbUserDataSource)
     }
 }
