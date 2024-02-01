@@ -9,6 +9,7 @@ import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
 import com.vml.tutorial.plantshop.profile.data.ProfileRepository
 import com.vml.tutorial.plantshop.profile.domain.UserDataSource
+import com.vml.tutorial.plantshop.profile.orders.data.OrdersRepository
 
 expect class AppModule {
     val authRepository: AuthRepository
@@ -17,6 +18,7 @@ expect class AppModule {
     val plantsRepository: PlantsRepository
     val dbFavoritesDataSource: DbFavoritesDataSource
     val basketRepository: BasketRepository
+    val orderRepository: OrdersRepository
     val shareUtils: ShareUtils
     val dataStore: AppDataStore
     val profileRepository: ProfileRepository

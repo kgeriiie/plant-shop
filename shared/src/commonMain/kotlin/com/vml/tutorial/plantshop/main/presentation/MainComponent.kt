@@ -16,8 +16,9 @@ import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailComponent
 import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailEvent
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenComponent
-import com.vml.tutorial.plantshop.profile.data.ProfileRepository
+import com.vml.tutorial.plantshop.profile.orders.presentation.OrderHistoryComponent
 import com.vml.tutorial.plantshop.profile.domain.User
+import com.vml.tutorial.plantshop.profile.orders.presentation.OrderHistoryEvents
 import com.vml.tutorial.plantshop.profile.presentation.ProfileComponent
 import com.vml.tutorial.plantshop.profile.presentation.components.ProfileEvent
 import kotlinx.coroutines.channels.Channel
@@ -41,6 +42,7 @@ interface MainComponent {
         data class BasketScreen(val component: BasketComponent): MainChild()
         data class PlantDetailScreen(val component: PlantDetailComponent): MainChild()
         data class ProfileScreen(val component: ProfileComponent): MainChild()
+        data class OrderHistoryScreen(val component: OrderHistoryComponent): MainChild()
     }
 }
 
@@ -142,6 +144,23 @@ class DefaultMainComponent(
                 ) { event ->
                     when (event) {
                         ProfileEvent.NavigateBack -> navigation.pop()
+                        ProfileEvent.OnMyOrdersClick -> {
+                            _state.update { it.copy(bottomNavigationVisible = false) }
+                            navigation.pushNew(MainConfiguration.OrderHistoryScreen)
+                        }
+                        else -> Unit
+                    }
+                }
+            )
+
+            is MainConfiguration.OrderHistoryScreen -> MainComponent.MainChild.OrderHistoryScreen(
+                OrderHistoryComponent(
+                    componentContext = context,
+                    plantsRepository = appModule.plantsRepository,
+                    ordersRepository = appModule.orderRepository
+                ) { event ->
+                    when (event) {
+                        OrderHistoryEvents.NavigateBack -> navigation.pop()
                         else -> Unit
                     }
                 }
@@ -165,6 +184,8 @@ class DefaultMainComponent(
         data class PlantDetailScreen(val plant: Plant): MainConfiguration()
         @Serializable
         data class ProfileScreen(val user: User?): MainConfiguration()
+        @Serializable
+        data object OrderHistoryScreen: MainConfiguration()
     }
 
     data class MainUiState(
