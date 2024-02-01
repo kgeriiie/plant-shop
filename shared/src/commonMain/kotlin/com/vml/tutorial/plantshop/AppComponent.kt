@@ -81,7 +81,7 @@ class DefaultAppComponent(
                 RegisterComponent(
                     componentContext = context,
                     authRepository = appModule.authRepository,
-                    registerUserRepository = appModule.registerUserRepository,
+                    profileRepository = appModule.profileRepository,
                     onNavigateBack = {
                         navigation.pop()
                     },

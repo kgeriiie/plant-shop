@@ -7,9 +7,9 @@ data class User (
     val firstName: String?,
     val lastName: String?,
     val email: String,
-    val birthDate: String?,
-    val phoneNumber: String?,
-    val address: Address
+    val birthDate: String? = null,
+    val phoneNumber: String? = null,
+    val address: Address? = null
 ) {
     val monogram: String get() = if (firstName.isNullOrEmpty()) {
         "${email.first()}"
