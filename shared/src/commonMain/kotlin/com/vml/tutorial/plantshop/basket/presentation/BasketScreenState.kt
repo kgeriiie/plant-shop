@@ -1,5 +1,6 @@
 package com.vml.tutorial.plantshop.basket.presentation
 
+import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.utils.exts.orFalse
 import com.vml.tutorial.plantshop.core.utils.exts.orZero
 import com.vml.tutorial.plantshop.core.utils.exts.roundTo
@@ -7,7 +8,8 @@ import com.vml.tutorial.plantshop.plants.domain.Plant
 
 data class BasketScreenState(
     val items: List<BasketItemState>? = null,
-    val discount: Double = 3.0   // 3 USD
+    val discount: Double = 3.0,   // 3 USD
+    val checkoutInProgress: Boolean = false
 ) {
     private val itemsPrice: Double get() = items.orEmpty().sumOf { it.totalPrice }
     private val totalPrice: Double get() = itemsPrice.minus(discount).takeUnless { items.isNullOrEmpty() }.orZero()
@@ -24,3 +26,8 @@ data class BasketItemState(
 ) {
     val totalPrice: Double get() = plant.price.times(quantity)
 }
+
+data class BasketScreenUiAction(
+    val checkoutInProgress: Boolean = false,
+    val errorMessage: UiText? = null
+)

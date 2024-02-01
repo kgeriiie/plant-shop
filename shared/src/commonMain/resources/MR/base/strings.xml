@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <string name="app_name">Plant Shop</string>
+    <string name="confirm_text">Confirm</string>
+    <string name="yes_text">Yes</string>
+    <string name="no_text">No</string>
+
     <string name="plant_image_description">Plant image</string>
     <string name="background_image">Background image</string>
     <string name="share_plant_content_text">Hey, check out this super fantastic offer about %s in our Plant Shop App!</string>
@@ -57,7 +61,9 @@
     <string name="basket_empty_title">I\'m so light, I\'m floating</string>
     <string name="basket_empty_message">It seems you forgot to add any of our amazing plants to my cart! Hurry up I will fly away if you leave me empty!</string>
     <string name="basket_empty_Button">Explore</string>
+    <string name="basket_purchasing_message">Purchasing...</string>
     <string name="basket_checkout_message">Thanks so much for your order! I hope you enjoy your new purchase!</string>
+
     <!--Profile Screen-->
     <string name="my_orders">My Orders</string>
     <string name="payment_method">Payment Method</string>
@@ -83,6 +89,11 @@
     <string name="orders_empty_title_text">No History Yet</string>
     <string name="orders_empty_message_text">It seems you haven\'t ordered anything yet</string>
     <string name="orders_empty_action_button_text">Start Ordering</string>
+    <string name="orders_confirm_cancellation_message_text">Are you sure want to cancel your order?</string>
+    <string name="orders_confirm_reorder_message_text">Are you sure want to purchase your selected order again?</string>
+    <string name="orders_cancelled_message_text">We\'re sorry you\'ve changed your mind, We hope you\'ll soon be in the mood to have an another beautiful plant</string>
+    <string name="orders_reordered_message_text">You are amazing, thanks for choosing our goods again!</string>
+    <string name="orders_fail_to_reordered_message_text">Fail to purchase your selected order, please try again later!</string>
 
 
 </resources>

@@ -18,7 +18,8 @@ import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailEvent
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenComponent
 import com.vml.tutorial.plantshop.profile.orders.presentation.OrderHistoryComponent
 import com.vml.tutorial.plantshop.profile.domain.User
-import com.vml.tutorial.plantshop.profile.orders.presentation.OrderHistoryEvents
+import com.vml.tutorial.plantshop.profile.orders.data.usecase.OrderPlantsUseCase
+import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryEvents
 import com.vml.tutorial.plantshop.profile.presentation.ProfileComponent
 import com.vml.tutorial.plantshop.profile.presentation.components.ProfileEvent
 import kotlinx.coroutines.channels.Channel
@@ -90,6 +91,7 @@ class DefaultMainComponent(
                     componentContext = context,
                     plantsRepository = appModule.plantsRepository,
                     basketRepository = appModule.basketRepository,
+                    orderPlants = OrderPlantsUseCase(appModule.orderRepository),
                     onNavigateToHome = { onEvent(MainScreenEvent.OnHomeTabClicked) },
                     onShowMessage = ::showMessage
                 )
@@ -143,7 +145,10 @@ class DefaultMainComponent(
                     componentContext = context
                 ) { event ->
                     when (event) {
-                        ProfileEvent.NavigateBack -> navigation.pop()
+                        ProfileEvent.NavigateBack -> {
+                            _state.update { it.copy(bottomNavigationVisible = true) }
+                            navigation.pop()
+                        }
                         ProfileEvent.OnMyOrdersClick -> {
                             _state.update { it.copy(bottomNavigationVisible = false) }
                             navigation.pushNew(MainConfiguration.OrderHistoryScreen)
@@ -161,6 +166,9 @@ class DefaultMainComponent(
                 ) { event ->
                     when (event) {
                         OrderHistoryEvents.NavigateBack -> navigation.pop()
+                        is OrderHistoryEvents.ShowMessage -> {
+                            showMessage(event.message)
+                        }
                         else -> Unit
                     }
                 }
