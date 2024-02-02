@@ -18,6 +18,7 @@ class LoginComponent(
     componentContext: ComponentContext,
     private val authRepository: AuthRepository,
     private val onNavigateToMain: () -> Unit,
+    private val onNavigateRegister: () -> Unit
 ): ComponentContext by componentContext {
 
     private val _uiState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState())
@@ -29,6 +30,7 @@ class LoginComponent(
             is LoginEvent.UsernameChanged -> _uiState.update { it.copy(username = event.value, errorMessage = null) }
             LoginEvent.PasswordVisibilityToggled -> _uiState.update { it.copy(passwordVisible = !it.passwordVisible) }
             LoginEvent.LoginClicked -> doLogin()
+            LoginEvent.RegisterClicked -> onNavigateRegister.invoke()
         }
     }
 
@@ -67,4 +69,5 @@ sealed interface LoginEvent {
     data class PasswordChanged(val value: String): LoginEvent
     data object PasswordVisibilityToggled: LoginEvent
     data object LoginClicked: LoginEvent
+    data object RegisterClicked: LoginEvent
 }

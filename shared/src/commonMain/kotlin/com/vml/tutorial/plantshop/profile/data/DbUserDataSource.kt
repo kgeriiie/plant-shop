@@ -15,12 +15,12 @@ class DbUserDataSource(db: PlantDatabase) : UserDataSource {
             email = user.email,
             birthDate = user.birthDate,
             phoneNumber = user.phoneNumber,
-            streetName = user.address.streetName,
-            doorNumber = user.address.doorNumber.toLong(),
-            city = user.address.city,
-            postalCode = user.address.postalCode.toLong(),
-            country = user.address.country,
-            additionalDescription = user.address.additionalDescription
+            streetName = user.address?.streetName,
+            doorNumber = user.address?.doorNumber?.toLong(),
+            city = user.address?.city,
+            postalCode = user.address?.postalCode?.toLong(),
+            country = user.address?.country,
+            additionalDescription = user.address?.additionalDescription
         )
     }
 
@@ -38,9 +38,9 @@ class DbUserDataSource(db: PlantDatabase) : UserDataSource {
             phoneNumber = user.phoneNumber,
             Address(
                 streetName = user.streetName,
-                doorNumber = user.doorNumber.toInt(),
+                doorNumber = user.doorNumber?.toInt(),
                 city = user.city,
-                postalCode = user.postalCode.toInt(),
+                postalCode = user.postalCode?.toInt(),
                 country = user.country,
                 additionalDescription = user.additionalDescription
             )

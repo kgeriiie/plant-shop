@@ -13,12 +13,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import com.vml.tutorial.plantshop.profile.domain.User
 import com.vml.tutorial.plantshop.ui.theme.Typography
 
 @Composable
-fun ProfilePhoto(
-    user: User?,
+fun ProfileLettermark(
+    monogram: String,
     textStyle: TextStyle = Typography.displayMedium,
     modifier: Modifier = Modifier
 ) {
@@ -29,9 +28,6 @@ fun ProfilePhoto(
             .clip(roundedCornerShape)
             .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
-        Text(
-            text = "${user?.firstName?.first()} ${user?.lastName?.first()}".uppercase(),
-            style = textStyle
-        )
+        Text(text = monogram, style = textStyle)
     }
 }
