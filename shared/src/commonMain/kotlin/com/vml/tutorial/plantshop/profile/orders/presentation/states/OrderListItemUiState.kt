@@ -1,4 +1,4 @@
-package com.vml.tutorial.plantshop.profile.orders.presentation
+package com.vml.tutorial.plantshop.profile.orders.presentation.states
 
 import com.vml.tutorial.plantshop.MR
 import com.vml.tutorial.plantshop.core.presentation.UiText
@@ -12,7 +12,7 @@ data class OrderListItemUiState(
 ) {
     val orderId: UiText
         get() {
-        return UiText.StringRes(MR.strings.orders_item_order_id_text, listOf(data.orderId))
+        return UiText.StringRes(MR.strings.orders_item_order_id_text, listOf(data.orderNumber))
     }
     val title: UiText
         get() {
@@ -29,8 +29,13 @@ data class OrderListItemUiState(
         return UiText.DynamicString("${data.currency}${data.totalPrice}")
     }
 
-    val plants: List<Plant> get() {
+    // Include all available plants only once
+    val standalonePlants: List<Plant> get() {
         return plantsMap.values.toList()
+    }
+    
+    val allPlants: List<Plant> get() {
+        return data.plantIds.mapNotNull { plantsMap[it] }
     }
 
     val primaryButtonTitle: UiText

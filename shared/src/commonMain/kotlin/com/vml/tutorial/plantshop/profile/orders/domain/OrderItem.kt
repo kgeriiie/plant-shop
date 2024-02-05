@@ -10,13 +10,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OrderItem(
-    @SerialName("orderNumber") val orderId: String,
+    @SerialName("orderCId") val id: String,
+    @SerialName("orderNumber") val orderNumber: String,
     val plantIds: List<Int>,
     val status: OrderStatus,
     val currency: String,
     val totalPrice: Double,
     val createdAt: Long,
     val updatedAt: Long,
+    val userId: String,
 ) {
     fun getMessage(): UiText {
         val dateFormat = "MMM dd, hh:mm"

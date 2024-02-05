@@ -23,6 +23,7 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,11 +44,14 @@ import com.vml.tutorial.plantshop.MR
 import com.vml.tutorial.plantshop.MR.strings.orders_active_orders_title_text
 import com.vml.tutorial.plantshop.MR.strings.orders_cancelled_orders_title_text
 import com.vml.tutorial.plantshop.MR.strings.orders_completed_orders_title_text
+import com.vml.tutorial.plantshop.core.presentation.DefaultDialog
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.core.utils.exts.orZero
 import com.vml.tutorial.plantshop.plants.presentation.PlantImage
-import com.vml.tutorial.plantshop.profile.presentation.components.ProfileEvent
+import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryEvents
+import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryUiState
+import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderListItemUiState
 import com.vml.tutorial.plantshop.ui.theme.Typography
 
 @Composable
@@ -57,6 +61,18 @@ fun OrderHistoryScreen(
     paddingHorizontalOffset: Dp = 2.dp,
     onEvent: (event: OrderHistoryEvents) -> Unit,
 ) {
+    state.confirmAction?.let { action ->
+        DefaultDialog(
+            title = UiText.StringRes(MR.strings.confirm_text).asString(),
+            message = action.message.asString(),
+            primaryText = UiText.StringRes(MR.strings.yes_text).asString(),
+            primaryCallback = { onEvent(OrderHistoryEvents.ConfirmDialogDismissed(action, true)) },
+            secondaryText = UiText.StringRes(MR.strings.no_text).asString(),
+            secondaryCallback = { onEvent(OrderHistoryEvents.ConfirmDialogDismissed(action, false)) },
+            onDismissRequest = { onEvent(OrderHistoryEvents.ConfirmDialogDismissed(action, false)) }
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -84,6 +100,16 @@ fun OrderHistoryScreen(
                 text = UiText.StringRes(MR.strings.orders_screen_title).asString(),
                 style = Typography.headlineMedium
             )
+
+            if (state.contentLoading) {
+                Spacer(modifier = Modifier.weight(1f))
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(20.dp),
+                    strokeWidth = 2.dp
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
         }
 
         if (state.displayEmptyMessage) {
@@ -184,7 +210,7 @@ fun OrderListSection(
         ) {
             items(
                 orders.size.orZero(),
-                key = { orders[it].data.orderId + "${(0..100).random()}" }
+                key = { orders[it].data.orderNumber }
             ) {index ->
                 OrderListItem(
                     itemState = orders[index],
@@ -220,9 +246,9 @@ fun OrderListItem(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                val containerWidth: Dp = 100.dp.takeIf { itemState.plants.size == 1 }?: 120.dp
+                val containerWidth: Dp = 100.dp.takeIf { itemState.standalonePlants.size == 1 }?: 120.dp
                 val imageWidth = containerWidth.times(0.7f)
-                val offset = containerWidth.minus(imageWidth).div(itemState.plants.size.minus(1))
+                val offset = containerWidth.minus(imageWidth).div(itemState.standalonePlants.size.minus(1))
 
                 LazyRow(
                     modifier = Modifier
@@ -230,12 +256,12 @@ fun OrderListItem(
                     horizontalArrangement = Arrangement.spacedBy(-(imageWidth.minus(offset)))
                 ) {
                     items(
-                        count = itemState.plants.size,
+                        count = itemState.standalonePlants.size,
                         key = {
-                            itemState.plants[it].id.toString()
+                            itemState.standalonePlants[it].id.toString()
                         }
                     ) {index ->
-                        itemState.plants.getOrNull(index)?.let { plant ->
+                        itemState.standalonePlants.getOrNull(index)?.let { plant ->
                             Box(
                                 modifier = Modifier
                                     .width(imageWidth)

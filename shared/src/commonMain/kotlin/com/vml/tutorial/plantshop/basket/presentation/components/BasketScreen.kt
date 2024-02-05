@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.vml.tutorial.plantshop.MR
 import com.vml.tutorial.plantshop.basket.presentation.BasketItemState
 import com.vml.tutorial.plantshop.basket.presentation.BasketScreenState
+import com.vml.tutorial.plantshop.core.presentation.DefaultProgressDialog
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.plants.presentation.PlantImage
@@ -41,6 +42,10 @@ fun BasketScreen(
     state: BasketScreenState,
     onEvent: (BasketEvent) -> Unit
 ) {
+    if (state.checkoutInProgress) {
+        DefaultProgressDialog(UiText.StringRes(MR.strings.basket_purchasing_message).asString())
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
