@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -247,12 +248,12 @@ fun OrderListItem(
                     .fillMaxWidth()
             ) {
                 val containerWidth: Dp = 100.dp.takeIf { itemState.standalonePlants.size == 1 }?: 120.dp
-                val imageWidth = containerWidth.times(0.7f)
-                val offset = containerWidth.minus(imageWidth).div(itemState.standalonePlants.size.minus(1))
+                val imageWidth = containerWidth.times(1f.takeIf { itemState.standalonePlants.size == 1 }?: 0.7f)
+                val offset = 0.dp.takeIf { itemState.standalonePlants.size == 1 }?: containerWidth.minus(imageWidth).div(itemState.standalonePlants.size.minus(1))
 
                 LazyRow(
                     modifier = Modifier
-                        .size(containerWidth, 100.dp),
+                        .size(width = containerWidth, height = 120.dp),
                     horizontalArrangement = Arrangement.spacedBy(-(imageWidth.minus(offset)))
                 ) {
                     items(
@@ -293,7 +294,10 @@ fun OrderListItem(
                     Text(
                         text = itemState.title.asString(),
                         style = Typography.titleMedium,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
                         color = Color.Black.copy(alpha = 0.6f),
+                        modifier = Modifier.height(50.dp)
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(

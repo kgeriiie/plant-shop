@@ -21,7 +21,7 @@ data class OrderItem(
     val userId: String,
 ) {
     fun getMessage(): UiText {
-        val dateFormat = "MMM dd, hh:mm"
+        val dateFormat = "MMM dd, HH:mm"
         return when(status) {
             OrderStatus.PENDING -> UiText.StringRes(orders_item_pending_date_text, listOf(DateTimeFormatter.format(createdAt, dateFormat)))
             OrderStatus.SHIPPED -> UiText.StringRes(orders_item_shipped_date_text, listOf(DateTimeFormatter.format(updatedAt, dateFormat)))
