@@ -3,10 +3,12 @@ package com.vml.tutorial.plantshop.profile.orders.data
 import com.vml.tutorial.plantshop.core.data.account.FirebaseAuthDataSource
 import com.vml.tutorial.plantshop.profile.orders.domain.OrderItem
 import com.vml.tutorial.plantshop.profile.orders.domain.OrderStatus
+import com.vml.tutorial.plantshop.profile.orders.data.FirebaseOrdersDataSource.Companion.QueryParam
+import com.vml.tutorial.plantshop.profile.orders.data.FirebaseOrdersDataSource.Companion.Fields
 import kotlinx.datetime.Clock
 
 interface OrdersRepository {
-    suspend fun getOrders(): List<OrderItem>
+    suspend fun getOrders(status: OrderStatus? = null, limit: Int? = null): List<OrderItem>
     suspend fun cancelOrder(orderId: String)
 
     suspend fun createAnOrder(itemIds: List<Int>, totalPrice: Double, currency: String): Boolean
@@ -16,9 +18,18 @@ class OrdersRepositoryImpl(
     private val authDataSource: FirebaseAuthDataSource,
     private val remoteDataSource: FirebaseOrdersDataSource
 ): OrdersRepository {
-    override suspend fun getOrders(): List<OrderItem> {
+    override suspend fun getOrders(status: OrderStatus?, limit: Int?): List<OrderItem> {
         val user = authDataSource.getCurrentUser()?: return emptyList()
-        return remoteDataSource.fetchOrders(user.uid)
+        val queryParams = buildMap {
+            status?.let {
+                put(QueryParam.STATUS, it.name.lowercase())
+            }
+            limit?.let { limit ->
+                put(QueryParam.LIMIT, limit.toString())
+                put(QueryParam.ORDER_BY_DESC, Fields.UPDATE)
+            }
+        }
+        return remoteDataSource.fetchOrders(user.uid, queryParams)
     }
 
     override suspend fun cancelOrder(orderId: String) {

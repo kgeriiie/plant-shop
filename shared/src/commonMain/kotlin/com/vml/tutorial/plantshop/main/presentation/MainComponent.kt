@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import com.vml.tutorial.plantshop.basket.presentation.BasketComponent
@@ -19,6 +20,8 @@ import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenComponent
 import com.vml.tutorial.plantshop.profile.orders.presentation.OrderHistoryComponent
 import com.vml.tutorial.plantshop.profile.domain.User
 import com.vml.tutorial.plantshop.profile.orders.data.usecase.OrderPlantsUseCase
+import com.vml.tutorial.plantshop.profile.orders.domain.OrderStatus
+import com.vml.tutorial.plantshop.profile.orders.presentation.all.OrderHistoryAllComponent
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryEvents
 import com.vml.tutorial.plantshop.profile.presentation.ProfileComponent
 import com.vml.tutorial.plantshop.profile.presentation.components.ProfileEvent
@@ -44,6 +47,7 @@ interface MainComponent {
         data class PlantDetailScreen(val component: PlantDetailComponent): MainChild()
         data class ProfileScreen(val component: ProfileComponent): MainChild()
         data class OrderHistoryScreen(val component: OrderHistoryComponent): MainChild()
+        data class OrderHistoryAllScreen(val component: OrderHistoryAllComponent): MainChild()
     }
 }
 
@@ -166,6 +170,31 @@ class DefaultMainComponent(
                 ) { event ->
                     when (event) {
                         OrderHistoryEvents.NavigateBack -> navigation.pop()
+                        is OrderHistoryEvents.StartOrderPressed -> {
+                            _state.update { it.copy(bottomNavigationVisible = true) }
+                            navigation.replaceAll(MainConfiguration.HomeScreen)
+                        }
+                        is OrderHistoryEvents.ShowAllPressed -> {
+                            _state.update { it.copy(bottomNavigationVisible = false) }
+                            navigation.pushNew(MainConfiguration.OrderHistoryAllScreen(event.selectedType))
+                        }
+                        is OrderHistoryEvents.ShowMessage -> {
+                            showMessage(event.message)
+                        }
+                        else -> Unit
+                    }
+                }
+            )
+
+            is MainConfiguration.OrderHistoryAllScreen -> MainComponent.MainChild.OrderHistoryAllScreen(
+                OrderHistoryAllComponent(
+                    componentContext = context,
+                    config.status,
+                    ordersRepository = appModule.orderRepository,
+                    plantsRepository = appModule.plantsRepository
+                ) { event ->
+                    when (event) {
+                        OrderHistoryEvents.NavigateBack -> navigation.pop()
                         is OrderHistoryEvents.ShowMessage -> {
                             showMessage(event.message)
                         }
@@ -194,6 +223,8 @@ class DefaultMainComponent(
         data class ProfileScreen(val user: User?): MainConfiguration()
         @Serializable
         data object OrderHistoryScreen: MainConfiguration()
+        @Serializable
+        data class OrderHistoryAllScreen(val status: OrderStatus): MainConfiguration()
     }
 
     data class MainUiState(
