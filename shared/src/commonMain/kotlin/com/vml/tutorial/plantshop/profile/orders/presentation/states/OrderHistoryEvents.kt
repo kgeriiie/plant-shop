@@ -5,6 +5,7 @@ import com.vml.tutorial.plantshop.profile.orders.domain.OrderItem
 import com.vml.tutorial.plantshop.profile.orders.domain.OrderStatus
 
 sealed interface OrderHistoryEvents {
+    data object FetchContents: OrderHistoryEvents
     data class ShowMessage(val message: UiText): OrderHistoryEvents
     data class PrimaryButtonPressed(val order: OrderItem): OrderHistoryEvents
     data class SecondaryButtonPressed(val order: OrderItem): OrderHistoryEvents
