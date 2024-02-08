@@ -3,6 +3,7 @@ package com.vml.tutorial.plantshop.profile.orders.presentation.states
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.profile.orders.domain.OrderItem
 import com.vml.tutorial.plantshop.profile.orders.domain.OrderStatus
+import com.vml.tutorial.plantshop.rate.domain.Rating
 
 sealed interface OrderHistoryEvents {
     data object FetchContents: OrderHistoryEvents
@@ -13,4 +14,6 @@ sealed interface OrderHistoryEvents {
     data object StartOrderPressed: OrderHistoryEvents
     data object NavigateBack: OrderHistoryEvents
     data class ConfirmDialogDismissed(val action: OrderHistoryConfirmAction, val confirmed: Boolean): OrderHistoryEvents
+    data class OnRateSubmitted(val rating: Rating): OrderHistoryEvents
+    data object DismissRatingDialog: OrderHistoryEvents
 }

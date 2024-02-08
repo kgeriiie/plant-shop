@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
 
 interface MainComponent {
@@ -166,7 +167,8 @@ class DefaultMainComponent(
                 OrderHistoryComponent(
                     componentContext = context,
                     plantsRepository = appModule.plantsRepository,
-                    ordersRepository = appModule.orderRepository
+                    ordersRepository = appModule.orderRepository,
+                    profileRepository = appModule.profileRepository
                 ) { event ->
                     when (event) {
                         OrderHistoryEvents.NavigateBack -> navigation.pop()
@@ -178,9 +180,7 @@ class DefaultMainComponent(
                             _state.update { it.copy(bottomNavigationVisible = false) }
                             navigation.pushNew(MainConfiguration.OrderHistoryAllScreen(event.selectedType))
                         }
-                        is OrderHistoryEvents.ShowMessage -> {
-                            showMessage(event.message)
-                        }
+                        is OrderHistoryEvents.ShowMessage -> showMessage(event.message)
                         else -> Unit
                     }
                 }
@@ -191,13 +191,12 @@ class DefaultMainComponent(
                     componentContext = context,
                     config.status,
                     ordersRepository = appModule.orderRepository,
-                    plantsRepository = appModule.plantsRepository
+                    plantsRepository = appModule.plantsRepository,
+                    profileRepository = appModule.profileRepository
                 ) { event ->
                     when (event) {
                         OrderHistoryEvents.NavigateBack -> navigation.pop()
-                        is OrderHistoryEvents.ShowMessage -> {
-                            showMessage(event.message)
-                        }
+                        is OrderHistoryEvents.ShowMessage -> showMessage(event.message)
                         else -> Unit
                     }
                 }
@@ -206,7 +205,7 @@ class DefaultMainComponent(
     }
 
     private fun showMessage(message: UiText) {
-        _actions.trySend(Actions.ShowMessageAction(message))
+        _actions.trySend(Actions.ShowMessageAction(Clock.System.now().epochSeconds ,message))
     }
 
     @Serializable
@@ -227,11 +226,7 @@ class DefaultMainComponent(
         data class OrderHistoryAllScreen(val status: OrderStatus): MainConfiguration()
     }
 
-    data class MainUiState(
-        val bottomNavigationVisible: Boolean = true
-    )
-
     sealed interface Actions {
-        data class ShowMessageAction(val message: UiText): Actions
+        data class ShowMessageAction(val id: Long, val message: UiText): Actions
     }
 }

@@ -45,6 +45,7 @@ import com.vml.tutorial.plantshop.core.utils.exts.orZero
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryEvents
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryUiState
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderListItemUiState
+import com.vml.tutorial.plantshop.rate.RateDialog
 import com.vml.tutorial.plantshop.ui.theme.Typography
 import dev.icerock.moko.resources.compose.painterResource
 
@@ -64,6 +65,19 @@ fun OrderHistoryScreen(
             secondaryText = UiText.StringRes(MR.strings.no_text).asString(),
             secondaryCallback = { onEvent(OrderHistoryEvents.ConfirmDialogDismissed(action, false)) },
             onDismissRequest = { onEvent(OrderHistoryEvents.ConfirmDialogDismissed(action, false)) }
+        )
+    }
+
+    if (state.displayRating) {
+        RateDialog(
+            orderId = state.commonState.ratingState?.orderId.orEmpty(),
+            rating = state.commonState.ratingState?.previousRating,
+            onSubmitRating = { rating ->
+                onEvent(OrderHistoryEvents.OnRateSubmitted(rating))
+            },
+            onDismissRequest = {
+                onEvent(OrderHistoryEvents.DismissRatingDialog)
+            }
         )
     }
 
