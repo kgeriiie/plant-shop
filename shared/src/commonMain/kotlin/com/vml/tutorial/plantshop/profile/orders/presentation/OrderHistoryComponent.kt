@@ -11,51 +11,71 @@ import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistor
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderListItemUiState
 import com.vml.tutorial.plantshop.profile.orders.data.OrdersRepository
 import com.vml.tutorial.plantshop.profile.orders.data.usecase.OrderPlantsUseCase
+import com.vml.tutorial.plantshop.profile.orders.domain.OrderItem
 import com.vml.tutorial.plantshop.profile.orders.domain.OrderStatus
+import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryCommonUiState
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryConfirmAction
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class OrderHistoryComponent(
+open class OrderHistoryComponent(
     componentContext: ComponentContext,
-    private val ordersRepository: OrdersRepository,
-    private val plantsRepository: PlantsRepository,
+    internal val ordersRepository: OrdersRepository,
+    internal val plantsRepository: PlantsRepository,
     private val orderPlants: OrderPlantsUseCase = OrderPlantsUseCase(ordersRepository),
     private val onComponentEvent: (event: OrderHistoryEvents) -> Unit
 ): ComponentContext by componentContext  {
+    internal val commonUiState: MutableStateFlow<OrderHistoryCommonUiState> = MutableStateFlow(OrderHistoryCommonUiState())
+
     private val _uiState: MutableStateFlow<OrderHistoryUiState> = MutableStateFlow(OrderHistoryUiState())
-    val uiState: StateFlow<OrderHistoryUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<OrderHistoryUiState> = commonUiState.combine(_uiState) { common, ui ->
+        ui.copy(commonState = common)
+    }.stateIn(componentCoroutineScope(), SharingStarted.WhileSubscribed(), _uiState.value)
 
-    init {
-        fetchOrderHistory()
-    }
-
-    private fun fetchOrderHistory() {
+    open fun fetchOrderHistory() {
         componentCoroutineScope().launch {
             showLoader()
-            val orders = ordersRepository.getOrders()
             _uiState.update {
-                it.copy(
-                    contentLoading = false,
-                    items = orders.map { order ->
-                        OrderListItemUiState(
-                            data = order,
-                            plantsMap = buildMap {
-                                order.plantIds.forEach { plantId ->
-                                    if (!this.containsKey(plantId)) {
-                                        plantsRepository.getPlant(plantId)
-                                            ?.let { plant -> this.put(plant.id, plant) }
-                                    }
-                                }
-                            }
-                        )
-                    }
-                )
+                it.copy(items = fetchOrders().mapOrderItemsToState())
+            }.also {
+                hideLoader()
             }
         }
+    }
+
+
+    private suspend fun fetchOrders(): List<OrderItem> {
+        return listOf(OrderStatus.PENDING, OrderStatus.SHIPPED, OrderStatus.CANCELLED).map { status ->
+            componentCoroutineScope().async {
+                ordersRepository.getOrders(status = status, limit = 3)
+            }
+        }.awaitAll().flatten()
+    }
+
+    internal suspend fun List<OrderItem>.mapOrderItemsToState(): List<OrderListItemUiState> {
+        return map { order ->
+            OrderListItemUiState(
+                data = order,
+                plantsMap = buildMap {
+                    order.plantIds.forEach { plantId ->
+                        if (!this.containsKey(plantId)) {
+                            plantsRepository.getPlant(plantId)?.let { plant -> this.put(plant.id, plant) }
+                        }
+                    }
+                }
+            )
+        }
+    }
+
+    open fun getOrderItemBy(orderId: String): OrderListItemUiState? {
+        return uiState.value.items?.firstOrNull { it.data.id == orderId }
     }
 
     private fun cancelOrder(orderId: String) {
@@ -70,7 +90,7 @@ class OrderHistoryComponent(
 
     private fun reOrder(orderId: String) {
         showLoader()
-        uiState.value.items?.firstOrNull { it.data.id == orderId }?.let { item ->
+        getOrderItemBy(orderId)?.let { item ->
             componentCoroutineScope().launch {
                 if (orderPlants(item.allPlants)) {
                     onComponentEvent(OrderHistoryEvents.ShowMessage(UiText.StringRes(MR.strings.orders_reordered_message_text)))
@@ -88,20 +108,19 @@ class OrderHistoryComponent(
 
     fun onEvent(event: OrderHistoryEvents) {
         when(event) {
+            is OrderHistoryEvents.FetchContents -> fetchOrderHistory()
             is OrderHistoryEvents.PrimaryButtonPressed -> when(event.order.status) {
-                OrderStatus.PENDING -> _uiState.update { it.copy(confirmAction = OrderHistoryConfirmAction.Cancellation(event.order)) }
+                OrderStatus.PENDING -> commonUiState.update { it.copy(confirmAction = OrderHistoryConfirmAction.Cancellation(event.order)) }
                 OrderStatus.SHIPPED -> Unit // TODO: implement feature
                 OrderStatus.CANCELLED -> Unit // TODO: implement feature
             }
             is OrderHistoryEvents.SecondaryButtonPressed -> when(event.order.status) {
                 OrderStatus.PENDING -> Unit // TODO: implement feature
                 OrderStatus.SHIPPED -> Unit // TODO: implement feature
-                OrderStatus.CANCELLED -> _uiState.update { it.copy(confirmAction = OrderHistoryConfirmAction.Reorder(event.order)) }
+                OrderStatus.CANCELLED -> commonUiState.update { it.copy(confirmAction = OrderHistoryConfirmAction.Reorder(event.order)) }
             }
-            is OrderHistoryEvents.ShowAllPressed -> Unit
-            OrderHistoryEvents.StartOrderPressed -> Unit
             is OrderHistoryEvents.ConfirmDialogDismissed -> {
-                _uiState.update { it.copy(confirmAction = null) }
+                commonUiState.update { it.copy(confirmAction = null) }
                 if (event.confirmed) {
                     onActionConfirmed(event.action)
                 }
@@ -117,11 +136,11 @@ class OrderHistoryComponent(
         }
     }
 
-    private fun showLoader() {
-        _uiState.update { it.copy(contentLoading = true) }
+    internal open fun showLoader() {
+        commonUiState.update { it.copy(contentLoading = true) }
     }
 
-    private fun hideLoader() {
-        _uiState.update { it.copy(contentLoading = false) }
+    internal open fun hideLoader() {
+        commonUiState.update { it.copy(contentLoading = false) }
     }
 }
