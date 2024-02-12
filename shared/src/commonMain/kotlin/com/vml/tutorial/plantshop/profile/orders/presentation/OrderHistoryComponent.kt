@@ -6,6 +6,7 @@ import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.MR
 import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
+import com.vml.tutorial.plantshop.profile.data.ProfileRepository
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryEvents
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryUiState
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderListItemUiState
@@ -15,6 +16,8 @@ import com.vml.tutorial.plantshop.profile.orders.domain.OrderItem
 import com.vml.tutorial.plantshop.profile.orders.domain.OrderStatus
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryCommonUiState
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryConfirmAction
+import com.vml.tutorial.plantshop.profile.orders.presentation.states.RatingState
+import com.vml.tutorial.plantshop.rate.domain.Rating
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +32,7 @@ open class OrderHistoryComponent(
     componentContext: ComponentContext,
     internal val ordersRepository: OrdersRepository,
     internal val plantsRepository: PlantsRepository,
+    internal val profileRepository: ProfileRepository,
     private val orderPlants: OrderPlantsUseCase = OrderPlantsUseCase(ordersRepository),
     private val onComponentEvent: (event: OrderHistoryEvents) -> Unit
 ): ComponentContext by componentContext  {
@@ -81,9 +85,14 @@ open class OrderHistoryComponent(
     private fun cancelOrder(orderId: String) {
         showLoader()
         componentCoroutineScope().launch {
-            ordersRepository.cancelOrder(orderId).also {
-                fetchOrderHistory()
-                onComponentEvent(OrderHistoryEvents.ShowMessage(UiText.StringRes(MR.strings.orders_cancelled_message_text)))
+            ordersRepository.cancelOrder(orderId).also { success ->
+                if (success) {
+                    fetchOrderHistory()
+                    onComponentEvent(OrderHistoryEvents.ShowMessage(UiText.StringRes(MR.strings.orders_cancelled_message_text)))
+                } else {
+                    onComponentEvent(OrderHistoryEvents.ShowMessage(UiText.StringRes(MR.strings.orders_fail_to_cancel_message_text)))
+                    hideLoader()
+                }
             }
         }
     }
@@ -106,18 +115,35 @@ open class OrderHistoryComponent(
         }
     }
 
+    private fun showRatingDialog(order: OrderItem) {
+        componentCoroutineScope().launch {
+            commonUiState.update { it.copy(
+                ratingState = RatingState(
+                    orderId = order.id,
+                    previousRating = profileRepository.getOrderRating(order.id)
+                ),
+            )}
+        }
+    }
+
+    private fun submitRating(rating: Rating) {
+        componentCoroutineScope().launch {
+            hideRatingDialog()
+            profileRepository.saveRating(rating)
+            onComponentEvent(OrderHistoryEvents.ShowMessage(UiText.StringRes(MR.strings.rate_greetings_text)))
+        }
+    }
+
     fun onEvent(event: OrderHistoryEvents) {
         when(event) {
             is OrderHistoryEvents.FetchContents -> fetchOrderHistory()
             is OrderHistoryEvents.PrimaryButtonPressed -> when(event.order.status) {
                 OrderStatus.PENDING -> commonUiState.update { it.copy(confirmAction = OrderHistoryConfirmAction.Cancellation(event.order)) }
-                OrderStatus.SHIPPED -> Unit // TODO: implement feature
-                OrderStatus.CANCELLED -> Unit // TODO: implement feature
+                else -> showRatingDialog(event.order)
             }
             is OrderHistoryEvents.SecondaryButtonPressed -> when(event.order.status) {
                 OrderStatus.PENDING -> Unit // TODO: implement feature
-                OrderStatus.SHIPPED -> Unit // TODO: implement feature
-                OrderStatus.CANCELLED -> commonUiState.update { it.copy(confirmAction = OrderHistoryConfirmAction.Reorder(event.order)) }
+                else -> commonUiState.update { it.copy(confirmAction = OrderHistoryConfirmAction.Reorder(event.order)) }
             }
             is OrderHistoryEvents.ConfirmDialogDismissed -> {
                 commonUiState.update { it.copy(confirmAction = null) }
@@ -125,6 +151,8 @@ open class OrderHistoryComponent(
                     onActionConfirmed(event.action)
                 }
             }
+            is OrderHistoryEvents.OnRateSubmitted -> submitRating(event.rating)
+            is OrderHistoryEvents.DismissRatingDialog -> hideRatingDialog()
             else -> onComponentEvent.invoke(event)
         }
     }
@@ -134,6 +162,10 @@ open class OrderHistoryComponent(
             is OrderHistoryConfirmAction.Cancellation -> cancelOrder(action.item.id)
             is OrderHistoryConfirmAction.Reorder -> reOrder(action.item.id)
         }
+    }
+
+    private fun hideRatingDialog() {
+        commonUiState.update { it.copy(ratingState = null) }
     }
 
     internal open fun showLoader() {

@@ -3,6 +3,7 @@ package com.vml.tutorial.plantshop.profile.orders.presentation.all
 import com.arkivanov.decompose.ComponentContext
 import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
+import com.vml.tutorial.plantshop.profile.data.ProfileRepository
 import com.vml.tutorial.plantshop.profile.orders.data.OrdersRepository
 import com.vml.tutorial.plantshop.profile.orders.data.usecase.OrderPlantsUseCase
 import com.vml.tutorial.plantshop.profile.orders.domain.OrderStatus
@@ -22,9 +23,10 @@ class OrderHistoryAllComponent(
     private val status: OrderStatus,
     ordersRepository: OrdersRepository,
     plantsRepository: PlantsRepository,
+    profileRepository: ProfileRepository,
     orderPlants: OrderPlantsUseCase = OrderPlantsUseCase(ordersRepository),
     onComponentEvent: (event: OrderHistoryEvents) -> Unit
-): OrderHistoryComponent(componentContext, ordersRepository, plantsRepository, orderPlants, onComponentEvent) {
+): OrderHistoryComponent(componentContext, ordersRepository, plantsRepository, profileRepository, orderPlants, onComponentEvent) {
 
     private val _state: MutableStateFlow<OrderHistoryAllUiState> = MutableStateFlow(OrderHistoryAllUiState(status))
     val state: StateFlow<OrderHistoryAllUiState> = commonUiState.combine(_state) { common, uiState ->

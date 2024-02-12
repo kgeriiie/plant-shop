@@ -42,8 +42,7 @@ data class OrderListItemUiState(
         get() {
         return when(data.status) {
             OrderStatus.PENDING -> UiText.StringRes(MR.strings.orders_item_cancel_order_text)
-            OrderStatus.SHIPPED -> UiText.StringRes(MR.strings.orders_item_rate_order_text)
-            OrderStatus.CANCELLED -> UiText.StringRes(MR.strings.orders_item_rate_us_text)
+            else -> UiText.StringRes(MR.strings.orders_item_rate_order_text)
         }
     }
 
@@ -51,8 +50,7 @@ data class OrderListItemUiState(
         get() {
         return when(data.status) {
             OrderStatus.PENDING -> UiText.StringRes(MR.strings.orders_item_track_order_text)
-            OrderStatus.SHIPPED -> UiText.StringRes(MR.strings.orders_item_re_order_text)
-            OrderStatus.CANCELLED -> UiText.StringRes(MR.strings.orders_item_re_order_text)
+            else -> UiText.StringRes(MR.strings.orders_item_re_order_text)
         }
     }
 }

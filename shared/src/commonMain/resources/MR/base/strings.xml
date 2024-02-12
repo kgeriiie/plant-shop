@@ -4,6 +4,8 @@
     <string name="confirm_text">Confirm</string>
     <string name="yes_text">Yes</string>
     <string name="no_text">No</string>
+    <string name="cancel_text">Cancel</string>
+    <string name="submit_text">Submit</string>
 
     <string name="plant_image_description">Plant image</string>
     <string name="background_image">Background image</string>
@@ -63,6 +65,7 @@
     <string name="basket_empty_Button">Explore</string>
     <string name="basket_purchasing_message">Purchasing...</string>
     <string name="basket_checkout_message">Thanks so much for your order! I hope you enjoy your new purchase!</string>
+    <string name="basket_fail_to_checkout_message">Fail to purchase your items please try again later.</string>
 
     <!--Profile Screen-->
     <string name="my_orders">My Orders</string>
@@ -80,7 +83,6 @@
     <string name="orders_item_order_id_text">OrderID: %s</string>
     <string name="orders_item_cancel_order_text">Cancel Order</string>
     <string name="orders_item_rate_order_text">Rate Order</string>
-    <string name="orders_item_rate_us_text">Rate Us</string>
     <string name="orders_item_track_order_text">Track Order</string>
     <string name="orders_item_re_order_text">Re Order</string>
     <string name="orders_item_pending_date_text">%s Ordered</string>
@@ -92,8 +94,13 @@
     <string name="orders_confirm_cancellation_message_text">Are you sure want to cancel your order?</string>
     <string name="orders_confirm_reorder_message_text">Are you sure want to purchase your selected order again?</string>
     <string name="orders_cancelled_message_text">We\'re sorry you\'ve changed your mind, We hope you\'ll soon be in the mood to have an another beautiful plant</string>
+    <string name="orders_fail_to_cancel_message_text">Fail to cancel your order, please try again later</string>
     <string name="orders_reordered_message_text">You are amazing, thanks for choosing our goods again!</string>
     <string name="orders_fail_to_reordered_message_text">Fail to purchase your selected order, please try again later!</string>
 
-
+    <!--Rate-->
+    <string name="rate_dialog_title">Rate Your Order</string>
+    <string name="rate_dialog_body">We highly value your feedback! Kindly take a moment to rate your order and provide us with your valuable feedback.</string>
+    <string name="rate_dialog_comment_placeholder_text">Tell us about your experience! (optional)</string>
+    <string name="rate_greetings_text">We really appreciate you taking the time to share your rating with us.</string>
 </resources>

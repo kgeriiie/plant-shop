@@ -12,9 +12,12 @@ data class OrderHistoryUiState(
     val cancelledOrders: List<OrderListItemUiState> get() { return items?.filter { it.data.status == OrderStatus.CANCELLED }?.sortedByDescending { it.data.updatedAt }.orEmpty() }
 
     val displayEmptyMessage: Boolean get() { return items?.isEmpty().orFalse() && !commonState.contentLoading }
+
+    val displayRating: Boolean get() { return commonState.ratingState != null && !commonState.ratingState.orderId.isNullOrEmpty()}
 }
 
 data class OrderHistoryCommonUiState(
     val contentLoading: Boolean = false,
-    val confirmAction: OrderHistoryConfirmAction? = null
+    val confirmAction: OrderHistoryConfirmAction? = null,
+    val ratingState: RatingState? = null
 )

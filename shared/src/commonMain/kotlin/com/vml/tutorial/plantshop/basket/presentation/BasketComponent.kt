@@ -82,8 +82,7 @@ class BasketComponent(
                     uiActionStateFlow.update { it.copy(checkoutInProgress = false) }
                     onShowMessage.invoke(UiText.StringRes(MR.strings.basket_checkout_message))
                 } else {
-                    // TODO: add to string res
-                    onShowMessage.invoke(UiText.DynamicString("Fail to purchase your items please try again later."))
+                    onShowMessage.invoke(UiText.StringRes(MR.strings.basket_fail_to_checkout_message))
                 }
             }
         }

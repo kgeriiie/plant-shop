@@ -19,7 +19,7 @@ class FirebaseOrdersDataSource(
     override suspend fun fetchOrders(userId: String, queries: Map<String, String>): List<OrderItem> {
         return ordersCollection
             .where(Fields.USER_ID, userId)
-            .where(Fields.STATUS, queries[QueryParam.STATUS])
+            .whereIfNotNull(Fields.STATUS, queries[QueryParam.STATUS])
             .orderByAsc(queries[QueryParam.ORDER_BY_ASC])
             .orderByDesc(queries[QueryParam.ORDER_BY_DESC])
             .limit(queries[QueryParam.LIMIT]?.toIntOrNull())
@@ -40,6 +40,12 @@ class FirebaseOrdersDataSource(
 
     private fun Query.limit(number: Int?): Query {
         return number?.let(::limit)?: this
+    }
+
+    private fun Query.whereIfNotNull(field: String, equalTo: Any?): Query {
+        return equalTo?.let {
+            return where(field, it)
+        }?: this
     }
 
     override suspend fun updateOrder(order: OrderItem) {

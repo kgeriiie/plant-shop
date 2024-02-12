@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.plants.presentation.PlantImage
+import com.vml.tutorial.plantshop.profile.orders.domain.OrderStatus
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryEvents
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderListItemUiState
 import com.vml.tutorial.plantshop.ui.theme.Typography
@@ -126,16 +128,20 @@ fun OrderListItem(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Button(
-                    onClick = { onEvent(OrderHistoryEvents.PrimaryButtonPressed(itemState.data)) },
-                    modifier = Modifier.fillMaxWidth().weight(1f)
-                ) {
-                    Text(
-                        text = itemState.primaryButtonTitle.asString()
-                    )
+                if (itemState.data.status != OrderStatus.CANCELLED) {
+                    OutlinedButton(
+                        onClick = { onEvent(OrderHistoryEvents.PrimaryButtonPressed(itemState.data)) },
+                        modifier = Modifier.fillMaxWidth().weight(1f)
+                    ) {
+                        Text(
+                            text = itemState.primaryButtonTitle.asString()
+                        )
+                    }
+                    Spacer(Modifier.width(10.dp))
+                } else {
+                    Spacer(Modifier.fillMaxWidth().weight(1f))
                 }
 
-                Spacer(Modifier.width(10.dp))
                 Button(
                     onClick = { onEvent(OrderHistoryEvents.SecondaryButtonPressed(itemState.data)) },
                     modifier = Modifier.fillMaxWidth().weight(1f)

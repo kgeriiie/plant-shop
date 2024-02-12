@@ -58,8 +58,9 @@ fun MainScreen(
 
     when(actions) {
         is DefaultMainComponent.Actions.ShowMessageAction -> {
-            val message = (actions as DefaultMainComponent.Actions.ShowMessageAction).message.asString()
-            LaunchedEffect(message) {
+            val action = (actions as DefaultMainComponent.Actions.ShowMessageAction)
+            val message = action.message.asString()
+            LaunchedEffect(action.id) {
                 snackBarHostState.showSnackbar(message = message)
             }
         }
