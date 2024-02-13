@@ -1,7 +1,10 @@
+import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.googleServices)
+    alias(libs.plugins.firebaseAppDistribution)
 }
 
 android {
@@ -28,6 +31,13 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+        }
+        getByName("debug") {
+            firebaseAppDistribution {
+                serviceCredentialsFile="google-services-account.json"
+                releaseNotesFile="release-notes.txt"
+                groups="internal-testers"
+            }
         }
     }
     compileOptions {
