@@ -1,8 +1,9 @@
 CREATE TABLE user (
+    cId TEXT NOT NULL,
     firstName TEXT NOT NULL,
     lastName TEXT NOT NULL,
     email TEXT NOT NULL,
-    birthDate TEXT NOT NULL,
+    birthDate INTEGER NOT NULL,
     phoneNumber TEXT NOT NULL,
     streetName TEXT NOT NULL,
     doorNumber INTEGER NOT NULL,
@@ -14,6 +15,7 @@ CREATE TABLE user (
 
 insertUser:
 INSERT OR REPLACE INTO user (
+    cId,
     firstName,
     lastName,
     email,
@@ -25,7 +27,7 @@ INSERT OR REPLACE INTO user (
     postalCode,
     country,
     additionalDescription
-) VALUES (?,?, ?,?, ?, ?,?,?,?,?,?);
+) VALUES (?, ?,?, ?,?, ?, ?,?,?,?,?,?);
 
 getUser:
 SELECT * FROM user;

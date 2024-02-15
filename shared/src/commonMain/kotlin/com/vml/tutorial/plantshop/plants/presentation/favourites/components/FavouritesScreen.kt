@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import com.vml.tutorial.plantshop.MR
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
-import com.vml.tutorial.plantshop.plants.presentation.favourites.FavoritesScreenEvent
 import com.vml.tutorial.plantshop.plants.presentation.favourites.FavoritesScreenState
 import com.vml.tutorial.plantshop.plants.presentation.plantList.ItemListEvent
 import com.vml.tutorial.plantshop.plants.presentation.plantList.itemListGrid

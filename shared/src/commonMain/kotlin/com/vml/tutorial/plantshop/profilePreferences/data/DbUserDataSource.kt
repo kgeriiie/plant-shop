@@ -1,26 +1,28 @@
-package com.vml.tutorial.plantshop.profile.data
+package com.vml.tutorial.plantshop.profilePreferences.data
 
 import com.vml.tutorial.plantshop.PlantDatabase
-import com.vml.tutorial.plantshop.profile.domain.Address
-import com.vml.tutorial.plantshop.profile.domain.User
-import com.vml.tutorial.plantshop.profile.domain.UserDataSource
+import com.vml.tutorial.plantshop.core.utils.exts.orZero
+import com.vml.tutorial.plantshop.profilePreferences.domain.Address
+import com.vml.tutorial.plantshop.profilePreferences.domain.User
+import com.vml.tutorial.plantshop.profilePreferences.domain.UserDataSource
 import database.UserQueries
 
 class DbUserDataSource(db: PlantDatabase) : UserDataSource {
     private val queries: UserQueries = db.userQueries
     override suspend fun insertToDatabase(user: User) {
         queries.insertUser(
-            firstName = user.firstName,
-            lastName = user.lastName,
+            cId = user.cId,
+            firstName = user.firstName.orEmpty(),
+            lastName = user.lastName.orEmpty(),
             email = user.email,
-            birthDate = user.birthDate,
-            phoneNumber = user.phoneNumber,
-            streetName = user.address.streetName,
-            doorNumber = user.address.doorNumber.toLong(),
-            city = user.address.city,
-            postalCode = user.address.postalCode.toLong(),
-            country = user.address.country,
-            additionalDescription = user.address.additionalDescription
+            birthDate = user.birthDate.orZero(),
+            phoneNumber = user.phoneNumber.orEmpty(),
+            streetName = user.address?.streetName.orEmpty(),
+            doorNumber = user.address?.doorNumber?.toLong().orZero(),
+            city = user.address?.city.orEmpty(),
+            postalCode = user.address?.postalCode?.toLong().orZero(),
+            country = user.address?.country.orEmpty(),
+            additionalDescription = user.address?.additionalDescription.orEmpty()
         )
     }
 
@@ -31,6 +33,7 @@ class DbUserDataSource(db: PlantDatabase) : UserDataSource {
     override suspend fun getUser(email: String?): User {
         val user = queries.getUser().executeAsOne()
         return User(
+            cId = user.cId.trim(),
             firstName = user.firstName,
             lastName = user.lastName,
             email = user.email,
@@ -49,5 +52,11 @@ class DbUserDataSource(db: PlantDatabase) : UserDataSource {
 
     override suspend fun isThereUser(): Boolean {
         return queries.getUserCount().executeAsOne().toInt() > 0
+    }
+
+    override suspend fun updateUserInfo(user: User) {
+        // INSERT OR REPLACE doesn't work for some reason
+        removeFromDatabase()
+        insertToDatabase(user)
     }
 }

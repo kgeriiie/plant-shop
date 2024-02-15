@@ -1,7 +1,7 @@
-package com.vml.tutorial.plantshop.profile.data
+package com.vml.tutorial.plantshop.profilePreferences.data
 
-import com.vml.tutorial.plantshop.profile.domain.User
-import com.vml.tutorial.plantshop.profile.domain.UserDataSource
+import com.vml.tutorial.plantshop.profilePreferences.domain.User
+import com.vml.tutorial.plantshop.profilePreferences.domain.UserDataSource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 
@@ -9,6 +9,7 @@ interface ProfileRepository {
     suspend fun insertToDatabase(user: User)
     suspend fun removeFromDatabase()
     suspend fun getUser(): User?
+    suspend fun updateUserInfo(user: User): Boolean
 }
 
 class ProfileRepositoryImpl(
@@ -30,5 +31,15 @@ class ProfileRepositoryImpl(
             }
         }
         return dbUserDataSource.getUser(null)
+    }
+
+    override suspend fun updateUserInfo(user: User): Boolean {
+        try {
+            remoteDbUserDataSource.updateUserInfo(user)
+            dbUserDataSource.updateUserInfo(user)
+        } catch (err: Exception) {
+            return false
+        }
+        return true
     }
 }

@@ -1,7 +1,7 @@
-package com.vml.tutorial.plantshop.profile.data
+package com.vml.tutorial.plantshop.profilePreferences.data
 
-import com.vml.tutorial.plantshop.profile.domain.User
-import com.vml.tutorial.plantshop.profile.domain.UserDataSource
+import com.vml.tutorial.plantshop.profilePreferences.domain.User
+import com.vml.tutorial.plantshop.profilePreferences.domain.UserDataSource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import dev.gitlive.firebase.firestore.where
@@ -26,6 +26,10 @@ class RemoteDbUserDataSource : UserDataSource {
             return null
         }
         return users?.firstOrNull()
+    }
+
+    override suspend fun updateUserInfo(user: User) {
+        collection.collection(COLLECTION_ID).document(user.cId).set(user)
     }
 
     companion object {
