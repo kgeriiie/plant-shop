@@ -25,7 +25,7 @@ class OrderHistoryAllComponent(
     plantsRepository: PlantsRepository,
     profileRepository: ProfileRepository,
     orderPlants: OrderPlantsUseCase = OrderPlantsUseCase(ordersRepository),
-    onComponentEvent: (event: OrderHistoryEvents) -> Unit
+    onComponentEvent: (event: OrderHistoryEvents.ComponentEvents) -> Unit
 ): OrderHistoryComponent(componentContext, ordersRepository, plantsRepository, profileRepository, orderPlants, onComponentEvent) {
 
     private val _state: MutableStateFlow<OrderHistoryAllUiState> = MutableStateFlow(OrderHistoryAllUiState(status))

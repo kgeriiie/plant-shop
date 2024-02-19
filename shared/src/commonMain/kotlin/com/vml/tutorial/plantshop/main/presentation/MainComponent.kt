@@ -20,9 +20,12 @@ import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenComponent
 import com.vml.tutorial.plantshop.profile.orders.presentation.OrderHistoryComponent
 import com.vml.tutorial.plantshop.profile.domain.User
 import com.vml.tutorial.plantshop.profile.orders.data.usecase.OrderPlantsUseCase
+import com.vml.tutorial.plantshop.profile.orders.domain.OrderItem
 import com.vml.tutorial.plantshop.profile.orders.domain.OrderStatus
 import com.vml.tutorial.plantshop.profile.orders.presentation.all.OrderHistoryAllComponent
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryEvents
+import com.vml.tutorial.plantshop.profile.orders.presentation.track.TrackOrderComponent
+import com.vml.tutorial.plantshop.profile.orders.presentation.track.TrackOrderEvents
 import com.vml.tutorial.plantshop.profile.presentation.ProfileComponent
 import com.vml.tutorial.plantshop.profile.presentation.components.ProfileEvent
 import kotlinx.coroutines.channels.Channel
@@ -49,6 +52,7 @@ interface MainComponent {
         data class ProfileScreen(val component: ProfileComponent): MainChild()
         data class OrderHistoryScreen(val component: OrderHistoryComponent): MainChild()
         data class OrderHistoryAllScreen(val component: OrderHistoryAllComponent): MainChild()
+        data class TrackOrderScreen(val component: TrackOrderComponent): MainChild()
     }
 }
 
@@ -170,18 +174,21 @@ class DefaultMainComponent(
                     ordersRepository = appModule.orderRepository,
                     profileRepository = appModule.profileRepository
                 ) { event ->
-                    when (event) {
-                        OrderHistoryEvents.NavigateBack -> navigation.pop()
-                        is OrderHistoryEvents.StartOrderPressed -> {
-                            _state.update { it.copy(bottomNavigationVisible = true) }
-                            navigation.replaceAll(MainConfiguration.HomeScreen)
-                        }
-                        is OrderHistoryEvents.ShowAllPressed -> {
+                    when(event) {
+                        OrderHistoryEvents.ComponentEvents.NavigateBack -> navigation.pop()
+                        is OrderHistoryEvents.ComponentEvents.ShowAllPressed -> {
                             _state.update { it.copy(bottomNavigationVisible = false) }
                             navigation.pushNew(MainConfiguration.OrderHistoryAllScreen(event.selectedType))
                         }
-                        is OrderHistoryEvents.ShowMessage -> showMessage(event.message)
-                        else -> Unit
+                        is OrderHistoryEvents.ComponentEvents.ShowMessage -> showMessage(event.message)
+                        OrderHistoryEvents.ComponentEvents.StartOrderPressed -> {
+                            _state.update { it.copy(bottomNavigationVisible = true) }
+                            navigation.replaceAll(MainConfiguration.HomeScreen)
+                        }
+                        is OrderHistoryEvents.ComponentEvents.TrackOrderPressed -> {
+                            _state.update { it.copy(bottomNavigationVisible = false) }
+                            navigation.pushNew(MainConfiguration.TrackOrderScreen(event.order))
+                        }
                     }
                 }
             )
@@ -195,9 +202,22 @@ class DefaultMainComponent(
                     profileRepository = appModule.profileRepository
                 ) { event ->
                     when (event) {
-                        OrderHistoryEvents.NavigateBack -> navigation.pop()
-                        is OrderHistoryEvents.ShowMessage -> showMessage(event.message)
+                        OrderHistoryEvents.ComponentEvents.NavigateBack -> navigation.pop()
+                        is OrderHistoryEvents.ComponentEvents.ShowMessage -> showMessage(event.message)
                         else -> Unit
+                    }
+                }
+            )
+
+            is MainConfiguration.TrackOrderScreen -> MainComponent.MainChild.TrackOrderScreen(
+                TrackOrderComponent(
+                    componentContext = context,
+                    order = config.order,
+                    ordersRepository = appModule.orderRepository,
+                    profileRepository = appModule.profileRepository
+                ) { event ->
+                    when(event) {
+                        TrackOrderEvents.ComponentEvents.NavigateBack -> navigation.pop()
                     }
                 }
             )
@@ -224,6 +244,8 @@ class DefaultMainComponent(
         data object OrderHistoryScreen: MainConfiguration()
         @Serializable
         data class OrderHistoryAllScreen(val status: OrderStatus): MainConfiguration()
+        @Serializable
+        data class TrackOrderScreen(val order: OrderItem): MainConfiguration()
     }
 
     sealed interface Actions {

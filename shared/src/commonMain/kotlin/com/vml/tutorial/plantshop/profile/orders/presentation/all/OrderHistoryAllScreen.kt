@@ -75,7 +75,7 @@ fun OrderHistoryAllScreen(
             IconButton(
                 modifier = Modifier.size(50.dp),
                 onClick = {
-                    onEvent(OrderHistoryEvents.NavigateBack)
+                    onEvent(OrderHistoryEvents.ComponentEvents.NavigateBack)
                 }
             ) {
                 Icon(

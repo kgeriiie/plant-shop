@@ -19,6 +19,7 @@ data class OrderItem(
     val createdAt: Long,
     val updatedAt: Long,
     val userId: String,
+    val details: List<OrderDetail> = emptyList()
 ) {
     fun getMessage(): UiText {
         val dateFormat = "MMM dd, HH:mm"

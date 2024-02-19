@@ -8,6 +8,7 @@ import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.profile.data.ProfileRepository
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryEvents
+import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryEvents.ComponentEvents
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderHistoryUiState
 import com.vml.tutorial.plantshop.profile.orders.presentation.states.OrderListItemUiState
 import com.vml.tutorial.plantshop.profile.orders.data.OrdersRepository
@@ -34,7 +35,7 @@ open class OrderHistoryComponent(
     internal val plantsRepository: PlantsRepository,
     internal val profileRepository: ProfileRepository,
     private val orderPlants: OrderPlantsUseCase = OrderPlantsUseCase(ordersRepository),
-    private val onComponentEvent: (event: OrderHistoryEvents) -> Unit
+    private val onComponentEvent: (event: ComponentEvents) -> Unit
 ): ComponentContext by componentContext  {
     internal val commonUiState: MutableStateFlow<OrderHistoryCommonUiState> = MutableStateFlow(OrderHistoryCommonUiState())
 
@@ -88,9 +89,9 @@ open class OrderHistoryComponent(
             ordersRepository.cancelOrder(orderId).also { success ->
                 if (success) {
                     fetchOrderHistory()
-                    onComponentEvent(OrderHistoryEvents.ShowMessage(UiText.StringRes(MR.strings.orders_cancelled_message_text)))
+                    onComponentEvent(ComponentEvents.ShowMessage(UiText.StringRes(MR.strings.orders_cancelled_message_text)))
                 } else {
-                    onComponentEvent(OrderHistoryEvents.ShowMessage(UiText.StringRes(MR.strings.orders_fail_to_cancel_message_text)))
+                    onComponentEvent(ComponentEvents.ShowMessage(UiText.StringRes(MR.strings.orders_fail_to_cancel_message_text)))
                     hideLoader()
                 }
             }
@@ -102,15 +103,15 @@ open class OrderHistoryComponent(
         getOrderItemBy(orderId)?.let { item ->
             componentCoroutineScope().launch {
                 if (orderPlants(item.allPlants)) {
-                    onComponentEvent(OrderHistoryEvents.ShowMessage(UiText.StringRes(MR.strings.orders_reordered_message_text)))
+                    onComponentEvent(ComponentEvents.ShowMessage(UiText.StringRes(MR.strings.orders_reordered_message_text)))
                     fetchOrderHistory()
                 } else {
-                    onComponentEvent(OrderHistoryEvents.ShowMessage(UiText.StringRes(MR.strings.orders_fail_to_reordered_message_text)))
+                    onComponentEvent(ComponentEvents.ShowMessage(UiText.StringRes(MR.strings.orders_fail_to_reordered_message_text)))
                     hideLoader()
                 }
             }
         }?: run {
-            onComponentEvent(OrderHistoryEvents.ShowMessage(UiText.StringRes(MR.strings.orders_fail_to_reordered_message_text)))
+            onComponentEvent(ComponentEvents.ShowMessage(UiText.StringRes(MR.strings.orders_fail_to_reordered_message_text)))
             hideLoader()
         }
     }
@@ -130,7 +131,7 @@ open class OrderHistoryComponent(
         componentCoroutineScope().launch {
             hideRatingDialog()
             profileRepository.saveRating(rating)
-            onComponentEvent(OrderHistoryEvents.ShowMessage(UiText.StringRes(MR.strings.rate_greetings_text)))
+            onComponentEvent(ComponentEvents.ShowMessage(UiText.StringRes(MR.strings.rate_greetings_text)))
         }
     }
 
@@ -142,7 +143,7 @@ open class OrderHistoryComponent(
                 else -> showRatingDialog(event.order)
             }
             is OrderHistoryEvents.SecondaryButtonPressed -> when(event.order.status) {
-                OrderStatus.PENDING -> Unit // TODO: implement feature
+                OrderStatus.PENDING -> onComponentEvent(ComponentEvents.TrackOrderPressed(event.order))
                 else -> commonUiState.update { it.copy(confirmAction = OrderHistoryConfirmAction.Reorder(event.order)) }
             }
             is OrderHistoryEvents.ConfirmDialogDismissed -> {
@@ -153,7 +154,7 @@ open class OrderHistoryComponent(
             }
             is OrderHistoryEvents.OnRateSubmitted -> submitRating(event.rating)
             is OrderHistoryEvents.DismissRatingDialog -> hideRatingDialog()
-            else -> onComponentEvent.invoke(event)
+            is ComponentEvents -> onComponentEvent.invoke(event)
         }
     }
 

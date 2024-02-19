@@ -103,4 +103,22 @@
     <string name="rate_dialog_body">We highly value your feedback! Kindly take a moment to rate your order and provide us with your valuable feedback.</string>
     <string name="rate_dialog_comment_placeholder_text">Tell us about your experience! (optional)</string>
     <string name="rate_greetings_text">We really appreciate you taking the time to share your rating with us.</string>
+
+    <!--Track-->
+    <string name="track_screen_title">Track Order</string>
+    <string name="track_placed_title">Order Placed</string>
+    <string name="track_placed_subtitle">We have received your order.</string>
+    <string name="track_processing_title">Processing</string>
+    <string name="track_processing_subtitle">We are packing your order.</string>
+    <string name="track_ready_title">Ready to ship</string>
+    <string name="track_ready_subtitle">We prepared your order.</string>
+    <string name="track_shipping_title">Shipping</string>
+    <string name="track_shipping_subtitle">Collected from warehouse.</string>
+    <string name="track_completed_title">Completed</string>
+    <string name="track_completed_subtitle">Received at your address.</string>
+    <string name="track_estimated_delivery_title">Estimated Delivery:</string>
+    <string name="track_delivery_address_title">Delivery Address</string>
+    <string name="track_home_address_title">Home address</string>
+    <string name="track_confirm_completion_message">Are you sure want to mark \'%s\' as completed?</string>
+
 </resources>

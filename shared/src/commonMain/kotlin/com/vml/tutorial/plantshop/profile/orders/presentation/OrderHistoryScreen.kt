@@ -94,7 +94,7 @@ fun OrderHistoryScreen(
             IconButton(
                 modifier = Modifier.size(50.dp),
                 onClick = {
-                    onEvent(OrderHistoryEvents.NavigateBack)
+                    onEvent(OrderHistoryEvents.ComponentEvents.NavigateBack)
                 }
             ) {
                 Icon(
@@ -122,7 +122,7 @@ fun OrderHistoryScreen(
 
         if (state.displayEmptyMessage) {
             EmptyMessage {
-                onEvent(OrderHistoryEvents.StartOrderPressed)
+                onEvent(OrderHistoryEvents.ComponentEvents.StartOrderPressed)
             }
         } else {
             Column(
@@ -203,7 +203,7 @@ private fun OrderListSection(
             if (orders.size > 1) {
                 TextButton(
                     onClick = {
-                        onEvent(OrderHistoryEvents.ShowAllPressed(orders.first().data.status))
+                        onEvent(OrderHistoryEvents.ComponentEvents.ShowAllPressed(orders.first().data.status))
                     }
                 ) {
                     Text(

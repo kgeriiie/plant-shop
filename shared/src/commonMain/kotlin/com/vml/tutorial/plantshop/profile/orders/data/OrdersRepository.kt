@@ -6,12 +6,13 @@ import com.vml.tutorial.plantshop.profile.orders.domain.OrderItem
 import com.vml.tutorial.plantshop.profile.orders.domain.OrderStatus
 import com.vml.tutorial.plantshop.profile.orders.data.FirebaseOrdersDataSource.Companion.QueryParam
 import com.vml.tutorial.plantshop.profile.orders.data.FirebaseOrdersDataSource.Companion.Fields
+import com.vml.tutorial.plantshop.profile.orders.domain.OrderDetail
 import kotlinx.datetime.Clock
 
 interface OrdersRepository {
     suspend fun getOrders(status: OrderStatus? = null, limit: Int? = null): List<OrderItem>
+    suspend fun updateOrder(order: OrderItem): OrderItem?
     suspend fun cancelOrder(orderId: String): Boolean
-
     suspend fun createAnOrder(itemIds: List<Int>, totalPrice: Double, currency: String): Boolean
 }
 
@@ -34,8 +35,6 @@ class OrdersRepositoryImpl(
     }
 
     override suspend fun cancelOrder(orderId: String): Boolean {
-        val ord = getOrders()
-        Logger.d("test--","orders: ${ord.size}")
         return getOrders().firstOrNull { it.id == orderId }?.let {orderItem ->
             remoteDataSource.updateOrder(orderItem.copy(
                 status = OrderStatus.CANCELLED,
@@ -43,6 +42,12 @@ class OrdersRepositoryImpl(
             ))
             true
         }?: false
+    }
+
+    override suspend fun updateOrder(order: OrderItem): OrderItem? {
+        remoteDataSource.updateOrder(order.copy(updatedAt = Clock.System.now().epochSeconds)).also {
+            return getOrders().firstOrNull { it.id == order.id }
+        }
     }
 
     override suspend fun createAnOrder(itemIds: List<Int>, totalPrice: Double, currency: String): Boolean {
