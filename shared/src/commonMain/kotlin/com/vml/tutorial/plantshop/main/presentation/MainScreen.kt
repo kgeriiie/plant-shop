@@ -43,6 +43,11 @@ import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.plants.presentation.favourites.components.FavouritesScreen
 import com.vml.tutorial.plantshop.plants.presentation.detail.components.PlantDetailScreen
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
+import com.vml.tutorial.plantshop.profilePreferences.presentation.preferences.components.PreferencesScreen
+import com.vml.tutorial.plantshop.profilePreferences.presentation.editAddress.components.EditAddressScreen
+import com.vml.tutorial.plantshop.profilePreferences.presentation.editPersonalInfo.components.EditProfileScreen
+import com.vml.tutorial.plantshop.profilePreferences.presentation.profile.components.ProfileScreen
+import kotlinx.datetime.Clock
 
 @Composable
 fun MainScreen(
@@ -56,7 +61,7 @@ fun MainScreen(
     when(actions) {
         is DefaultMainComponent.Actions.ShowMessageAction -> {
             val message = (actions as DefaultMainComponent.Actions.ShowMessageAction).message.asString()
-            LaunchedEffect(message) {
+            LaunchedEffect(Clock.System.now()) {
                 snackBarHostState.showSnackbar(message = message)
             }
         }
@@ -95,6 +100,32 @@ fun MainScreen(
                     is MainComponent.MainChild.PlantDetailScreen -> {
                         val plantDetailState by instance.component.state.collectAsState()
                         PlantDetailScreen(plantDetailState) { event ->
+                            instance.component.onEvent(event)
+                        }
+                    }
+                    is MainComponent.MainChild.ProfileScreen -> {
+                        val profileState by instance.component.state.collectAsState()
+                        ProfileScreen(profileState) {event ->
+                            instance.component.onEvent(event)
+                        }
+                    }
+
+                    is MainComponent.MainChild.PreferencesScreen -> {
+                        PreferencesScreen { event ->
+                            instance.component.onEvent(event)
+                        }
+                    }
+
+                    is MainComponent.MainChild.EditAddressScreen -> {
+                        val editAddressState by instance.component.state.collectAsState()
+                        EditAddressScreen(editAddressState) { event ->
+                            instance.component.onEvent(event)
+                        }
+                    }
+
+                    is MainComponent.MainChild.EditPersonalInfoScreen -> {
+                        val editPersonalInfoState by instance.component.state.collectAsState()
+                        EditProfileScreen(editPersonalInfoState) { event ->
                             instance.component.onEvent(event)
                         }
                     }

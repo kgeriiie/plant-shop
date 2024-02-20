@@ -1,0 +1,39 @@
+CREATE TABLE user (
+    cId TEXT NOT NULL,
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL,
+    email TEXT NOT NULL,
+    birthDate INTEGER NOT NULL,
+    phoneNumber TEXT NOT NULL,
+    streetName TEXT NOT NULL,
+    doorNumber INTEGER NOT NULL,
+    city TEXT NOT NULL,
+    postalCode INTEGER NOT NULL,
+    country TEXT NOT NULL,
+    additionalDescription TEXT NOT NULL
+);
+
+insertUser:
+INSERT OR REPLACE INTO user (
+    cId,
+    firstName,
+    lastName,
+    email,
+    birthDate,
+    phoneNumber,
+    streetName,
+    doorNumber,
+    city,
+    postalCode,
+    country,
+    additionalDescription
+) VALUES (?, ?,?, ?,?, ?, ?,?,?,?,?,?);
+
+getUser:
+SELECT * FROM user;
+
+removeUser:
+DELETE FROM user;
+
+getUserCount:
+SELECT COUNT(*) FROM user;

@@ -1,4 +1,4 @@
-package com.vml.tutorial.plantshop.plants.presentation.detail
+package com.vml.tutorial.plantshop.plants.presentation.detail.components
 
 sealed interface PlantDetailEvent {
     data class OnShareClick(val content: String): PlantDetailEvent
