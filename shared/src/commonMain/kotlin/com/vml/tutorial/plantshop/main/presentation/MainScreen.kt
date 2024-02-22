@@ -111,7 +111,8 @@ fun MainScreen(
                     }
 
                     is MainComponent.MainChild.PreferencesScreen -> {
-                        PreferencesScreen { event ->
+                        val preferencesState by instance.component.state.collectAsState()
+                        PreferencesScreen(preferencesState) { event ->
                             instance.component.onEvent(event)
                         }
                     }

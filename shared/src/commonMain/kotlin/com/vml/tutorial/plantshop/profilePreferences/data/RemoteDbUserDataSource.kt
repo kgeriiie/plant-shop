@@ -12,10 +12,8 @@ class RemoteDbUserDataSource : UserDataSource {
         collection.collection(COLLECTION_ID).add(user)
     }
 
-    override suspend fun removeFromDatabase() {
-        collection.collection(COLLECTION_ID).get().documents.map { document ->
-            collection.document(document.id).delete()
-        }
+    override suspend fun removeFromDatabase(cId: String?) {
+        cId?.let { collection.collection(COLLECTION_ID).document(it).delete() }
     }
 
     override suspend fun getUser(email: String?): User? {
