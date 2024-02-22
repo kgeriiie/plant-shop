@@ -71,13 +71,15 @@ private fun UserInfo(user: User?, modifier: Modifier = Modifier) {
             onClicked = { /* Do nothing */ }
         )
         Column {
-            Text(
-                text = "${user?.firstName} ${user?.lastName}",
-                style = Typography.headlineLarge,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            UserInfoItem(Icons.Default.Email, user?.email.orEmpty())
-            UserInfoItem(Icons.Default.Phone, user?.phoneNumber.orEmpty())
+            user?.let {
+                Text(
+                    text = "${it.firstName} ${it.lastName}",
+                    style = Typography.headlineLarge,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                UserInfoItem(Icons.Default.Email, it.email)
+                UserInfoItem(Icons.Default.Phone, it.phoneNumber.orEmpty())
+            }
         }
     }
 }
