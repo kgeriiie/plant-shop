@@ -155,8 +155,11 @@ class DefaultMainComponent(
             is MainConfiguration.ProfileScreen -> MainComponent.MainChild.ProfileScreen(
                 ProfileComponent(
                     user = config.user,
+                    authRepository = appModule.authRepository,
+                    profileRepository = appModule.profileRepository,
                     componentContext = context,
                     onShowMessage = ::showMessage,
+                    onLogout = onLogOut,
                     onComponentEvent =
                     { event ->
                         when (event) {

@@ -15,6 +15,7 @@ interface ProfileRepository {
     suspend fun getUser(): User?
     suspend fun updateUserInfo(user: User): Boolean
     suspend fun deleteUser(cId: String)
+    suspend fun logout()
 }
 
 class ProfileRepositoryImpl(
@@ -54,5 +55,9 @@ class ProfileRepositoryImpl(
     override suspend fun deleteUser(cId: String) {
         dbUserDataSource.removeFromDatabase(null)
         remoteDbUserDataSource.removeFromDatabase(cId)
+    }
+
+    override suspend fun logout() {
+        dbUserDataSource.removeFromDatabase(null)
     }
 }
