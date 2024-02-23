@@ -6,10 +6,10 @@ import com.vml.tutorial.plantshop.basket.data.BasketRepository
 import com.vml.tutorial.plantshop.basket.presentation.components.BasketEvent
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
+import com.vml.tutorial.plantshop.core.utils.exts.orFalse
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.Plant
-import com.vml.tutorial.plantshop.plants.presentation.PlantCategory
-import com.vml.tutorial.plantshop.profile.orders.data.OrdersRepository
+import com.vml.tutorial.plantshop.profile.data.ProfileRepository
 import com.vml.tutorial.plantshop.profile.orders.data.usecase.OrderPlantsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,21 +23,25 @@ class BasketComponent(
     componentContext: ComponentContext,
     private val plantsRepository: PlantsRepository,
     private val basketRepository: BasketRepository,
+    private val profileRepository: ProfileRepository,
     private val orderPlants: OrderPlantsUseCase,
-    private val onNavigateToHome: () -> Unit,
-    private val onShowMessage: (message: UiText) -> Unit,
+    private val onComponentEvents: (BasketEvent.ComponentEvents) -> Unit,
 ): ComponentContext by componentContext {
-
     private val plantsFlow: MutableStateFlow<List<Plant>> = MutableStateFlow(listOf())
+    private val plantItemsState: StateFlow<List<BasketItemState>> = plantsFlow.combine(basketRepository.basketItemsFlow) { plants, basket ->
+        basket.mapNotNull { item ->
+            plants.firstOrNull { it.id == item.plantId }?.let { plant ->
+                BasketItemState(plant, item.quantity)
+            }
+        }
+    }.stateIn(componentCoroutineScope(), SharingStarted.Lazily, listOf())
+
     private val uiActionStateFlow: MutableStateFlow<BasketScreenUiAction> = MutableStateFlow(BasketScreenUiAction())
-    val state: StateFlow<BasketScreenState> = combine(plantsFlow, basketRepository.basketItemsFlow, uiActionStateFlow) { plants, basket, uiAction ->
+    val state: StateFlow<BasketScreenState> = combine(plantItemsState, uiActionStateFlow) { items, uiAction ->
         BasketScreenState(
-            items = basket.mapNotNull { item ->
-                plants.firstOrNull { it.id == item.plantId }?.let { plant ->
-                    BasketItemState(plant, item.quantity)
-                }
-            },
-            checkoutInProgress = uiAction.checkoutInProgress
+            items = items,
+            checkoutInProgress = uiAction.checkoutInProgress,
+            error = uiAction.error
         )
     }.stateIn(componentCoroutineScope(), SharingStarted.Lazily, BasketScreenState())
 
@@ -51,7 +55,6 @@ class BasketComponent(
     fun onEvent(event: BasketEvent) {
         when(event) {
             BasketEvent.Checkout -> checkout()
-            BasketEvent.ExplorePlants -> onNavigateToHome()
             is BasketEvent.OnQuantityChanged -> {
                 componentCoroutineScope().launch {
                     if (event.value > 0) {
@@ -61,30 +64,42 @@ class BasketComponent(
                     }
                 }
             }
+            BasketEvent.DismissErrorDialog -> uiActionStateFlow.update {it.copy(error = null) }
+            is BasketEvent.ComponentEvents -> onComponentEvents(event)
         }
     }
 
     private fun checkout() {
-        uiActionStateFlow.update { it.copy(checkoutInProgress = true) }
-        // add all plant to list depending on it's quantity
-        val orders = state.value.items?.map { item ->
-            buildList {
-                for (i in 0 until item.quantity) {
-                    add(item.plant)
-                }
-            }
-        }?.flatten()?: return
-
         componentCoroutineScope().launch {
+            if (!profileRepository.getUser()?.address?.isFilled().orFalse()) {
+                uiActionStateFlow.update {it.copy(error = BasketError.AddressMissingError) }
+                return@launch
+            }
+
+            if (profileRepository.getUser()?.phoneNumber.isNullOrEmpty()) {
+                uiActionStateFlow.update {it.copy(error = BasketError.PhoneNumberMissingError) }
+                return@launch
+            }
+
+            val orders = collectUserOrder()?: return@launch
+            uiActionStateFlow.update { it.copy(checkoutInProgress = true) }
+
             orderPlants(orders, state.value.discount).also { success ->
                 if (success) {
                     basketRepository.deleteAll()
                     uiActionStateFlow.update { it.copy(checkoutInProgress = false) }
-                    onShowMessage.invoke(UiText.StringRes(MR.strings.basket_checkout_message))
+                    onComponentEvents(BasketEvent.ComponentEvents.ShowMessage(UiText.StringRes(MR.strings.basket_checkout_message)))
                 } else {
-                    onShowMessage.invoke(UiText.StringRes(MR.strings.basket_fail_to_checkout_message))
+                    uiActionStateFlow.update {it.copy(error = BasketError.DefaultError(UiText.StringRes(MR.strings.basket_fail_to_checkout_message))) }
                 }
             }
         }
+    }
+
+    private fun collectUserOrder(): List<Plant>? {
+        return state.value.items?.map { item ->
+            // repeat plant n times (n=quantity), to get all quantity from basket.
+            (0 until item.quantity).map { item.plant }
+        }?.flatten()
     }
 }

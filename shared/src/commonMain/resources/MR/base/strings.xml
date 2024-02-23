@@ -6,6 +6,8 @@
     <string name="no_text">No</string>
     <string name="cancel_text">Cancel</string>
     <string name="submit_text">Submit</string>
+    <string name="warning_text">Warning</string>
+    <string name="ok_text">Ok</string>
 
     <string name="plant_image_description">Plant image</string>
     <string name="background_image">Background image</string>
@@ -66,6 +68,10 @@
     <string name="basket_purchasing_message">Purchasing...</string>
     <string name="basket_checkout_message">Thanks so much for your order! I hope you enjoy your new purchase!</string>
     <string name="basket_fail_to_checkout_message">Fail to purchase your items please try again later.</string>
+    <string name="basket_user_has_no_address_message">You need to fill your address before you start purchasing.</string>
+    <string name="basket_fill_address_message">Fill your address</string>
+    <string name="basket_user_has_no_phone_number_message">You need to set your phone number before you start purchasing.</string>
+    <string name="basket_fill_phone_number_message">Set your phone number</string>
 
     <!--Profile Screen-->
     <string name="my_orders">My Orders</string>

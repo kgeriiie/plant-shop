@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class User (
-    //TODO: we need to store uid as well
     val firstName: String,
     val lastName: String,
     val email: String,
@@ -21,4 +20,12 @@ data class Address (
     val postalCode: Int,
     val country: String,
     val additionalDescription: String
-)
+) {
+    fun isFilled(): Boolean {
+        return streetName.isNotEmpty()
+            && city.isNotEmpty()
+            && country.isNotEmpty()
+            && postalCode > 0
+            && doorNumber > 0
+    }
+}
