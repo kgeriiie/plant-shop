@@ -29,13 +29,13 @@ fun BirthdayDialog(
             onDateConfirm(datePickerState.selectedDateMillis.orZero())
             onDismissRequest.invoke()
         }) {
-            Text(UiText.StringRes(MR.strings.pick_birth_date_dialog_confirm_text).asString())
+            Text(UiText.StringRes(MR.strings.dialog_confirm_text).asString())
         }
     }, dismissButton = {
         TextButton(onClick = {
             onDismissRequest.invoke()
         }) {
-            Text(UiText.StringRes(MR.strings.pick_birth_date_dialog_dismiss_text).asString())
+            Text(UiText.StringRes(MR.strings.dialog_dismiss_text).asString())
         }
     }) {
         DatePicker(state = datePickerState)

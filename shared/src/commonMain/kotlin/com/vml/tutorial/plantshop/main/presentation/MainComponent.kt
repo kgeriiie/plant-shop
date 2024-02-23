@@ -55,7 +55,8 @@ interface MainComponent {
 
 class DefaultMainComponent(
     componentContext: ComponentContext,
-    private val appModule: AppModule
+    private val appModule: AppModule,
+    private val onLogOut: () -> Unit
 ) : MainComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<MainConfiguration>()
@@ -154,33 +155,44 @@ class DefaultMainComponent(
             is MainConfiguration.ProfileScreen -> MainComponent.MainChild.ProfileScreen(
                 ProfileComponent(
                     user = config.user,
-                    componentContext = context
-                ) { event ->
-                    when (event) {
-                        ProfileEvent.NavigateBack -> navigation.pop()
-                        ProfileEvent.OnPreferencesClicked -> {
-                            _state.update { it.copy(bottomNavigationVisible = false) }
-                            navigation.pushNew(MainConfiguration.PreferencesScreen)
-                        }
+                    authRepository = appModule.authRepository,
+                    profileRepository = appModule.profileRepository,
+                    componentContext = context,
+                    onShowMessage = ::showMessage,
+                    onLogout = onLogOut,
+                    onComponentEvent =
+                    { event ->
+                        when (event) {
+                            ProfileEvent.NavigateBack -> navigation.pop()
+                            ProfileEvent.OnPreferencesClicked -> {
+                                _state.update { it.copy(bottomNavigationVisible = false) }
+                                navigation.pushNew(MainConfiguration.PreferencesScreen)
+                            }
 
-                        else -> Unit
+                            else -> Unit
+                        }
                     }
-                }
+                )
             )
 
             is MainConfiguration.PreferencesScreen -> MainComponent.MainChild.PreferencesScreen(
                 PreferencesComponent(
                     componentContext = context,
-                    profileRepository = appModule.profileRepository
-                ) { event , user ->
+                    authRepository = appModule.authRepository,
+                    profileRepository = appModule.profileRepository,
+                    onShowMessage = ::showMessage,
+                    onLogout = onLogOut
+                ) { event, user ->
                     when (event) {
                         PreferencesEvent.NavigateBack -> navigation.pop()
                         PreferencesEvent.OnEditAddressClicked -> navigation.pushNew(
                             MainConfiguration.EditAddressScreen(user)
                         )
+
                         PreferencesEvent.OnEditPersonalDataClicked -> navigation.pushNew(
                             MainConfiguration.EditPersonalInfoScreen(user)
                         )
+
                         else -> Unit
                     }
                 }
@@ -192,12 +204,12 @@ class DefaultMainComponent(
                     componentContext = context,
                     profileRepository = appModule.profileRepository,
                     onShowMessage = ::showMessage,
-                    onComponentEvent =  { event ->
-                    when(event) {
-                        EditAddressEvent.NavigateBack -> navigation.pop()
-                        else -> Unit
-                    }
-                })
+                    onComponentEvent = { event ->
+                        when (event) {
+                            EditAddressEvent.NavigateBack -> navigation.pop()
+                            else -> Unit
+                        }
+                    })
             )
 
             is MainConfiguration.EditPersonalInfoScreen -> MainComponent.MainChild.EditPersonalInfoScreen(
@@ -206,12 +218,12 @@ class DefaultMainComponent(
                     componentContext = context,
                     profileRepository = appModule.profileRepository,
                     onShowMessage = ::showMessage,
-                    onComponentEvent =  { event ->
-                    when(event) {
-                        EditProfileEvent.NavigateBack -> navigation.pop()
-                        else -> Unit
-                    }
-                })
+                    onComponentEvent = { event ->
+                        when (event) {
+                            EditProfileEvent.NavigateBack -> navigation.pop()
+                            else -> Unit
+                        }
+                    })
             )
         }
     }

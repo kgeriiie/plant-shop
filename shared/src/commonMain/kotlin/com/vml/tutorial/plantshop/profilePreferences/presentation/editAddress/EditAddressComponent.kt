@@ -52,6 +52,7 @@ class EditAddressComponent(
 
             is EditAddressEvent.SaveClicked -> {
                 user.apply { this?.address = getAddress(state.value) }?.let { updateAddress(it) }
+                    ?: run { _state.update { it.copy(errorMessage = UiText.StringRes(MR.strings.save_error_text)) } }
             }
 
             else -> onComponentEvent(event)

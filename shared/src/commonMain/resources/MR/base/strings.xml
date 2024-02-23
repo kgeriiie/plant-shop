@@ -18,7 +18,6 @@
     <string name="login_icon_content_description">Login screen icon.</string>
     <string name="login_show_pw_content_description">Show password</string>
     <string name="login_hide_pw_content_description">Hide password</string>
-
     <!--Plant extra info-->
     <string name="plant_info_drained_text">Drained</string>
     <string name="plant_info_full_sun_text">Full Sun</string>
@@ -47,7 +46,6 @@
     <!--Favorites Screen list-->
     <string name="favorites">Favorites</string>
     <string name="empty_favorites_list">Your favorite plant list is feeling a bit minimalist right now!</string>
-
     <!--Basket Screen-->
     <string name="basket_screen_title">My Cart</string>
     <string name="basket_summary_items_title">Items</string>
@@ -64,6 +62,7 @@
     <string name="get_help">Get Help</string>
     <string name="preferences">Preferences</string>
     <string name="log_out">Log Out</string>
+    <string name="retrieve_user_error_text">Something went wrong when retrieving the user data</string>
     <!--Preferences Screen-->
     <string name="edit_address">Edit Address</string>
     <string name="edit_personal_info">Edit Personal Info</string>
@@ -72,6 +71,12 @@
     <string name="preferences_subtitle_text">Personalize your profile</string>
     <string name="save_error_text">Something went wrong when saving</string>
     <string name="saved_text">Saved!</string>
+    <string name="delete_account_dialog_title">Delete Account</string>
+    <string name="delete_account_dialog_message">Confirm your account</string>
+    <string name="delete_account_progress_dialog_title">Deleting</string>
+    <string name="email_placeholder_text">Your email</string>
+    <string name="password_placeholder_text">Your password</string>
+    <string name="delete_error_text">Something went wrong when deleting</string>
     <!--Edit Address Screen-->
     <string name="edit_address_title_text">Edit Address</string>
     <string name="edit_address_subtitle_text">Edit your address</string>
@@ -89,6 +94,6 @@
     <string name="edit_profile_lastName_placeholder_text">Your last name</string>
     <string name="edit_profile_phone_placeholder_text">Your phone number</string>
     <string name="edit_profile_birthday_placeholder_text">Your birth date</string>
-    <string name="pick_birth_date_dialog_confirm_text">OK</string>
-    <string name="pick_birth_date_dialog_dismiss_text">CANCEL</string>
+    <string name="dialog_confirm_text">OK</string>
+    <string name="dialog_dismiss_text">CANCEL</string>
 </resources>
