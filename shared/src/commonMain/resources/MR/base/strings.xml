@@ -8,6 +8,7 @@
     <string name="submit_text">Submit</string>
     <string name="warning_text">Warning</string>
     <string name="ok_text">Ok</string>
+    <string name="default_error_message">Something went wrong</string>
 
     <string name="plant_image_description">Plant image</string>
     <string name="background_image">Background image</string>

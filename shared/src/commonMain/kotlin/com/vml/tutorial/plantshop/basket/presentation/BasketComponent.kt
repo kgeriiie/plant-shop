@@ -2,6 +2,7 @@ package com.vml.tutorial.plantshop.basket.presentation
 
 import com.arkivanov.decompose.ComponentContext
 import com.vml.tutorial.plantshop.MR
+import com.vml.tutorial.plantshop.MR.strings.default_error_message
 import com.vml.tutorial.plantshop.basket.data.BasketRepository
 import com.vml.tutorial.plantshop.basket.presentation.components.BasketEvent
 import com.vml.tutorial.plantshop.core.presentation.UiText
@@ -71,13 +72,18 @@ class BasketComponent(
 
     private fun checkout() {
         componentCoroutineScope().launch {
-            if (!profileRepository.getUser()?.address?.isFilled().orFalse()) {
-                uiActionStateFlow.update {it.copy(error = BasketError.AddressMissingError) }
+            val user = profileRepository.getUser()?: run {
+                uiActionStateFlow.update { it.copy(error = BasketError.DefaultError(message = UiText.StringRes(default_error_message))) }
                 return@launch
             }
 
-            if (profileRepository.getUser()?.phoneNumber.isNullOrEmpty()) {
-                uiActionStateFlow.update {it.copy(error = BasketError.PhoneNumberMissingError) }
+            if (!user.address?.isFilled().orFalse()) {
+                uiActionStateFlow.update { it.copy(error = BasketError.AddressMissingError) }
+                return@launch
+            }
+
+            if (user.phoneNumber.isEmpty()) {
+                uiActionStateFlow.update { it.copy(error = BasketError.PhoneNumberMissingError) }
                 return@launch
             }
 
