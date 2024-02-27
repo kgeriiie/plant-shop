@@ -10,6 +10,7 @@ import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import com.vml.tutorial.plantshop.basket.presentation.BasketComponent
+import com.vml.tutorial.plantshop.basket.presentation.components.BasketEvent
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.di.AppModule
 import com.vml.tutorial.plantshop.plants.presentation.favourites.FavouritesComponent
@@ -100,9 +101,16 @@ class DefaultMainComponent(
                     componentContext = context,
                     plantsRepository = appModule.plantsRepository,
                     basketRepository = appModule.basketRepository,
+                    profileRepository = appModule.profileRepository,
                     orderPlants = OrderPlantsUseCase(appModule.orderRepository),
-                    onNavigateToHome = { onEvent(MainScreenEvent.OnHomeTabClicked) },
-                    onShowMessage = ::showMessage
+                    onComponentEvents = { event ->
+                        when(event) {
+                            BasketEvent.ComponentEvents.NavigateToEditAddress -> showMessage(UiText.DynamicString("Not implemented")) // TODO: add navigation if the screen will be available on this branch
+                            BasketEvent.ComponentEvents.NavigateToEditProfile -> showMessage(UiText.DynamicString("Not implemented")) // TODO: add navigation if the screen will be available on this branch
+                            BasketEvent.ComponentEvents.NavigateToHome -> onEvent(MainScreenEvent.OnHomeTabClicked)
+                            is BasketEvent.ComponentEvents.ShowMessage -> showMessage(event.message)
+                        }
+                    },
                 )
             )
             MainConfiguration.FavouritesScreen -> MainComponent.MainChild.FavouritesScreen(

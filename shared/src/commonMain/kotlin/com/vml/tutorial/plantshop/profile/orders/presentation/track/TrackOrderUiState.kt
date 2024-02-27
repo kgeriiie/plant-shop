@@ -46,7 +46,7 @@ data class TrackOrderUiState(
     }
 
     val deliveryAddress: String? get() {
-        return address?.let {
+        return address?.takeIf { it.isFilled() }?.let {
             "${it.streetName} ${it.doorNumber}, ${it.city} ${it.postalCode}, ${it.country}"
         }
     }
