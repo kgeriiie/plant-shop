@@ -1,0 +1,72 @@
+#https://circleci.com/blog/building-kmm-on-cicd/
+version: 2.1
+
+orbs:
+  android: circleci/android@2.4.0
+
+jobs:
+  build-android:
+    executor:
+      name: android/android-docker
+      tag: 2023.05.1
+
+    steps:
+      - checkout
+
+      - run:
+          name: Store Google Services Account
+          command: echo $GOOGLE_SERVICES_ACCOUNT | base64 -d > google-services-account.json
+
+      - android/restore-build-cache
+      - android/restore-gradle-cache
+
+      - run:
+          name: Run Android tests
+          command: ./gradlew androidApp:testDebugUnitTest
+
+      - android/save-gradle-cache
+      - android/save-build-cache
+
+      - run:
+          name: Generate Release Notes
+          command: bash /home/circleci/project/.circleci/getnotes.sh > release-notes.txt
+
+      - run:
+          name: Build debug APK
+          command: ./gradlew androidApp:assembleDebug
+
+      - store_artifacts:
+          path: app/build/outputs/apk/
+          destination: apk
+
+      - run:
+          name: Publish APK to Firebase Distribution
+          command: ./gradlew assembleDebug appDistributionUploadDebug
+
+  build-ios:
+    macos:
+      xcode: 14.2.0
+    steps:
+      - checkout
+      - run:
+          name: Allow proper XCode dependency resolution
+          command: |
+            sudo defaults write com.apple.dt.Xcode IDEPackageSupportUseBuiltinSCM YES
+            rm ~/.ssh/id_rsa || true
+            for ip in $(dig @8.8.8.8 bitbucket.org +short); do ssh-keyscan bitbucket.org,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts || true
+            for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts || true
+      - run:
+          name: Fastlane Tests
+          command: |
+            cd iosApp
+            fastlane scan
+            
+workflows:
+  build-all:
+    jobs:
+      - build-android:
+          filters:
+            branches:
+              only:
+                -main
+      #- build-ios

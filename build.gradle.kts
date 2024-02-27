@@ -1,3 +1,8 @@
+buildscript {
+    dependencies {
+        classpath("com.google.firebase:firebase-appdistribution-gradle:4.0.1")
+    }
+}
 plugins {
     alias(libs.plugins.jetbrainsCompose).apply(false)
     alias(libs.plugins.androidApplication).apply(false)
@@ -8,4 +13,5 @@ plugins {
     alias(libs.plugins.sqlDelight).apply(false)
     alias(libs.plugins.mokoResourcesMultiplatform).apply(false)
     alias(libs.plugins.googleServices).apply(false)
+    alias(libs.plugins.firebaseAppDistribution).apply(false)
 }
