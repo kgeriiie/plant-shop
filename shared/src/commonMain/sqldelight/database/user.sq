@@ -10,7 +10,11 @@ CREATE TABLE user (
     city TEXT NOT NULL,
     postalCode INTEGER NOT NULL,
     country TEXT NOT NULL,
-    additionalDescription TEXT NOT NULL
+    additionalDescription TEXT NOT NULL,
+    creditCardNumber TEXT NOT NULL,
+    expirationDate TEXT NOT NULL,
+    cvv TEXT NOT NULL,
+    cardHolderName TEXT NOT NULL
 );
 
 insertUser:
@@ -26,8 +30,12 @@ INSERT OR REPLACE INTO user (
     city,
     postalCode,
     country,
-    additionalDescription
-) VALUES (?, ?,?, ?,?, ?, ?,?,?,?,?,?);
+    additionalDescription,
+    creditCardNumber,
+    expirationDate,
+    cvv,
+    cardHolderName
+) VALUES (?, ?,?, ?,?,?,?, ?,?, ?, ?,?,?,?,?,?);
 
 getUser:
 SELECT * FROM user;

@@ -55,8 +55,6 @@ class PreferencesComponent(
             PreferencesEvent.OnDeleteUserClicked -> {
                 _state.update { it.copy(showConfirmationDialog = true) }
             }
-
-            PreferencesEvent.OnPaymentMethodClicked -> TODO()
             else -> {
                 componentCoroutineScope().launch {
                     onComponentEvent(event, profileRepository.getUser())

@@ -31,7 +31,7 @@ import com.vml.tutorial.plantshop.MR
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.core.utils.exts.toNonZeroString
-import com.vml.tutorial.plantshop.profilePreferences.presentation.ToolbarSection
+import com.vml.tutorial.plantshop.profilePreferences.presentation.TitleSection
 import com.vml.tutorial.plantshop.profilePreferences.presentation.UserInput
 import com.vml.tutorial.plantshop.profilePreferences.presentation.editAddress.EditAddressState
 import com.vml.tutorial.plantshop.ui.theme.Typography
@@ -71,7 +71,7 @@ private fun EditAddressScreenContent(
     LazyColumn(modifier = modifier) {
         item {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                ToolbarSection(
+                TitleSection(
                     UiText.StringRes(MR.strings.edit_address_title_text).asString(),
                     UiText.StringRes(MR.strings.edit_address_subtitle_text).asString(),
                     Modifier.padding(horizontal = 8.dp)

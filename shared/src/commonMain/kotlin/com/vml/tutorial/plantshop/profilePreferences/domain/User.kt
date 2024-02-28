@@ -10,7 +10,8 @@ data class User (
     val email: String,
     var birthDate: Long?,
     var phoneNumber: String?,
-    var address: Address?
+    var address: Address?,
+    var paymentMethod: PaymentMethod?
 )
 
 @Serializable
@@ -21,4 +22,12 @@ data class Address (
     var postalCode: Int?,
     var country: String?,
     var additionalDescription: String?
+)
+
+@Serializable
+data class PaymentMethod(
+    val creditCardNumber: String?,
+    val expirationDate: String?,
+    val cvv: String?,
+    val cardHolderName: String?
 )

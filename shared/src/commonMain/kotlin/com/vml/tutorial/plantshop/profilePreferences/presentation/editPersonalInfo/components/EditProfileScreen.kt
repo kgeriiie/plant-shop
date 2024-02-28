@@ -33,7 +33,7 @@ import com.vml.tutorial.plantshop.MR
 import com.vml.tutorial.plantshop.core.presentation.BirthdayDialog
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
-import com.vml.tutorial.plantshop.profilePreferences.presentation.ToolbarSection
+import com.vml.tutorial.plantshop.profilePreferences.presentation.TitleSection
 import com.vml.tutorial.plantshop.profilePreferences.presentation.UserInput
 import com.vml.tutorial.plantshop.profilePreferences.presentation.editPersonalInfo.EditProfileScreenState
 import com.vml.tutorial.plantshop.ui.theme.Typography
@@ -64,7 +64,7 @@ fun EditProfileScreen(state: EditProfileScreenState, onEvent: (EditProfileEvent)
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
 
-                ToolbarSection(
+                TitleSection(
                     UiText.StringRes(MR.strings.edit_profile_title_text).asString(),
                     UiText.StringRes(MR.strings.edit_profile_subtitle_text).asString(),
                     Modifier.padding(horizontal = 8.dp)

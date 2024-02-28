@@ -21,7 +21,7 @@ class HomeScreenComponent(
     private val plantsRepository: PlantsRepository,
     private val profileRepository: ProfileRepository,
     private val onNavigateToDetail: (plant: Plant) -> Unit,
-    private val onNavigateToProfile: (user: User?) -> Unit
+    private val onNavigateToProfile: (user: User?) -> Unit //TODO: Use event instead
 ) : ComponentContext by componentContext {
     private var allPlants: List<Plant>? = null
     private val plantsFlow: MutableStateFlow<List<Plant>?> = MutableStateFlow(listOf())

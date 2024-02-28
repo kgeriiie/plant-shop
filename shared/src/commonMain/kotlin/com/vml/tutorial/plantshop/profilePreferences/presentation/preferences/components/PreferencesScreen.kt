@@ -24,7 +24,7 @@ import com.vml.tutorial.plantshop.core.presentation.DefaultProgressDialog
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.profilePreferences.presentation.ActionItem
-import com.vml.tutorial.plantshop.profilePreferences.presentation.ToolbarSection
+import com.vml.tutorial.plantshop.profilePreferences.presentation.TitleSection
 import com.vml.tutorial.plantshop.profilePreferences.presentation.preferences.PreferencesState
 
 @Composable
@@ -58,7 +58,7 @@ fun PreferencesScreen(state: PreferencesState, onEvent: (PreferencesEvent) -> Un
                 tint = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
-        ToolbarSection(
+        TitleSection(
             UiText.StringRes(MR.strings.preferences_title_text).asString(),
             UiText.StringRes(MR.strings.preferences_subtitle_text).asString(),
             Modifier.padding(horizontal = 16.dp)
