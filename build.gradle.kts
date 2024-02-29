@@ -14,4 +14,5 @@ plugins {
     alias(libs.plugins.mokoResourcesMultiplatform).apply(false)
     alias(libs.plugins.googleServices).apply(false)
     alias(libs.plugins.firebaseAppDistribution).apply(false)
+    alias(libs.plugins.ksp).apply(false)
 }
