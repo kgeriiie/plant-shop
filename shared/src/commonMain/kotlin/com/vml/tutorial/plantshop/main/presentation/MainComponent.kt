@@ -22,6 +22,7 @@ import com.vml.tutorial.plantshop.profilePreferences.presentation.editAddress.Ed
 import com.vml.tutorial.plantshop.profilePreferences.presentation.editAddress.components.EditAddressEvent
 import com.vml.tutorial.plantshop.profilePreferences.presentation.editPersonalInfo.EditProfileComponent
 import com.vml.tutorial.plantshop.profilePreferences.presentation.editPersonalInfo.components.EditProfileEvent
+import com.vml.tutorial.plantshop.profilePreferences.presentation.paymentMethod.PaymentMethodComponent
 import com.vml.tutorial.plantshop.profilePreferences.presentation.preferences.PreferencesComponent
 import com.vml.tutorial.plantshop.profilePreferences.presentation.preferences.components.PreferencesEvent
 import com.vml.tutorial.plantshop.profilePreferences.presentation.profile.ProfileComponent
@@ -50,6 +51,7 @@ interface MainComponent {
         data class PreferencesScreen(val component: PreferencesComponent) : MainChild()
         data class EditAddressScreen(val component: EditAddressComponent) : MainChild()
         data class EditPersonalInfoScreen(val component: EditProfileComponent) : MainChild()
+        data class PaymentMethodScreen(val component: PaymentMethodComponent) : MainChild()
     }
 }
 
@@ -193,6 +195,10 @@ class DefaultMainComponent(
                             MainConfiguration.EditPersonalInfoScreen(user)
                         )
 
+                        PreferencesEvent.OnPaymentMethodClicked -> navigation.pushNew(
+                            MainConfiguration.PaymentMethodScreen(user)
+                        )
+
                         else -> Unit
                     }
                 }
@@ -206,7 +212,7 @@ class DefaultMainComponent(
                     onShowMessage = ::showMessage,
                     onComponentEvent = { event ->
                         when (event) {
-                            EditAddressEvent.NavigateBack -> navigation.pop()
+                            EditAddressEvent.NavigateBack -> navigation.pop() //TODO: Use a simple callback function instead of passing the whole event
                             else -> Unit
                         }
                     })
@@ -220,10 +226,19 @@ class DefaultMainComponent(
                     onShowMessage = ::showMessage,
                     onComponentEvent = { event ->
                         when (event) {
-                            EditProfileEvent.NavigateBack -> navigation.pop()
+                            EditProfileEvent.NavigateBack -> navigation.pop() //TODO: Use a simple callback function instead of passing the whole event
                             else -> Unit
                         }
                     })
+            )
+
+            is MainConfiguration.PaymentMethodScreen -> MainComponent.MainChild.PaymentMethodScreen(
+                PaymentMethodComponent(
+                    user = config.user,
+                    componentContext = context,
+                    profileRepository = appModule.profileRepository,
+                    onShowMessage = ::showMessage,
+                    onNavigateBack = { navigation.pop() })
             )
         }
     }
@@ -257,6 +272,9 @@ class DefaultMainComponent(
 
         @Serializable
         data class EditPersonalInfoScreen(val user: User?) : MainConfiguration()
+
+        @Serializable
+        data class PaymentMethodScreen(val user: User?) : MainConfiguration()
     }
 
     data class MainUiState(

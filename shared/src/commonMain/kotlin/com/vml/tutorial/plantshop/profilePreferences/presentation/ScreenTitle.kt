@@ -10,7 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.vml.tutorial.plantshop.ui.theme.Typography
 
 @Composable
-fun ToolbarSection(titleText: String, subtitleText: String, modifier: Modifier = Modifier) {
+fun TitleSection(titleText: String, subtitleText: String, modifier: Modifier = Modifier) {
     Column(modifier) {
         Text(
             text = titleText,

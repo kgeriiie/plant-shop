@@ -96,4 +96,13 @@
     <string name="edit_profile_birthday_placeholder_text">Your birth date</string>
     <string name="dialog_confirm_text">OK</string>
     <string name="dialog_dismiss_text">CANCEL</string>
+    <!--Payment Method Screen-->
+    <string name="payment_method_title_text">Payment Method</string>
+    <string name="payment_method_subtitle_text">Edit your payment method</string>
+    <string name="cc_number_placeholder_text">Your credit card number</string>
+    <string name="exp_date_placeholder_text">Exp date</string>
+    <string name="cvv_placeholder_text">CVV</string>
+    <string name="card_holder_name_placeholder_text">Card holder name</string>
+    <string name="cc_show_info_description">Show credit card details</string>
+    <string name="cc_hide_info_description">Hide credit card details</string>
 </resources>

@@ -1,9 +1,9 @@
 package com.vml.tutorial.plantshop.profilePreferences.data
 
 import com.vml.tutorial.plantshop.PlantDatabase
-import com.vml.tutorial.plantshop.core.utils.Logger
 import com.vml.tutorial.plantshop.core.utils.exts.orZero
 import com.vml.tutorial.plantshop.profilePreferences.domain.Address
+import com.vml.tutorial.plantshop.profilePreferences.domain.PaymentMethod
 import com.vml.tutorial.plantshop.profilePreferences.domain.User
 import com.vml.tutorial.plantshop.profilePreferences.domain.UserDataSource
 import database.UserQueries
@@ -23,7 +23,11 @@ class DbUserDataSource(db: PlantDatabase) : UserDataSource {
             city = user.address?.city.orEmpty(),
             postalCode = user.address?.postalCode?.toLong().orZero(),
             country = user.address?.country.orEmpty(),
-            additionalDescription = user.address?.additionalDescription.orEmpty()
+            additionalDescription = user.address?.additionalDescription.orEmpty(),
+            cardHolderName = user.paymentMethod?.cardHolderName.orEmpty(),
+            creditCardNumber = user.paymentMethod?.creditCardNumber.orEmpty(),
+            cvv = user.paymentMethod?.cvv.orEmpty(),
+            expirationDate = user.paymentMethod?.expirationDate.orEmpty()
         )
     }
 
@@ -47,6 +51,12 @@ class DbUserDataSource(db: PlantDatabase) : UserDataSource {
                 postalCode = user.postalCode.toInt(),
                 country = user.country,
                 additionalDescription = user.additionalDescription
+            ),
+            PaymentMethod(
+                cardHolderName = user.cardHolderName,
+                creditCardNumber = user.creditCardNumber,
+                cvv = user.cvv,
+                expirationDate = user.expirationDate
             )
         )
     } catch (err: Exception) {
