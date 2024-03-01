@@ -1,5 +1,6 @@
 package com.vml.tutorial.plantshop.plants.data
 
+import com.vml.tutorial.plantshop.core.utils.exts.orInvalid
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
 import dev.gitlive.firebase.Firebase
@@ -21,6 +22,6 @@ class RemoteDbPlantsDataSource : PlantsDataSource {
     }
 
     override suspend fun getPlantCount(): Int {
-        return getPlants()?.count() ?: -1
+        return getPlants()?.count().orInvalid()
     }
 }

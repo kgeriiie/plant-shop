@@ -4,12 +4,10 @@ import com.arkivanov.decompose.ComponentContext
 import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.Plant
-import kotlinx.coroutines.flow.Flow
+import com.vml.tutorial.plantshop.plants.presentation.favourites.components.FavoritesScreenEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 

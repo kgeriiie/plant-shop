@@ -10,8 +10,8 @@ import dev.gitlive.firebase.auth.FirebaseUser
 interface FirebaseAuthDataSource {
     suspend fun login(email: String, password: String): DataResult<FirebaseUser>
     suspend fun logout()
-
     suspend fun getCurrentUser(): FirebaseUser?
+    suspend fun deleteUser()
 }
 
 class FirebaseAuthDataSourceImpl(private val authService: FirebaseAuth): FirebaseAuthDataSource {
@@ -34,5 +34,9 @@ class FirebaseAuthDataSourceImpl(private val authService: FirebaseAuth): Firebas
 
     override suspend fun getCurrentUser(): FirebaseUser? {
         return authService.currentUser
+    }
+
+    override suspend fun deleteUser() {
+        authService.currentUser?.delete()
     }
 }

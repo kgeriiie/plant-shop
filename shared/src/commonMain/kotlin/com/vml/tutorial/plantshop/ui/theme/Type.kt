@@ -7,7 +7,7 @@ import androidx.compose.ui.text.font.FontWeight
 private val defaultTypography = Typography()
 val Typography = Typography(
     displayLarge = defaultTypography.displayLarge,
-    displayMedium = defaultTypography.displayMedium,
+    displayMedium = defaultTypography.displayMedium.copy(fontWeight = FontWeight.Bold),
     displaySmall = defaultTypography.displaySmall,
     headlineLarge = defaultTypography.headlineLarge.copy(fontWeight = FontWeight.Bold),
     headlineMedium = defaultTypography.headlineMedium.copy(fontWeight = FontWeight.Bold),

@@ -2,7 +2,6 @@ package com.vml.tutorial.plantshop.plants.presentation.home.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,14 +17,11 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
@@ -59,13 +55,11 @@ import com.vml.tutorial.plantshop.MR.strings.indoor_plants
 import com.vml.tutorial.plantshop.MR.strings.no_search_result
 import com.vml.tutorial.plantshop.MR.strings.off
 import com.vml.tutorial.plantshop.MR.strings.offer_image_description
-import com.vml.tutorial.plantshop.MR.strings.profile_photo_description
 import com.vml.tutorial.plantshop.MR.strings.search
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.PlantCategory
-import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenEvent
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenState
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.DEFAULT_SEARCH_ACTIVE_STATE
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.DEFAULT_SEARCH_QUERY
@@ -74,6 +68,8 @@ import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.SINGLE_GRID_COLUMN_SPAN
 import com.vml.tutorial.plantshop.plants.presentation.plantList.ItemListEvent
 import com.vml.tutorial.plantshop.plants.presentation.plantList.itemListGrid
+import com.vml.tutorial.plantshop.profilePreferences.domain.User
+import com.vml.tutorial.plantshop.profilePreferences.presentation.profile.components.ProfileLettermark
 import com.vml.tutorial.plantshop.ui.theme.Typography
 import dev.icerock.moko.resources.ImageResource
 import dev.icerock.moko.resources.compose.painterResource
@@ -81,7 +77,7 @@ import dev.icerock.moko.resources.compose.painterResource
 @Composable
 fun HomeScreen(state: HomeScreenState, onEvent: (HomeScreenEvent) -> Unit) {
     Column(modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)) {
-        ScreenTitle({ onEvent(HomeScreenEvent.OnProfileClicked) })
+        ScreenTitle(state.user, { onEvent(HomeScreenEvent.OnProfileClicked) })
         SearchBar(
             state.searchResults,
             onSearchEvent = onEvent,
@@ -154,19 +150,16 @@ private fun getHomeScreenEventFrom(plantListEvent: ItemListEvent): HomeScreenEve
 }
 
 @Composable
-private fun ScreenTitle(onProfileClicked: () -> Unit, modifier: Modifier = Modifier) {
+private fun ScreenTitle(user: User?, onProfileClicked: () -> Unit, modifier: Modifier = Modifier) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Text(UiText.StringRes(discover).asString(), style = Typography.headlineMedium)
         Spacer(modifier = Modifier.weight(1.0f))
-        IconButton(
-            onClick = { onProfileClicked() },
-            modifier = Modifier.border(1.dp, Color.Black, shape = CircleShape).size(32.dp)
-        ) {
-            Icon(
-                Icons.Rounded.Person,
-                contentDescription = UiText.StringRes(profile_photo_description).asString()
-            )
-        }
+        ProfileLettermark(
+            user,
+            textStyle = Typography.titleSmall,
+            modifier = Modifier.size(32.dp),
+            onClicked = onProfileClicked
+        )
     }
 }
 

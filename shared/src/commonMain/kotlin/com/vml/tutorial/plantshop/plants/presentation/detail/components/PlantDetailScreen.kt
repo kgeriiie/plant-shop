@@ -57,7 +57,6 @@ import com.vml.tutorial.plantshop.core.utils.exts.roundTo
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.domain.PlantDetails
 import com.vml.tutorial.plantshop.plants.presentation.PlantImage
-import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailEvent
 import com.vml.tutorial.plantshop.plants.presentation.detail.PlantDetailState
 
 @Composable
