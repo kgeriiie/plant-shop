@@ -9,7 +9,9 @@ import dev.gitlive.firebase.firestore.where
 class RemoteDbUserDataSource : UserDataSource {
     private val collection = Firebase.firestore
     override suspend fun insertToDatabase(user: User) {
-        collection.collection(COLLECTION_ID).add(user)
+        val newDocument = collection.collection(COLLECTION_ID).document
+        user.cId = newDocument.id
+        newDocument.set(user)
     }
 
     override suspend fun removeFromDatabase(cId: String?) {
@@ -27,7 +29,7 @@ class RemoteDbUserDataSource : UserDataSource {
     }
 
     override suspend fun updateUserInfo(user: User) {
-        collection.collection(COLLECTION_ID).document(user.cId).set(user)
+        user.cId?.let { collection.collection(COLLECTION_ID).document(it).set(user) }
     }
 
     companion object {

@@ -12,7 +12,7 @@ class DbUserDataSource(db: PlantDatabase) : UserDataSource {
     private val queries: UserQueries = db.userQueries
     override suspend fun insertToDatabase(user: User) {
         queries.insertUser(
-            cId = user.cId.trim(),
+            cId = user.cId?.trim(),
             firstName = user.firstName.orEmpty(),
             lastName = user.lastName.orEmpty(),
             email = user.email,
@@ -38,7 +38,7 @@ class DbUserDataSource(db: PlantDatabase) : UserDataSource {
     override suspend fun getUser(email: String?): User? = try {
         val user = queries.getUser().executeAsOne()
         User(
-            cId = user.cId.trim(),
+            cId = user.cId?.trim(),
             firstName = user.firstName,
             lastName = user.lastName,
             email = user.email,

@@ -22,7 +22,10 @@ class ProfileRepositoryImpl(
     private val dbUserDataSource: UserDataSource, private val remoteDbUserDataSource: UserDataSource
 ) : ProfileRepository {
     override suspend fun insertToDatabase(user: User) {
-        dbUserDataSource.insertToDatabase(user)
+        CoroutineScope(Dispatchers.IO).launch {
+            remoteDbUserDataSource.insertToDatabase(user)
+            dbUserDataSource.insertToDatabase(user)
+        }.join()
     }
 
     override suspend fun removeFromDatabase() {
