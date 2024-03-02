@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import com.vml.tutorial.plantshop.MR
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.plants.presentation.favourites.FavoritesScreenState
+import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants
 import com.vml.tutorial.plantshop.plants.presentation.plantList.ItemListEvent
 import com.vml.tutorial.plantshop.plants.presentation.plantList.itemListGrid
 import com.vml.tutorial.plantshop.ui.theme.Typography
@@ -39,6 +41,9 @@ fun FavouritesScreen(state: FavoritesScreenState, onEvent: (FavoritesScreenEvent
                     modifier = Modifier.padding(8.dp)
                 ) { plantListEvent ->
                     onEvent(getFavoritesScreenEventFrom(plantListEvent))
+                }
+                item(span = { GridItemSpan(HomeScreenConstants.SINGLE_GRID_COLUMN_SPAN) }) {
+                    Spacer(modifier = Modifier.size(96.dp))
                 }
             }
         }
