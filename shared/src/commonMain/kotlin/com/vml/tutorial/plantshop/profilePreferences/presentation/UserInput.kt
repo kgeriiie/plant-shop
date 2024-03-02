@@ -23,6 +23,7 @@ fun UserInput(
     isSingleLine: Boolean = true,
     placeholderText: String,
     keyboardOptions: KeyboardOptions,
+    keyboardActions: KeyboardActions? = null,
     modifier: Modifier = Modifier,
     onValueChange: (String) -> Unit
 ) {
@@ -33,7 +34,8 @@ fun UserInput(
         onValueChange = { onValueChange(it) },
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
-        keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
+        keyboardActions = keyboardActions
+            ?: KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(25.dp),
         singleLine = isSingleLine,
