@@ -19,7 +19,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,9 +30,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.vml.tutorial.plantshop.MR
+import com.vml.tutorial.plantshop.core.presentation.LoadingButton
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
-import com.vml.tutorial.plantshop.login.presentation.LoginEvent
 import com.vml.tutorial.plantshop.profilePreferences.presentation.UserInput
 import com.vml.tutorial.plantshop.register.presentation.RegisterUiState
 import com.vml.tutorial.plantshop.ui.theme.Typography
@@ -151,12 +150,8 @@ private fun UserInfoSection(state: RegisterUiState, onEvent: (event: RegisterEve
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Button(modifier = Modifier.fillMaxWidth().height(50.dp), onClick = {
+        LoadingButton(UiText.StringRes(MR.strings.register_button_text).asString(), state.loading) {
             onEvent(RegisterEvent.RegisterClicked)
-        }) {
-            Text(
-                UiText.StringRes(MR.strings.register_button_text).asString()
-            )
         }
 
         if (state.errorMessage != null) {
@@ -167,14 +162,6 @@ private fun UserInfoSection(state: RegisterUiState, onEvent: (event: RegisterEve
                 color = Color.Red,
                 style = Typography.labelMedium,
                 textAlign = TextAlign.Center
-            )
-        }
-
-        if (state.loading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(20.dp)
             )
         }
     }

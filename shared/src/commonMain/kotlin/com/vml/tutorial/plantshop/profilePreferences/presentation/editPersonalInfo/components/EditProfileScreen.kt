@@ -31,10 +31,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.vml.tutorial.plantshop.MR
 import com.vml.tutorial.plantshop.core.presentation.BirthdayDialog
+import com.vml.tutorial.plantshop.core.presentation.LoadingButton
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.profilePreferences.presentation.TitleSection
 import com.vml.tutorial.plantshop.profilePreferences.presentation.UserInput
+import com.vml.tutorial.plantshop.profilePreferences.presentation.editAddress.components.EditAddressEvent
 import com.vml.tutorial.plantshop.profilePreferences.presentation.editPersonalInfo.EditProfileScreenState
 import com.vml.tutorial.plantshop.ui.theme.Typography
 
@@ -115,6 +117,10 @@ fun EditProfileScreen(state: EditProfileScreenState, onEvent: (EditProfileEvent)
                             onEvent(EditProfileEvent.ShowBirthdayDialog)
                         })
 
+                LoadingButton(UiText.StringRes(MR.strings.save_button_text).asString(), state.loading) {
+                    onEvent(EditProfileEvent.SaveClicked)
+                }
+
                 if (state.errorMessage != null) {
                     Text(
                         state.errorMessage.asString(),
@@ -122,20 +128,6 @@ fun EditProfileScreen(state: EditProfileScreenState, onEvent: (EditProfileEvent)
                         color = Color.Red,
                         style = Typography.labelMedium,
                         textAlign = TextAlign.Center
-                    )
-                }
-
-                Button(modifier = Modifier.fillMaxWidth().height(50.dp), onClick = {
-                    onEvent(EditProfileEvent.SaveClicked)
-                }) {
-                    Text(
-                        UiText.StringRes(MR.strings.save_button_text).asString()
-                    )
-                }
-
-                if (state.loading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.CenterHorizontally).padding(20.dp)
                     )
                 }
             }

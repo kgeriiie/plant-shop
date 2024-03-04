@@ -41,6 +41,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.vml.tutorial.plantshop.MR
 import com.vml.tutorial.plantshop.MR.images.ic_login
 import com.vml.tutorial.plantshop.MR.strings.login_button_text
 import com.vml.tutorial.plantshop.MR.strings.login_create_acc_button_text
@@ -52,8 +53,10 @@ import com.vml.tutorial.plantshop.MR.strings.login_show_pw_content_description
 import com.vml.tutorial.plantshop.MR.strings.login_subtitle_text
 import com.vml.tutorial.plantshop.MR.strings.login_title_text
 import com.vml.tutorial.plantshop.MR.strings.login_username_placeholder_text
+import com.vml.tutorial.plantshop.core.presentation.LoadingButton
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
+import com.vml.tutorial.plantshop.register.presentation.components.RegisterEvent
 import com.vml.tutorial.plantshop.ui.theme.Typography
 import dev.icerock.moko.resources.compose.painterResource
 
@@ -174,32 +177,11 @@ fun LoginScreen(
                 }
             )
 
-            if (state.errorMessage != null) {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    state.errorMessage.asString(),
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    color = Color.Red,
-                    style = Typography.labelMedium,
-                    textAlign = TextAlign.Center
-                )
-            }
-
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                onClick = {
-                    focusManager.clearFocus()
-                    onEvent(LoginEvent.LoginClicked)
-                }
-            ) {
-                Text(
-                    UiText.StringRes(login_button_text).asString()
-                )
+            LoadingButton(UiText.StringRes(login_button_text).asString(), state.loading) {
+                focusManager.clearFocus()
+                onEvent(LoginEvent.LoginClicked)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -212,14 +194,18 @@ fun LoginScreen(
                         onEvent(LoginEvent.RegisterClicked)
                     })
             }
-        }
 
-        if (state.loading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .align(Alignment.BottomCenter)
-            )
+            if (state.errorMessage != null) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    state.errorMessage.asString(),
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                    color = Color.Red,
+                    style = Typography.labelMedium,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }
