@@ -1,4 +1,4 @@
-package com.vml.tutorial.plantshop.profilePreferences.presentation
+package com.vml.tutorial.plantshop.core.presentation
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,6 +24,8 @@ fun UserInput(
     placeholderText: String,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     onValueChange: (String) -> Unit
 ) {
@@ -39,6 +41,8 @@ fun UserInput(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(25.dp),
         singleLine = isSingleLine,
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
         colors = TextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
             unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
