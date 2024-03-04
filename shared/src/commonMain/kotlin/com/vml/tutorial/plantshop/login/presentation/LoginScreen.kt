@@ -100,7 +100,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextField(
+            TextField( // TODO: Use UserInput instead to avoid duplication
                 value = state.username,
                 label = { Text(UiText.StringRes(login_username_placeholder_text).asString()) },
                 onValueChange = { onEvent(LoginEvent.UsernameChanged(it)) },

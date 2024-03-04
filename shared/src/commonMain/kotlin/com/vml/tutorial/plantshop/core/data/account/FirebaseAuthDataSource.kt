@@ -12,6 +12,7 @@ interface FirebaseAuthDataSource {
     suspend fun login(email: String, password: String): DataResult<FirebaseUser>
     suspend fun logout()
     suspend fun getCurrentUser(): FirebaseUser?
+    suspend fun deleteUser()
     suspend fun register(email: String, password: String): DataResult<FirebaseUser>
 }
 
@@ -35,6 +36,10 @@ class FirebaseAuthDataSourceImpl(private val authService: FirebaseAuth) : Fireba
 
     override suspend fun getCurrentUser(): FirebaseUser? {
         return authService.currentUser
+    }
+
+    override suspend fun deleteUser() {
+        authService.currentUser?.delete()
     }
 
     override suspend fun register(email: String, password: String): DataResult<FirebaseUser> {

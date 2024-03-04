@@ -2,7 +2,7 @@ package com.vml.tutorial.plantshop.plants.presentation.home
 
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.PlantCategory
-import com.vml.tutorial.plantshop.profile.domain.User
+import com.vml.tutorial.plantshop.profilePreferences.domain.User
 
 data class HomeScreenState(
     val plants: List<Plant>? = emptyList(),

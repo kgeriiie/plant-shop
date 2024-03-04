@@ -7,8 +7,8 @@ import com.vml.tutorial.plantshop.core.domain.DataResult
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
 import com.vml.tutorial.plantshop.core.utils.exts.isValidEmail
-import com.vml.tutorial.plantshop.profile.data.ProfileRepository
-import com.vml.tutorial.plantshop.profile.domain.User
+import com.vml.tutorial.plantshop.profilePreferences.data.ProfileRepository
+import com.vml.tutorial.plantshop.profilePreferences.domain.User
 import com.vml.tutorial.plantshop.register.presentation.components.RegisterEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -1,4 +1,4 @@
-package com.vml.tutorial.plantshop.plants.presentation.favourites
+package com.vml.tutorial.plantshop.plants.presentation.favourites.components
 
 import com.vml.tutorial.plantshop.plants.domain.Plant
 

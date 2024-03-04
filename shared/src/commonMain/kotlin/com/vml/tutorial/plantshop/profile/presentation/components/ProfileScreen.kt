@@ -39,7 +39,7 @@ import com.vml.tutorial.plantshop.MR.strings.get_help
 import com.vml.tutorial.plantshop.MR.strings.log_out
 import com.vml.tutorial.plantshop.MR.strings.my_orders
 import com.vml.tutorial.plantshop.MR.strings.payment_method
-import com.vml.tutorial.plantshop.MR.strings.settings
+import com.vml.tutorial.plantshop.MR.strings.preferences
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.profile.ProfileState
@@ -121,7 +121,7 @@ fun UserActions(modifier: Modifier = Modifier, onEvent: (ProfileEvent) -> Unit) 
         ActionItem(Icons.Default.Help, UiText.StringRes(get_help).asString(), {
             onEvent(ProfileEvent.OnGetHelpClick)
         })
-        ActionItem(Icons.Default.Settings, UiText.StringRes(settings).asString(), {
+        ActionItem(Icons.Default.Settings, UiText.StringRes(preferences).asString(), {
             onEvent(ProfileEvent.OnSettingsClick)
         })
         ActionItem(Icons.Default.Logout, UiText.StringRes(log_out).asString(), {

@@ -5,8 +5,9 @@ import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.PlantCategory
-import com.vml.tutorial.plantshop.profile.data.ProfileRepository
-import com.vml.tutorial.plantshop.profile.domain.User
+import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenEvent
+import com.vml.tutorial.plantshop.profilePreferences.data.ProfileRepository
+import com.vml.tutorial.plantshop.profilePreferences.domain.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,7 @@ class HomeScreenComponent(
     private val plantsRepository: PlantsRepository,
     private val profileRepository: ProfileRepository,
     private val onNavigateToDetail: (plant: Plant) -> Unit,
-    private val onNavigateToProfile: (user: User?) -> Unit
+    private val onNavigateToProfile: (user: User?) -> Unit //TODO: Use event instead
 ) : ComponentContext by componentContext {
     private var allPlants: List<Plant>? = null
     private val plantsFlow: MutableStateFlow<List<Plant>?> = MutableStateFlow(listOf())
@@ -60,7 +61,7 @@ class HomeScreenComponent(
                 if (event.query.isNotBlank()) {
                     _state.update {
                         it.copy(
-                            searchResults = filterPlants(plantName = event.query) ?: emptyList()
+                            searchResults = filterPlants(plantName = event.query).orEmpty()
                         )
                     }
                 }

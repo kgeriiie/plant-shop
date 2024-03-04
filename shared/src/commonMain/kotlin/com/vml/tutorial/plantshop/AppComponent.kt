@@ -54,7 +54,15 @@ class DefaultAppComponent(
         context: ComponentContext
     ): AppComponent.Child {
         return when (config) {
-            Configuration.MainScreen -> AppComponent.Child.MainScreen(DefaultMainComponent(context, appModule))
+            Configuration.MainScreen -> AppComponent.Child.MainScreen(
+                DefaultMainComponent(
+                    componentContext = context,
+                    appModule = appModule,
+                    onLogOut = {
+                        navigation.replaceAll(Configuration.LoginScreen)
+                    })
+            )
+
             Configuration.LoginScreen -> AppComponent.Child.LoginScreen(
                 LoginComponent(
                     componentContext = context,
@@ -66,6 +74,7 @@ class DefaultAppComponent(
                         navigation.pushNew(Configuration.RegisterScreen)
                     })
             )
+
             Configuration.SplashScreen -> AppComponent.Child.SplashScreen(SplashComponent(
                 componentContext = context,
                 appDataStore = appModule.dataStore,
@@ -77,6 +86,7 @@ class DefaultAppComponent(
                     navigation.replaceAll(Configuration.MainScreen)
                 }
             ))
+
             Configuration.RegisterScreen -> AppComponent.Child.RegisterScreen(
                 RegisterComponent(
                     componentContext = context,
@@ -96,12 +106,15 @@ class DefaultAppComponent(
     @Serializable
     sealed class Configuration {
         @Serializable
-        data object SplashScreen: Configuration()
+        data object SplashScreen : Configuration()
+
         @Serializable
-        data object LoginScreen: Configuration()
+        data object LoginScreen : Configuration()
+
         @Serializable
-        data object MainScreen: Configuration()
+        data object MainScreen : Configuration()
+
         @Serializable
-        data object RegisterScreen: Configuration()
+        data object RegisterScreen : Configuration()
     }
 }

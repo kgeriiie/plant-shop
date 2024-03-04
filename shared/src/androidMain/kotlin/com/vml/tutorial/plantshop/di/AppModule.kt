@@ -20,11 +20,11 @@ import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.data.PlantsRepositoryImpl
 import com.vml.tutorial.plantshop.plants.data.RemoteDbPlantsDataSource
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
-import com.vml.tutorial.plantshop.profile.data.DbUserDataSource
-import com.vml.tutorial.plantshop.profile.data.ProfileRepository
-import com.vml.tutorial.plantshop.profile.data.ProfileRepositoryImpl
-import com.vml.tutorial.plantshop.profile.data.RemoteDbUserDataSource
-import com.vml.tutorial.plantshop.profile.domain.UserDataSource
+import com.vml.tutorial.plantshop.profilePreferences.data.DbUserDataSource
+import com.vml.tutorial.plantshop.profilePreferences.data.ProfileRepository
+import com.vml.tutorial.plantshop.profilePreferences.data.ProfileRepositoryImpl
+import com.vml.tutorial.plantshop.profilePreferences.data.RemoteDbUserDataSource
+import com.vml.tutorial.plantshop.profilePreferences.domain.UserDataSource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 

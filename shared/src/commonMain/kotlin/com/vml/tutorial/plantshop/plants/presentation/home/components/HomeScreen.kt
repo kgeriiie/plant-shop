@@ -60,7 +60,6 @@ import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.PlantCategory
-import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenEvent
 import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenState
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.DEFAULT_SEARCH_ACTIVE_STATE
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.DEFAULT_SEARCH_QUERY
@@ -69,8 +68,8 @@ import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenConstants.SINGLE_GRID_COLUMN_SPAN
 import com.vml.tutorial.plantshop.plants.presentation.plantList.ItemListEvent
 import com.vml.tutorial.plantshop.plants.presentation.plantList.itemListGrid
-import com.vml.tutorial.plantshop.profile.domain.User
-import com.vml.tutorial.plantshop.profile.presentation.components.ProfileLettermark
+import com.vml.tutorial.plantshop.profilePreferences.domain.User
+import com.vml.tutorial.plantshop.profilePreferences.presentation.profile.components.ProfileLettermark
 import com.vml.tutorial.plantshop.ui.theme.Typography
 import dev.icerock.moko.resources.ImageResource
 import dev.icerock.moko.resources.compose.painterResource
@@ -156,11 +155,11 @@ private fun ScreenTitle(user: User?, onProfileClicked: () -> Unit, modifier: Mod
         Text(UiText.StringRes(discover).asString(), style = Typography.headlineMedium)
         Spacer(modifier = Modifier.weight(1.0f))
         ProfileLettermark(
-            user?.monogram.orEmpty(),
+            user,
             textStyle = Typography.titleSmall,
-            modifier = Modifier.size(32.dp).clickable {
-                onProfileClicked()
-            })
+            modifier = Modifier.size(32.dp),
+            onClicked = onProfileClicked
+        )
     }
 }
 

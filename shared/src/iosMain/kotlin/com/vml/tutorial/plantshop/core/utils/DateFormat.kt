@@ -11,5 +11,4 @@ actual fun formatDate(dateMillis: Long, dateFormat: String): String {
         this.dateFormat = dateFormat
         locale = NSLocale.currentLocale
     }.stringFromDate(NSDate.dateWithTimeIntervalSince1970(dateMillis.div(1000.0)))
-
 }
