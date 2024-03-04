@@ -37,6 +37,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
+import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.fade
+import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.vml.tutorial.plantshop.basket.presentation.components.BasketScreen
 import com.vml.tutorial.plantshop.core.presentation.asString
@@ -75,9 +77,9 @@ fun MainScreen(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            // TODO: add animation
             Children(
-                stack = childStack
+                stack = childStack,
+                animation = stackAnimation(fade())
             ) { child ->
                 when(val instance = child.instance) {
                     is MainComponent.MainChild.BasketScreen -> {
