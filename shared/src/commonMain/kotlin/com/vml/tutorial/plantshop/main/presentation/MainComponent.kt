@@ -9,6 +9,7 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackCallback
 import com.vml.tutorial.plantshop.basket.presentation.BasketComponent
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.di.AppModule
@@ -150,7 +151,7 @@ class DefaultMainComponent(
 
                             else -> Unit
                         }
-                    },
+                    }
                 )
             )
 
@@ -165,7 +166,10 @@ class DefaultMainComponent(
                     onComponentEvent =
                     { event ->
                         when (event) {
-                            ProfileEvent.NavigateBack -> navigation.pop()
+                            ProfileEvent.NavigateBack -> {
+                                _state.update { it.copy(bottomNavigationVisible = true) }
+                                navigation.pop()
+                            }
                             ProfileEvent.OnPreferencesClicked -> {
                                 _state.update { it.copy(bottomNavigationVisible = false) }
                                 navigation.pushNew(MainConfiguration.PreferencesScreen)

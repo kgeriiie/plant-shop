@@ -47,7 +47,8 @@
     <string name="favorite_icon_description">Favorite</string>
     <!--Favorites Screen list-->
     <string name="favorites">Favorites</string>
-    <string name="empty_favorites_list">Your favorite plant list is feeling a bit minimalist right now!</string>
+    <string name="empty_favorites_title">Your favorite plant list is feeling a bit minimalist right now!</string>
+    <string name="empty_favorites_message">Explore our collection and add some greenery to your favorites to create a lush oasis of plants that bring joy to your space!</string>
     <!--Basket Screen-->
     <string name="basket_screen_title">My Cart</string>
     <string name="basket_summary_items_title">Items</string>

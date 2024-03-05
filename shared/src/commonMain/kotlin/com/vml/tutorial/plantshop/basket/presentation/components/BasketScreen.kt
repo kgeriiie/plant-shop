@@ -44,7 +44,7 @@ fun BasketScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
         Text(
             UiText.StringRes(MR.strings.basket_screen_title).asString(),
@@ -77,7 +77,7 @@ fun BasketScreen(
                 // SUMMARY
                 item {
                     Column {
-                        Spacer(modifier = Modifier.height(100.dp))
+                        Spacer(modifier = Modifier.height(40.dp))
                         BasketSummary(
                             state,
                             onCheckout = {
@@ -177,7 +177,7 @@ private fun BasketSummary(
                 .fillMaxWidth(),
             onCheckout = onCheckout
         )
-        Spacer(modifier = Modifier.height(100.dp))
+        Spacer(modifier = Modifier.height(96.dp))
     }
 }
 
@@ -252,7 +252,7 @@ private fun EmptyMessage(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.height(120.dp))
+        Spacer(Modifier.height(72.dp))
         Image(
             painter = painterResource(MR.images.bg_empty_cart),
             contentDescription = UiText.StringRes(MR.strings.background_image).asString(),

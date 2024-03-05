@@ -137,6 +137,9 @@ private fun HomeScreenContent(
                 }
             }
         }
+        item(span = { GridItemSpan(SINGLE_GRID_COLUMN_SPAN) }) {
+            Spacer(modifier = Modifier.size(96.dp))
+        }
     }
 }
 

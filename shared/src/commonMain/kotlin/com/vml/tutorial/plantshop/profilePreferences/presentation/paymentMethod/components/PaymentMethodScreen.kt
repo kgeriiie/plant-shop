@@ -41,9 +41,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.vml.tutorial.plantshop.MR
 import com.vml.tutorial.plantshop.MR.images.ic_chip
+import com.vml.tutorial.plantshop.core.presentation.LoadingButton
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.profilePreferences.presentation.TitleSection
+import com.vml.tutorial.plantshop.profilePreferences.presentation.editPersonalInfo.components.EditProfileEvent
 import com.vml.tutorial.plantshop.profilePreferences.presentation.paymentMethod.PaymentMethodScreenState
 import com.vml.tutorial.plantshop.profilePreferences.presentation.paymentMethod.utils.addSlashToExpDate
 import com.vml.tutorial.plantshop.profilePreferences.presentation.paymentMethod.utils.determineCardType
@@ -92,6 +94,10 @@ private fun PaymentMethodContent(
                     CreditCardView(state, onEvent)
                 }
 
+                LoadingButton(UiText.StringRes(MR.strings.save_button_text).asString(), state.loading) {
+                    onEvent(PaymentMethodEvent.SaveClicked)
+                }
+
                 if (state.errorMessage != null) {
                     Text(
                         state.errorMessage.asString(),
@@ -99,18 +105,6 @@ private fun PaymentMethodContent(
                         color = Color.Red,
                         style = Typography.labelMedium,
                         textAlign = TextAlign.Center
-                    )
-                }
-
-                Button(modifier = Modifier.fillMaxWidth().height(50.dp), onClick = {
-                    onEvent(PaymentMethodEvent.SaveClicked)
-                }) {
-                    Text(UiText.StringRes(MR.strings.save_button_text).asString())
-                }
-
-                if (state.loading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.CenterHorizontally).padding(20.dp)
                     )
                 }
             }

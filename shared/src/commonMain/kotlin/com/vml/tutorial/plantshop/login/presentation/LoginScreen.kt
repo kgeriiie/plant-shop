@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -19,19 +18,13 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.PersonOutline
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
@@ -52,12 +45,13 @@ import com.vml.tutorial.plantshop.MR.strings.login_show_pw_content_description
 import com.vml.tutorial.plantshop.MR.strings.login_subtitle_text
 import com.vml.tutorial.plantshop.MR.strings.login_title_text
 import com.vml.tutorial.plantshop.MR.strings.login_username_placeholder_text
+import com.vml.tutorial.plantshop.core.presentation.LoadingButton
 import com.vml.tutorial.plantshop.core.presentation.UiText
+import com.vml.tutorial.plantshop.core.presentation.UserInput
 import com.vml.tutorial.plantshop.core.presentation.asString
 import com.vml.tutorial.plantshop.ui.theme.Typography
 import dev.icerock.moko.resources.compose.painterResource
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     state: LoginUiState,
@@ -100,26 +94,13 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextField( // TODO: Use UserInput instead to avoid duplication
+            UserInput(
                 value = state.username,
-                label = { Text(UiText.StringRes(login_username_placeholder_text).asString()) },
+                placeholderText = UiText.StringRes(login_username_placeholder_text).asString(),
                 onValueChange = { onEvent(LoginEvent.UsernameChanged(it)) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                ),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(25.dp),
-                singleLine = true,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    focusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
                 ),
                 leadingIcon = {
                     Icon(
@@ -131,27 +112,20 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextField(
+            UserInput(
                 value = state.password,
-                label = { Text(UiText.StringRes(login_password_placeholder_text).asString()) },
+                placeholderText = UiText.StringRes(login_password_placeholder_text).asString(),
                 onValueChange = { onEvent(LoginEvent.PasswordChanged(it)) },
                 visualTransformation = if (state.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
                 keyboardActions = KeyboardActions(
                     onDone = {
                         focusManager.clearFocus()
                         onEvent(LoginEvent.LoginClicked)
                     }
-                ),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(25.dp),
-                singleLine = true,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    focusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
                 ),
                 leadingIcon = {
                     Icon(
@@ -163,8 +137,10 @@ fun LoginScreen(
                     IconButton(onClick = {
                         onEvent(LoginEvent.PasswordVisibilityToggled)
                     }) {
-                        val icon = if (state.passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
-                        val description = if (state.passwordVisible) login_hide_pw_content_description else login_show_pw_content_description
+                        val icon =
+                            if (state.passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
+                        val description =
+                            if (state.passwordVisible) login_hide_pw_content_description else login_show_pw_content_description
 
                         Icon(
                             imageVector = icon,
@@ -174,32 +150,11 @@ fun LoginScreen(
                 }
             )
 
-            if (state.errorMessage != null) {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    state.errorMessage.asString(),
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    color = Color.Red,
-                    style = Typography.labelMedium,
-                    textAlign = TextAlign.Center
-                )
-            }
-
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                onClick = {
-                    focusManager.clearFocus()
-                    onEvent(LoginEvent.LoginClicked)
-                }
-            ) {
-                Text(
-                    UiText.StringRes(login_button_text).asString()
-                )
+            LoadingButton(UiText.StringRes(login_button_text).asString(), state.loading) {
+                focusManager.clearFocus()
+                onEvent(LoginEvent.LoginClicked)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -212,14 +167,18 @@ fun LoginScreen(
                         onEvent(LoginEvent.RegisterClicked)
                     })
             }
-        }
 
-        if (state.loading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .align(Alignment.BottomCenter)
-            )
+            if (state.errorMessage != null) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    state.errorMessage.asString(),
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                    color = Color.Red,
+                    style = Typography.labelMedium,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }
