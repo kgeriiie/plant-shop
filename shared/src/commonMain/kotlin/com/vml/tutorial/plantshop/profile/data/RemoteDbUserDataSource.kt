@@ -1,7 +1,7 @@
-package com.vml.tutorial.plantshop.profilePreferences.data
+package com.vml.tutorial.plantshop.profile.data
 
-import com.vml.tutorial.plantshop.profilePreferences.domain.User
-import com.vml.tutorial.plantshop.profilePreferences.domain.UserDataSource
+import com.vml.tutorial.plantshop.profile.domain.User
+import com.vml.tutorial.plantshop.profile.domain.UserDataSource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import dev.gitlive.firebase.firestore.where
@@ -9,13 +9,13 @@ import dev.gitlive.firebase.firestore.where
 class RemoteDbUserDataSource : UserDataSource {
     private val collection = Firebase.firestore
     override suspend fun insertToDatabase(user: User) {
-        val newDocument = collection.collection(COLLECTION_ID).document
-        user.cId = newDocument.id
-        newDocument.set(user)
+        collection.collection(COLLECTION_ID).add(user)
     }
 
-    override suspend fun removeFromDatabase(cId: String?) {
-        cId?.let { collection.collection(COLLECTION_ID).document(it).delete() }
+    override suspend fun removeFromDatabase() {
+        collection.collection(COLLECTION_ID).get().documents.map { document ->
+            collection.document(document.id).delete()
+        }
     }
 
     override suspend fun getUser(email: String?): User? {
@@ -26,10 +26,6 @@ class RemoteDbUserDataSource : UserDataSource {
             return null
         }
         return users?.firstOrNull()
-    }
-
-    override suspend fun updateUserInfo(user: User) {
-        user.cId?.let { collection.collection(COLLECTION_ID).document(it).set(user) }
     }
 
     companion object {

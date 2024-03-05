@@ -1,8 +1,8 @@
 package com.vml.tutorial.plantshop
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -13,6 +13,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.vml.tutorial.plantshop.core.presentation.PlantShopTheme
 import com.vml.tutorial.plantshop.login.presentation.LoginScreen
 import com.vml.tutorial.plantshop.main.presentation.MainScreen
+import com.vml.tutorial.plantshop.register.presentation.components.RegisterScreen
 import com.vml.tutorial.plantshop.splash.presentation.SplashScreen
 
 @Composable
@@ -28,7 +29,7 @@ fun App(
                 stack = childStack,
                 animation = stackAnimation(slide())
             ) { child ->
-                when(val instance = child.instance) {
+                when (val instance = child.instance) {
                     is AppComponent.Child.SplashScreen -> {
                         val state by instance.component.uiState.collectAsState()
                         SplashScreen(state) {
@@ -39,6 +40,12 @@ fun App(
                     is AppComponent.Child.LoginScreen -> {
                         val state by instance.component.uiState.collectAsState()
                         LoginScreen(state) { uiEvent ->
+                            instance.component.onEvent(uiEvent)
+                        }
+                    }
+                    is AppComponent.Child.RegisterScreen -> {
+                        val state by instance.component.uiState.collectAsState()
+                        RegisterScreen(state) { uiEvent ->
                             instance.component.onEvent(uiEvent)
                         }
                     }

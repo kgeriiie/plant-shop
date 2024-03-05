@@ -1,11 +1,11 @@
-package com.vml.tutorial.plantshop.profilePreferences.data
+package com.vml.tutorial.plantshop.profile.data
 
 import com.vml.tutorial.plantshop.PlantDatabase
 import com.vml.tutorial.plantshop.core.utils.exts.orZero
-import com.vml.tutorial.plantshop.profilePreferences.domain.Address
-import com.vml.tutorial.plantshop.profilePreferences.domain.PaymentMethod
-import com.vml.tutorial.plantshop.profilePreferences.domain.User
-import com.vml.tutorial.plantshop.profilePreferences.domain.UserDataSource
+import com.vml.tutorial.plantshop.profile.domain.Address
+import com.vml.tutorial.plantshop.profile.domain.PaymentMethod
+import com.vml.tutorial.plantshop.profile.domain.User
+import com.vml.tutorial.plantshop.profile.domain.UserDataSource
 import database.UserQueries
 
 class DbUserDataSource(db: PlantDatabase) : UserDataSource {
@@ -31,46 +31,36 @@ class DbUserDataSource(db: PlantDatabase) : UserDataSource {
         )
     }
 
-    override suspend fun removeFromDatabase(cId: String?) {
+    override suspend fun removeFromDatabase() {
         queries.removeUser()
     }
 
-    override suspend fun getUser(email: String?): User? = try {
+    override suspend fun getUser(email: String?): User {
         val user = queries.getUser().executeAsOne()
-        User(
-            cId = user.cId?.trim(),
+        return User(
             firstName = user.firstName,
             lastName = user.lastName,
             email = user.email,
             birthDate = user.birthDate,
             phoneNumber = user.phoneNumber,
-            Address(
+            address = Address(
                 streetName = user.streetName,
-                doorNumber = user.doorNumber.toInt(),
+                doorNumber = user.doorNumber?.toInt(),
                 city = user.city,
-                postalCode = user.postalCode.toInt(),
+                postalCode = user.postalCode?.toInt(),
                 country = user.country,
                 additionalDescription = user.additionalDescription
             ),
-            PaymentMethod(
+            paymentMethod = PaymentMethod(
                 cardHolderName = user.cardHolderName,
                 creditCardNumber = user.creditCardNumber,
                 cvv = user.cvv,
                 expirationDate = user.expirationDate
             )
         )
-    } catch (err: Exception) {
-        err.printStackTrace()
-        null
     }
 
     override suspend fun isThereUser(): Boolean {
         return queries.getUserCount().executeAsOne().toInt() > 0
-    }
-
-    override suspend fun updateUserInfo(user: User) {
-        // INSERT OR REPLACE doesn't work for some reason
-        removeFromDatabase(null)
-        insertToDatabase(user)
     }
 }

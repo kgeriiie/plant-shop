@@ -8,12 +8,13 @@ interface AuthRepository {
     suspend fun logout()
     suspend fun isAuthenticated(): Boolean
     suspend fun deleteUser()
+    suspend fun register(email: String, password: String): DataResult<FirebaseUser>
 }
 
 class AuthRepositoryImpl(
     private val firebaseDataSource: FirebaseAuthDataSource,
 
-): AuthRepository {
+    ) : AuthRepository {
     override suspend fun login(email: String, password: String): DataResult<FirebaseUser> {
         return firebaseDataSource.login(email, password)
     }
@@ -28,5 +29,9 @@ class AuthRepositoryImpl(
 
     override suspend fun deleteUser() {
         firebaseDataSource.deleteUser()
+    }
+
+    override suspend fun register(email: String, password: String): DataResult<FirebaseUser> {
+        return firebaseDataSource.register(email, password)
     }
 }
