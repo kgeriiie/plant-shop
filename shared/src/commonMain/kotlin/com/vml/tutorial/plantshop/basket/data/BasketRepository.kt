@@ -30,12 +30,16 @@ class BasketRepositoryImpl(
     }
 
     override suspend fun insertItem(plantId: Int, quantity: Int) {
+        if (quantity <= 0) throw RuntimeException("Item quantity should be larger than 0.")
+
         getBasketItems().firstOrNull { it.plantId == plantId }?.let { item ->
             updateItemQuantity(plantId, item.quantity.plus(quantity))
         }?: basketDataSource.insertItem(BasketItem(plantId, quantity)).also { getBasketItems() }
     }
 
     override suspend fun updateItemQuantity(plantId: Int, quantity: Int) {
+        if (quantity <= 0) throw RuntimeException("Item quantity should be larger than 0.")
+
         basketDataSource.updateQuantity(plantId, quantity).also { getBasketItems() }
     }
 
