@@ -35,6 +35,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
 interface MainComponent {
@@ -286,6 +288,6 @@ class DefaultMainComponent(
     )
 
     sealed interface Actions {
-        data class ShowMessageAction(val message: UiText) : Actions
+        data class ShowMessageAction(val message: UiText, val timeStamp: Instant = Clock.System.now()) : Actions
     }
 }

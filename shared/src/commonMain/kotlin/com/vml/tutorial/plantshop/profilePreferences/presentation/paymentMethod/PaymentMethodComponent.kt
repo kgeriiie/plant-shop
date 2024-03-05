@@ -75,7 +75,7 @@ class PaymentMethodComponent(
             if (!profileRepository.updateUserInfo(userInfo)) {
                 _state.update { it.copy(errorMessage = UiText.StringRes(MR.strings.save_error_text)) }
             } else {
-                _state.update { it.copy(errorMessage = null) }
+                //_state.update { it.copy(errorMessage = null) }
                 onShowMessage(UiText.StringRes(MR.strings.saved_text))
             }
             _state.update { it.copy(loading = false) }

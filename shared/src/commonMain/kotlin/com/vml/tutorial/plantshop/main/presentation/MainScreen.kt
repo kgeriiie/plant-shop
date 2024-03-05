@@ -50,7 +50,6 @@ import com.vml.tutorial.plantshop.profilePreferences.presentation.editAddress.co
 import com.vml.tutorial.plantshop.profilePreferences.presentation.editPersonalInfo.components.EditProfileScreen
 import com.vml.tutorial.plantshop.profilePreferences.presentation.paymentMethod.components.PaymentMethodScreen
 import com.vml.tutorial.plantshop.profilePreferences.presentation.profile.components.ProfileScreen
-import kotlinx.datetime.Clock
 
 @Composable
 fun MainScreen(
@@ -63,8 +62,9 @@ fun MainScreen(
 
     when(actions) {
         is DefaultMainComponent.Actions.ShowMessageAction -> {
-            val message = (actions as DefaultMainComponent.Actions.ShowMessageAction).message.asString()
-            LaunchedEffect(Clock.System.now()) {
+            val action = (actions as DefaultMainComponent.Actions.ShowMessageAction)
+            val message = action.message.asString()
+            LaunchedEffect(action.timeStamp) {
                 snackBarHostState.showSnackbar(message = message)
             }
         }
