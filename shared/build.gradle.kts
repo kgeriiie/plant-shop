@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.mokoResourcesMultiplatform)
     alias(libs.plugins.googleServices)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -89,6 +90,8 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(libs.kotlin.test)
+                implementation(libs.mockative)
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
             }
         }
 
@@ -139,6 +142,11 @@ dependencies {
     commonMainApi(libs.mvvm.flow.compose)
     commonMainApi(libs.moko.resources.common)
     commonMainApi(libs.moko.resources.compose)
+    configurations
+        .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
+        .forEach {
+            add(it.name, "io.mockative:mockative-processor:2.0.1")
+        }
 }
 
 multiplatformResources {
