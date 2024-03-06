@@ -34,7 +34,7 @@ class ProfileComponent(
 
     fun onEvent(event: ProfileEvent) {
         when (event) {
-            ProfileEvent.OnGetHelpClicked -> TODO()
+            ProfileEvent.OnGetHelpClicked -> onComponentEvent.invoke(ProfileEvent.OnGetHelpClicked)
             ProfileEvent.OnLogOutClicked -> {
                 componentCoroutineScope().launch {
                     authRepository.logout()

@@ -128,4 +128,9 @@
     <string name="register_error_text">Registration failed. Please ensure you\'ve entered a valid email address and that your passwords match.</string>
     <string name="pick_birth_date_dialog_confirm_text">OK</string>
     <string name="pick_birth_date_dialog_dismiss_text">Cancel</string>
+    <!--Get Help Screen-->
+    <string name="get_help_screen_title_text">Get Help</string>
+    <string name="get_help_title_subtitle_text">Feeling overwhelmed?</string>
+    <string name="get_help_message">Click the button below to connect with our dedicated call center. Our friendly support team is here to assist you with any questions or concerns you may have. We\'re just a call away!</string>
+    <string name="get_help_button_text">Give us a call</string>
 </resources>

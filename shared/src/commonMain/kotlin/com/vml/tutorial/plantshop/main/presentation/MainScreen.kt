@@ -48,6 +48,7 @@ import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
 import com.vml.tutorial.plantshop.profilePreferences.presentation.preferences.components.PreferencesScreen
 import com.vml.tutorial.plantshop.profilePreferences.presentation.editAddress.components.EditAddressScreen
 import com.vml.tutorial.plantshop.profilePreferences.presentation.editPersonalInfo.components.EditProfileScreen
+import com.vml.tutorial.plantshop.profilePreferences.presentation.getHelp.components.GetHelpScreen
 import com.vml.tutorial.plantshop.profilePreferences.presentation.paymentMethod.components.PaymentMethodScreen
 import com.vml.tutorial.plantshop.profilePreferences.presentation.profile.components.ProfileScreen
 
@@ -137,6 +138,12 @@ fun MainScreen(
                     is MainComponent.MainChild.PaymentMethodScreen -> {
                         val paymentMethodState by instance.component.state.collectAsState()
                         PaymentMethodScreen(paymentMethodState) { event ->
+                            instance.component.onEvent(event)
+                        }
+                    }
+
+                    is MainComponent.MainChild.GetHelpScreen -> {
+                        GetHelpScreen { event ->
                             instance.component.onEvent(event)
                         }
                     }
