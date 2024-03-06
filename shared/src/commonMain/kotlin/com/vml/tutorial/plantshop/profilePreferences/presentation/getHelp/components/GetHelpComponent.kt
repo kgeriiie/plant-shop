@@ -2,6 +2,7 @@ package com.vml.tutorial.plantshop.profilePreferences.presentation.getHelp.compo
 
 import com.arkivanov.decompose.ComponentContext
 import com.vml.tutorial.plantshop.core.utils.DialerUtils
+import com.vml.tutorial.plantshop.profilePreferences.presentation.getHelp.components.GetHelpComponentConstants.customerSupportPhoneNumber
 
 class GetHelpComponent(
     componentContext: ComponentContext,
@@ -10,8 +11,12 @@ class GetHelpComponent(
 ) : ComponentContext by componentContext {
     fun onEvent(event: GetHelpEvent) {
         when (event) {
-            GetHelpEvent.CallClicked -> dialerUtils.dialNumber("05013429432")
+            GetHelpEvent.CallClicked -> dialerUtils.dialNumber(customerSupportPhoneNumber)
             GetHelpEvent.NavigateBack -> onNavigateBack()
         }
     }
+}
+
+object GetHelpComponentConstants {
+    const val customerSupportPhoneNumber = "01234567890"
 }
