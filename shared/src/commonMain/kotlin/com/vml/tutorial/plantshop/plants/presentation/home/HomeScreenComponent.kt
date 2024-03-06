@@ -1,10 +1,12 @@
 package com.vml.tutorial.plantshop.plants.presentation.home
 
 import com.arkivanov.decompose.ComponentContext
+import com.vml.tutorial.plantshop.core.utils.BrowserUtils
 import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.Plant
 import com.vml.tutorial.plantshop.plants.presentation.PlantCategory
+import com.vml.tutorial.plantshop.plants.presentation.home.HomeScreenComponentConstants.offerUrl
 import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreenEvent
 import com.vml.tutorial.plantshop.profilePreferences.data.ProfileRepository
 import com.vml.tutorial.plantshop.profilePreferences.domain.User
@@ -20,6 +22,7 @@ class HomeScreenComponent(
     componentContext: ComponentContext,
     private val plantsRepository: PlantsRepository,
     private val profileRepository: ProfileRepository,
+    private val browserUtils: BrowserUtils,
     private val onNavigateToDetail: (plant: Plant) -> Unit,
     private val onNavigateToProfile: (user: User?) -> Unit //TODO: Use event instead
 ) : ComponentContext by componentContext {
@@ -55,7 +58,7 @@ class HomeScreenComponent(
                 }
             }
 
-            HomeScreenEvent.OnOfferClicked -> Unit //TODO()
+            HomeScreenEvent.OnOfferClicked -> browserUtils.browse(offerUrl)
             HomeScreenEvent.OnProfileClicked -> onNavigateToProfile(state.value.user)
             is HomeScreenEvent.OnSearchQueryChanged -> {
                 if (event.query.isNotBlank()) {
@@ -92,4 +95,8 @@ class HomeScreenComponent(
             nameMatches && categoryMatches
         }
     }
+}
+
+object HomeScreenComponentConstants {
+    const val offerUrl = "https://www.thesill.com/collections/sale"
 }

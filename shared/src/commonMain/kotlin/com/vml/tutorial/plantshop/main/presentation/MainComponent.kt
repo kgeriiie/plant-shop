@@ -123,6 +123,7 @@ class DefaultMainComponent(
                 componentContext = context,
                 plantsRepository = appModule.plantsRepository,
                 profileRepository = appModule.profileRepository,
+                browserUtils = appModule.browserUtils,
                 onNavigateToDetail = { plant ->
                     _state.update { it.copy(bottomNavigationVisible = false) }
                     navigation.pushNew(MainConfiguration.PlantDetailScreen(plant))

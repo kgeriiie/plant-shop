@@ -12,6 +12,7 @@ import com.vml.tutorial.plantshop.core.data.account.AuthRepository
 import com.vml.tutorial.plantshop.core.data.account.AuthRepositoryImpl
 import com.vml.tutorial.plantshop.core.data.account.FirebaseAuthDataSource
 import com.vml.tutorial.plantshop.core.data.account.FirebaseAuthDataSourceImpl
+import com.vml.tutorial.plantshop.core.utils.BrowserUtils
 import com.vml.tutorial.plantshop.core.utils.DataStoreUtil
 import com.vml.tutorial.plantshop.core.utils.DialerUtils
 import com.vml.tutorial.plantshop.core.utils.ShareUtils
@@ -99,5 +100,9 @@ actual class AppModule(private val context: Context) {
 
     actual val dialerUtils: DialerUtils by lazy {
         DialerUtils(context)
+    }
+
+    actual val browserUtils: BrowserUtils by lazy {
+        BrowserUtils(context)
     }
 }
