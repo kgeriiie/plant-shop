@@ -12,6 +12,10 @@ import com.vml.tutorial.plantshop.core.data.account.AuthRepository
 import com.vml.tutorial.plantshop.core.data.account.AuthRepositoryImpl
 import com.vml.tutorial.plantshop.core.data.account.FirebaseAuthDataSource
 import com.vml.tutorial.plantshop.core.data.account.FirebaseAuthDataSourceImpl
+import com.vml.tutorial.plantshop.core.data.config.ConfigRepository
+import com.vml.tutorial.plantshop.core.data.config.ConfigRepositoryImpl
+import com.vml.tutorial.plantshop.core.data.config.FirebaseRemoteConfigDataSource
+import com.vml.tutorial.plantshop.core.data.config.FirebaseRemoteConfigDataSourceImpl
 import com.vml.tutorial.plantshop.core.utils.BrowserUtils
 import com.vml.tutorial.plantshop.core.utils.DataStoreUtil
 import com.vml.tutorial.plantshop.core.utils.DialerUtils
@@ -29,6 +33,7 @@ import com.vml.tutorial.plantshop.profilePreferences.data.RemoteDbUserDataSource
 import com.vml.tutorial.plantshop.profilePreferences.domain.UserDataSource
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
+import dev.gitlive.firebase.remoteconfig.remoteConfig
 
 actual class AppModule(private val context: Context) {
     private val db: PlantDatabase by lazy {
@@ -104,5 +109,14 @@ actual class AppModule(private val context: Context) {
 
     actual val browserUtils: BrowserUtils by lazy {
         BrowserUtils(context)
+    }
+
+
+    private val firebaseRemoteConfigDataSource: FirebaseRemoteConfigDataSource by lazy {
+        FirebaseRemoteConfigDataSourceImpl(Firebase.remoteConfig)
+    }
+
+    actual val configRepository: ConfigRepository by lazy {
+        ConfigRepositoryImpl(firebaseRemoteConfigDataSource)
     }
 }

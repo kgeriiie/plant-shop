@@ -3,6 +3,7 @@ package com.vml.tutorial.plantshop.di
 import com.vml.tutorial.plantshop.basket.data.BasketRepository
 import com.vml.tutorial.plantshop.core.data.AppDataStore
 import com.vml.tutorial.plantshop.core.data.account.AuthRepository
+import com.vml.tutorial.plantshop.core.data.config.ConfigRepository
 import com.vml.tutorial.plantshop.core.utils.BrowserUtils
 import com.vml.tutorial.plantshop.core.utils.DialerUtils
 import com.vml.tutorial.plantshop.core.utils.ShareUtils
@@ -26,4 +27,5 @@ expect class AppModule {
     val remoteDbUserDataSource: UserDataSource
     val dialerUtils: DialerUtils
     val browserUtils: BrowserUtils
+    val configRepository: ConfigRepository
 }

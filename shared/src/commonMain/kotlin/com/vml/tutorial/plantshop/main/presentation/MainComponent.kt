@@ -124,6 +124,8 @@ class DefaultMainComponent(
                 plantsRepository = appModule.plantsRepository,
                 profileRepository = appModule.profileRepository,
                 browserUtils = appModule.browserUtils,
+                configRepository = appModule.configRepository,
+                onShowMessage = ::showMessage,
                 onNavigateToDetail = { plant ->
                     _state.update { it.copy(bottomNavigationVisible = false) }
                     navigation.pushNew(MainConfiguration.PlantDetailScreen(plant))
@@ -258,6 +260,8 @@ class DefaultMainComponent(
                 GetHelpComponent(
                     componentContext = context,
                     dialerUtils = appModule.dialerUtils,
+                    configRepository = appModule.configRepository,
+                    onShowMessage = ::showMessage,
                     onNavigateBack = { navigation.pop() })
             )
         }
