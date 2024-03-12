@@ -2,7 +2,7 @@ package com.vml.tutorial.plantshop.plants.presentation.detail
 
 import com.arkivanov.decompose.ComponentContext
 import com.vml.tutorial.plantshop.basket.data.BasketRepository
-import com.vml.tutorial.plantshop.core.utils.ShareUtils
+import com.vml.tutorial.plantshop.core.utils.ShareHelper
 import com.vml.tutorial.plantshop.core.utils.componentCoroutineScope
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
 import com.vml.tutorial.plantshop.plants.domain.Plant
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class PlantDetailComponent(
     plant: Plant,
     componentContext: ComponentContext,
-    private val shareUtils: ShareUtils,
+    private val shareHelper: ShareHelper,
     private val plantsRepository: PlantsRepository,
     private val basketRepository: BasketRepository,
     private val onComponentEvent: (event: PlantDetailEvent) -> Unit,
@@ -54,7 +54,7 @@ class PlantDetailComponent(
                 }
             }
 
-            is PlantDetailEvent.OnShareClick -> shareUtils.shareContent(event.content)
+            is PlantDetailEvent.OnShareClick -> shareHelper.shareContent(event.content)
             PlantDetailEvent.DismissDialog -> _state.update { it.copy(showAddToBasketDialog = false) }
             else -> onComponentEvent.invoke(event)
         }
