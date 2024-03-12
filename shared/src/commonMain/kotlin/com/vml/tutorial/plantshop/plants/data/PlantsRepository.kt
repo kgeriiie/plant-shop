@@ -1,9 +1,7 @@
 package com.vml.tutorial.plantshop.plants.data
 
-import com.vml.tutorial.plantshop.core.utils.Logger
 import com.vml.tutorial.plantshop.plants.domain.FavoritesDataSource
 import com.vml.tutorial.plantshop.plants.domain.Plant
-import com.vml.tutorial.plantshop.plants.domain.PlantDetails
 import com.vml.tutorial.plantshop.plants.domain.PlantsDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

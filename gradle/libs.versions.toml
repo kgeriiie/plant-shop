@@ -27,6 +27,7 @@ datastore = "1.1.0-alpha06"
 firebaseFirestoreKtx = "24.10.2"
 mockative = "2.0.1"
 ksp = "1.9.22-1.0.17"
+firebaseConfigKtx = "21.6.2"
 
 [libraries]
 datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore"}
@@ -36,6 +37,7 @@ decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decom
 
 firebase-common = { module = "dev.gitlive:firebase-common", version.ref = "firebaseFirestore" }
 firebase-common-ktx = { module = "com.google.firebase:firebase-common-ktx", version.ref = "firebaseCommonKtx" }
+firebase-config = { module = "dev.gitlive:firebase-config", version.ref = "firebase" }
 firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebaseFirestore" }
 firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebase" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

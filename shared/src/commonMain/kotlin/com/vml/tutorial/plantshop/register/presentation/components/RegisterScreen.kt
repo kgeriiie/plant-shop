@@ -60,7 +60,7 @@ fun RegisterScreen(state: RegisterUiState, onEvent: (event: RegisterEvent) -> Un
 @Composable
 private fun UserInfoSection(state: RegisterUiState, onEvent: (event: RegisterEvent) -> Unit) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.padding(bottom = 24.dp, start = 24.dp, end = 24.dp)
     ) {
         // TITLE
@@ -144,8 +144,6 @@ private fun UserInfoSection(state: RegisterUiState, onEvent: (event: RegisterEve
         ) {
             onEvent(RegisterEvent.LastNameChanged(it))
         }
-
-        Spacer(modifier = Modifier.height(8.dp))
 
         LoadingButton(UiText.StringRes(MR.strings.register_button_text).asString(), state.loading) {
             onEvent(RegisterEvent.RegisterClicked)

@@ -9,7 +9,6 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.backhandler.BackCallback
 import com.vml.tutorial.plantshop.basket.presentation.BasketComponent
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.di.AppModule
@@ -23,6 +22,7 @@ import com.vml.tutorial.plantshop.profilePreferences.presentation.editAddress.Ed
 import com.vml.tutorial.plantshop.profilePreferences.presentation.editAddress.components.EditAddressEvent
 import com.vml.tutorial.plantshop.profilePreferences.presentation.editPersonalInfo.EditProfileComponent
 import com.vml.tutorial.plantshop.profilePreferences.presentation.editPersonalInfo.components.EditProfileEvent
+import com.vml.tutorial.plantshop.profilePreferences.presentation.getHelp.components.GetHelpComponent
 import com.vml.tutorial.plantshop.profilePreferences.presentation.paymentMethod.PaymentMethodComponent
 import com.vml.tutorial.plantshop.profilePreferences.presentation.preferences.PreferencesComponent
 import com.vml.tutorial.plantshop.profilePreferences.presentation.preferences.components.PreferencesEvent
@@ -35,6 +35,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
 interface MainComponent {
@@ -53,6 +55,7 @@ interface MainComponent {
         data class EditAddressScreen(val component: EditAddressComponent) : MainChild()
         data class EditPersonalInfoScreen(val component: EditProfileComponent) : MainChild()
         data class PaymentMethodScreen(val component: PaymentMethodComponent) : MainChild()
+        data class GetHelpScreen(val component: GetHelpComponent) : MainChild()
     }
 }
 
@@ -120,6 +123,9 @@ class DefaultMainComponent(
                 componentContext = context,
                 plantsRepository = appModule.plantsRepository,
                 profileRepository = appModule.profileRepository,
+                browserUtils = appModule.browserUtils,
+                configRepository = appModule.configRepository,
+                onShowMessage = ::showMessage,
                 onNavigateToDetail = { plant ->
                     _state.update { it.copy(bottomNavigationVisible = false) }
                     navigation.pushNew(MainConfiguration.PlantDetailScreen(plant))
@@ -170,9 +176,14 @@ class DefaultMainComponent(
                                 _state.update { it.copy(bottomNavigationVisible = true) }
                                 navigation.pop()
                             }
+
                             ProfileEvent.OnPreferencesClicked -> {
                                 _state.update { it.copy(bottomNavigationVisible = false) }
                                 navigation.pushNew(MainConfiguration.PreferencesScreen)
+                            }
+
+                            ProfileEvent.OnGetHelpClicked -> {
+                                navigation.pushNew(MainConfiguration.GetHelpScreen)
                             }
 
                             else -> Unit
@@ -244,6 +255,15 @@ class DefaultMainComponent(
                     onShowMessage = ::showMessage,
                     onNavigateBack = { navigation.pop() })
             )
+
+            MainConfiguration.GetHelpScreen -> MainComponent.MainChild.GetHelpScreen(
+                GetHelpComponent(
+                    componentContext = context,
+                    dialerUtils = appModule.dialerUtils,
+                    configRepository = appModule.configRepository,
+                    onShowMessage = ::showMessage,
+                    onNavigateBack = { navigation.pop() })
+            )
         }
     }
 
@@ -279,6 +299,9 @@ class DefaultMainComponent(
 
         @Serializable
         data class PaymentMethodScreen(val user: User?) : MainConfiguration()
+
+        @Serializable
+        data object GetHelpScreen : MainConfiguration()
     }
 
     data class MainUiState(
@@ -286,6 +309,7 @@ class DefaultMainComponent(
     )
 
     sealed interface Actions {
-        data class ShowMessageAction(val message: UiText) : Actions
+        data class ShowMessageAction(val message: UiText, val timeStamp: Instant = Clock.System.now()) :
+            Actions
     }
 }

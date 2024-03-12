@@ -84,6 +84,8 @@ kotlin {
                 implementation(libs.firebase.auth)
 
                 implementation(libs.datastore)
+
+                implementation(libs.firebase.config)
             }
         }
 

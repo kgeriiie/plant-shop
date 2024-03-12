@@ -11,10 +11,7 @@ interface AuthRepository {
     suspend fun register(email: String, password: String): DataResult<FirebaseUser>
 }
 
-class AuthRepositoryImpl(
-    private val firebaseDataSource: FirebaseAuthDataSource,
-
-    ) : AuthRepository {
+class AuthRepositoryImpl(private val firebaseDataSource: FirebaseAuthDataSource) : AuthRepository {
     override suspend fun login(email: String, password: String): DataResult<FirebaseUser> {
         return firebaseDataSource.login(email, password)
     }

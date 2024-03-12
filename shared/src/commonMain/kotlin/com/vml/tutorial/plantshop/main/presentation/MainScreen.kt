@@ -48,9 +48,9 @@ import com.vml.tutorial.plantshop.plants.presentation.home.components.HomeScreen
 import com.vml.tutorial.plantshop.profilePreferences.presentation.preferences.components.PreferencesScreen
 import com.vml.tutorial.plantshop.profilePreferences.presentation.editAddress.components.EditAddressScreen
 import com.vml.tutorial.plantshop.profilePreferences.presentation.editPersonalInfo.components.EditProfileScreen
+import com.vml.tutorial.plantshop.profilePreferences.presentation.getHelp.components.GetHelpScreen
 import com.vml.tutorial.plantshop.profilePreferences.presentation.paymentMethod.components.PaymentMethodScreen
 import com.vml.tutorial.plantshop.profilePreferences.presentation.profile.components.ProfileScreen
-import kotlinx.datetime.Clock
 
 @Composable
 fun MainScreen(
@@ -63,8 +63,9 @@ fun MainScreen(
 
     when(actions) {
         is DefaultMainComponent.Actions.ShowMessageAction -> {
-            val message = (actions as DefaultMainComponent.Actions.ShowMessageAction).message.asString()
-            LaunchedEffect(Clock.System.now()) {
+            val action = (actions as DefaultMainComponent.Actions.ShowMessageAction)
+            val message = action.message.asString()
+            LaunchedEffect(action.timeStamp) {
                 snackBarHostState.showSnackbar(message = message)
             }
         }
@@ -137,6 +138,12 @@ fun MainScreen(
                     is MainComponent.MainChild.PaymentMethodScreen -> {
                         val paymentMethodState by instance.component.state.collectAsState()
                         PaymentMethodScreen(paymentMethodState) { event ->
+                            instance.component.onEvent(event)
+                        }
+                    }
+
+                    is MainComponent.MainChild.GetHelpScreen -> {
+                        GetHelpScreen { event ->
                             instance.component.onEvent(event)
                         }
                     }
