@@ -12,8 +12,6 @@ class FirebaseRemoteConfigDataSourceImpl(private val firebaseRemoteConfig: Fireb
         return try {
             firebaseRemoteConfig.fetchAndActivate()
             firebaseRemoteConfig.getValue(key).asString()
-
-            firebaseRemoteConfig.
         } catch (err: Exception) {
             null
         }
