@@ -1,4 +1,4 @@
-package com.vml.tutorial.plantshop.utils
+package com.vml.tutorial.plantshop.helpers
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.backhandler.BackHandler

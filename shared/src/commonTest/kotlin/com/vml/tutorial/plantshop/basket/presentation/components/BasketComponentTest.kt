@@ -11,7 +11,7 @@ import com.vml.tutorial.plantshop.basket.domain.BasketItem
 import com.vml.tutorial.plantshop.basket.presentation.BasketComponent
 import com.vml.tutorial.plantshop.core.presentation.UiText
 import com.vml.tutorial.plantshop.plants.data.PlantsRepository
-import com.vml.tutorial.plantshop.utils.ComponentContextIml
+import com.vml.tutorial.plantshop.helpers.ComponentContextIml
 import io.mockative.Fun0
 import io.mockative.Fun1
 import io.mockative.Mock
